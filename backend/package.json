@@ -1,0 +1,26 @@
+{
+  "name": "backend_speedquiz",
+  "version": "1.0.0",
+  "description": "Server backend del gioco SpeedQuiz",
+  "keywords": [
+    "Backend",
+    "SpeedQuiz",
+    "nodejs",
+    "express",
+    "mongodb",
+    "MERN",
+    "game"
+  ],
+  "license": "ISC",
+  "author": "Jonathan Caputo, Luca Gentile, Angelica DeFeudis",
+  "type": "module",
+  "main": "./src/server.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "dev": "nodemon --watch src --ext ts,json --exec \"node src/server.js\"",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
