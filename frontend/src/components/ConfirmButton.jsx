@@ -1,6 +1,9 @@
-const ConfirmButton = ({content}) => {
+const ConfirmButton = ({ content, onClick }) => {
   return (
-    <button className="bg-verdinoCarino border-3 border-neroNonNero px-4 py-2 font-extrabold text-sm md:text-base uppercase text-black shadow-buttons hover:scale-110 transition-all duration-300">
+    <button 
+      onClick={onClick}
+      className="w-full mt-4 bg-verdinoCarino border-3 border-neroNonNero shadow-buttons py-4 md:py-5 text-1xl md:text-4xl font-black uppercase text-black hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
+    >
       {content}
     </button>
   );
