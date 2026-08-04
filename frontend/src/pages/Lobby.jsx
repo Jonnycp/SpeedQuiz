@@ -17,7 +17,7 @@ const Lobby = () => {
         underPhase="In attesa di giocatori..."
         username={username}
       />
-      <div className="flex gap-20 mx-18 font-primary items-center">
+      <div className="flex gap-20 mx-22 font-primary items-center">
         <aside className="bg-secondary flex flex-col items-center py-5 px-4 shadow-buttons flex-1 uppercase font-extrabold border-3 z-10 rounded-xl h-fit">
           <h3 className="bg-black text-white w-fit px-3 py-1 rounded-xl mb-4 select-none">
             codice stanza
@@ -42,9 +42,9 @@ const Lobby = () => {
           </form>
         </aside>
 
-        <section className="bg-transparent md:bg-white md:border-4 md:border-neroNonNero md:shadow-[12px_12px_0_0_#000] md:p-10 flex-col gap-6 w-full flex md:flex-2 relative">
+        <section className="rotate-1 bg-transparent md:bg-white md:border-4 md:border-neroNonNero md:shadow-buttons md:p-10 flex-col gap-6 w-full flex-3 relative">
            <div className="hidden md:flex flex-col items-center gap-3">
-                <h1 className="text-4xl md:text-5xl font-black uppercase tracking-wide text-black text-center">
+                <h1 className="text-4xl font-black uppercase tracking-wide text-black text-center">
                     Lobby di {username}
                 </h1>
                 <h3 className="bg-primary text-white border-3 border-neroNonNero rounded-full px-6 py-1.5 font-extrabold text-sm uppercase shadow-buttons">
@@ -55,15 +55,14 @@ const Lobby = () => {
             <span className="uppercase font-bold tracking-wide">GIOCATORI ({players.length}/{maxPlayers})</span>
             <span className="text-white/80">In attesa...</span>
           </div>
-          <div className="hidden md:flex flex-col gap-3hidden md:flex flex-col gap-3"> 
-                    {/* Lista dei giocatori ma il primo è un host */}
+          <div className="hidden md:flex flex-col gap-3 my-8"> 
                    {players.map((player, index) => (
                     <Gamer
                         key={index}
                         username={player}
                         isHost={index === 0}
                         imageUser={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${player}`}
-                        rotation={index % 2 === 0 ? "rotate-[0.3deg]" : "-rotate-[0.3deg]"}
+                        rotation={index % 2 === 0 ? "rotate-0" : "-rotate-1"}
                     />
                 ))}
           </div>
