@@ -4,6 +4,38 @@ import LobbyCard from "../components/LobbyCard";
 
 const Home = () => {
   const username = "Jonathan";
+  const mockLobbies = [
+            {
+              id: "1",
+              title: "Stanza di tizio 1",
+              playersConnected: 3,
+              maxPlayers: 6,
+            },
+            {
+              id: "2",
+              title: "Stanza di tizio 2",
+              playersConnected: 3,
+              maxPlayers: 6,
+            },
+            {
+              id: "3",
+              title: "Stanza di tizio 3",
+              playersConnected: 3,
+              maxPlayers: 6,
+            },{
+              id: "4",
+              title: "Stanza di tizio 4",
+              playersConnected: 3,
+              maxPlayers: 6,
+            },{
+              id: "5",
+              title: "Stanza di tizio 5",
+              playersConnected: 3,
+              maxPlayers: 6,
+            },
+            
+          ]
+
   return (
     <>
       <Header username={username} />
@@ -13,11 +45,11 @@ const Home = () => {
           1 domanda, 3 risposte, il più veloce vince!
         </h2>
         <div className="flex mt-5 gap-4 uppercase w-full">
-          <button className="flex flex-col flex-1 items-center text-2xl justify-center gap-2 py-10 uppercase bg-primary text-white shadow-buttons border-3 border-neroNonNero hover:-translate-y-2 transition-transform cursor-pointer">
+          <button className="flex flex-col flex-1 items-center text-2xl justify-center -rotate-1 gap-2 py-10 uppercase bg-primary text-white shadow-buttons border-3 border-neroNonNero cursor-pointer hover:scale-110 transition-all duration-300">
             <Icon icon="mdi:plus-circle" width={50} />
             Crea un partita
           </button>
-          <form className="flex flex-col flex-1 p-4 gap-2 text-xl bg-gray-200 text-black shadow-buttons border-3 border-neroNonNero hover:-translate-y-2 transition-transform cursor-pointer">
+          <form className="flex flex-col flex-1 p-4 gap-2 text-xl bg-gray-200 text-black shadow-buttons border-3 border-neroNonNero cursor-pointer">
             Unisciti a una partita
             <input
               type="text"
@@ -41,12 +73,17 @@ const Home = () => {
           </h2>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-10 mt-5 pb-10">
-          <LobbyCard title="Stanza di tizio 1" players={3} players_max={6} rotation="rotate-2" />
-          <LobbyCard title="Stanza di tizio 2" players={3} players_max={6} rotation="-rotate-2" />
-          <LobbyCard title="Stanza di tizio 3" players={3} players_max={6} rotation="rotate-2" />
+        <div className="flex flex-wrap justify-center gap-10 mt-10 pb-10">
+          {mockLobbies.map((lobby, index) => (
+            <LobbyCard
+              key={lobby.id}
+              title={lobby.title}
+              players={lobby.playersConnected}
+              players_max={lobby.maxPlayers}
+              rotation={index % 2 === 0 ? "rotate-2" : "-rotate-2"}
+            />
+          ))}
         </div>
-
       </section>
     </>
   );
