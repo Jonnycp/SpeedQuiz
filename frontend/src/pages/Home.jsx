@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import Header from "../components/Header";
+import LobbyCard from "../components/LobbyCard";
 
 const Home = () => {
   const username = "Jonathan";
@@ -12,11 +13,11 @@ const Home = () => {
           1 domanda, 3 risposte, il più veloce vince!
         </h2>
         <div className="flex mt-5 gap-4 uppercase w-full">
-          <button className="flex flex-col flex-1 items-center text-2xl justify-center gap-2 py-10 uppercase bg-primary text-white shadow-buttons border-3 border-neroNonNero">
+          <button className="flex flex-col flex-1 items-center text-2xl justify-center gap-2 py-10 uppercase bg-primary text-white shadow-buttons border-3 border-neroNonNero hover:-translate-y-2 transition-transform cursor-pointer">
             <Icon icon="mdi:plus-circle" width={50} />
             Crea un partita
           </button>
-          <form className="flex flex-col flex-1 p-4 gap-2 text-xl bg-gray-200 text-black shadow-buttons border-3 border-neroNonNero">
+          <form className="flex flex-col flex-1 p-4 gap-2 text-xl bg-gray-200 text-black shadow-buttons border-3 border-neroNonNero hover:-translate-y-2 transition-transform cursor-pointer">
             Unisciti a una partita
             <input
               type="text"
@@ -39,7 +40,14 @@ const Home = () => {
             Esplora le stanze
           </h2>
         </div>
-        
+
+        <div className="flex flex-wrap justify-center gap-10 mt-5 pb-10">
+          <LobbyCard title="Stanza di tizio 1" players={3} players_max={6} rotation="rotate-2" />
+          <LobbyCard title="Stanza di tizio 2" players={3} players_max={6} rotation="-rotate-2" />
+          <LobbyCard title="Stanza di tizio 3" players={3} players_max={6} rotation="rotate-2" />
+          <LobbyCard title="Stanza di tizio 3" players={3} players_max={6} rotation="rotate-2" />
+        </div>
+
       </section>
     </>
   );
