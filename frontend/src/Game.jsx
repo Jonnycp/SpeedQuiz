@@ -15,7 +15,7 @@ const Game = () => {
           <Route path="/lobby" element={<Lobby />} />
         </Routes>
       </main>
-      <footer className="text-white/50 font-primary text-sm text-center my-5 font-extrabold uppercase">©{new Date().getFullYear()} - SpeedQuiz Team ❤️</footer>
+      <footer className="text-white/50 font-primary text-sm text-center my-5 font-extrabold uppercase selection:bg-primary selection:text-black">©{new Date().getFullYear()} - SpeedQuiz Team ❤️</footer>
     </BrowserRouter>
   );
 };
