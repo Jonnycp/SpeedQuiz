@@ -1,7 +1,7 @@
 import GamePhase from "../components/GamePhase";
 import Gamer from "../components/Gamer";
 import { Icon } from "@iconify/react";
-import SendButton from "../components/SendButton";
+import ConfirmButton from "../components/ConfirmButton";
 import SettingsInput from "../components/SettingsInput";
 
 const Lobby = () => {
@@ -49,7 +49,7 @@ const Lobby = () => {
                     rotation={index % 2 === 0 ? "rotate-[0.3deg]" : "-rotate-[0.3deg]"}
                 />
             ))}
-            <SendButton content="Inizia partita"/>
+            <ConfirmButton content="Inizia partita"/>
         </section>
       </div>
     </>
