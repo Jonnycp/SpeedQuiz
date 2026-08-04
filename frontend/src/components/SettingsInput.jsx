@@ -22,7 +22,7 @@ const SettingsInput = ({
       <div className="flex w-full justify-between">
         {type == "number" && (
           <button
-            className="bg-white px-2 py-2 text-xl border-2 border-neroNonNero"
+            className="bg-white px-2 py-2 text-xl border-2 border-neroNonNero cursor-pointer"
             onClick={() => setValue(Math.max(value - 1, minValue))}
           >
             <Icon icon="mdi:minus" />
@@ -53,7 +53,7 @@ const SettingsInput = ({
         )}
         {type == "number" && (
           <button
-            className="bg-white px-2 py-2 text-xl border-2 border-neroNonNero"
+            className="bg-white px-2 py-2 text-xl border-2 border-neroNonNero cursor-pointer"
             onClick={() => setValue(Math.min(value + 1, maxValue))}
           >
             <Icon icon="mdi:plus" />
