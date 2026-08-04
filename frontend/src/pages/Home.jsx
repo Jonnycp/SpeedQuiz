@@ -45,7 +45,6 @@ const Home = () => {
           <LobbyCard title="Stanza di tizio 1" players={3} players_max={6} rotation="rotate-2" />
           <LobbyCard title="Stanza di tizio 2" players={3} players_max={6} rotation="-rotate-2" />
           <LobbyCard title="Stanza di tizio 3" players={3} players_max={6} rotation="rotate-2" />
-          <LobbyCard title="Stanza di tizio 3" players={3} players_max={6} rotation="rotate-2" />
         </div>
 
       </section>
