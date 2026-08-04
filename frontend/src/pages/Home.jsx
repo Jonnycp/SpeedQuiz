@@ -39,13 +39,13 @@ const Home = () => {
   return (
     <>
       <Header username={username} />
-      <section className="rotate-1 my-10 mx-28 bg-white font-primary font-extrabold flex flex-col items-start justify-center gap-5 py-10 px-12 border-3 border-neroNonNero shadow-buttons">
-        <h3 className="text-3xl uppercase text-background">Ciao, {username}</h3>
-        <h2 className="text-xl -rotate-1 uppercase bg-secondary border-3 border-neroNonNero shadow-buttons inline py-2 px-3 mx-auto select-none">
+      <section className="rotate-1 my-10 mx-5 md:mx-28 xl:mx-72 bg-white font-primary font-extrabold flex flex-col items-start justify-center gap-5 py-5 px-8 md:py-10 md:px-12 border-3 border-neroNonNero shadow-buttons">
+        <h3 className="text-3xl uppercase text-background">Ciao, {username}!</h3>
+        <h2 className="text-xl -rotate-1 uppercase text-center md:text-left bg-secondary border-3 border-neroNonNero shadow-buttons inline py-2 px-3 mx-auto select-none">
           1 domanda, 3 risposte, il più veloce vince!
         </h2>
-        <div className="flex mt-5 gap-4 uppercase w-full">
-          <button className="flex flex-col flex-1 items-center text-2xl justify-center -rotate-1 gap-2 py-10 uppercase bg-primary text-white shadow-buttons border-3 border-neroNonNero cursor-pointer hover:scale-110 transition-all duration-300">
+        <div className="flex flex-col md:flex-row mt-5 gap-8 md:gap-4 uppercase w-full">
+          <button className="flex flex-col flex-1 items-center text-2xl justify-center -rotate-1 gap-2 py-5 md:py-10 uppercase bg-primary text-white shadow-buttons border-3 border-neroNonNero cursor-pointer hover:scale-110 transition-all duration-300">
             <Icon icon="mdi:plus-circle" width={50} />
             Crea un partita
           </button>
@@ -55,7 +55,7 @@ const Home = () => {
               type="text"
               placeholder="Codice stanza"
               maxLength={6}
-              className="mt-3 bg-white p-2 uppercase border-3 border-neroNonNero placeholder:text-gray-400 placeholder:text-lg placeholder:font-medium"
+              className="mt-3 bg-white p-2 uppercase border-3 border-neroNonNero placeholder:text-gray-400 placeholder:text-lg placeholder:font-medium focus:outline-none"
             />
             <input
               type="submit"
