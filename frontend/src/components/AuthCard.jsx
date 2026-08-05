@@ -4,7 +4,11 @@ import { useState } from "react";
 
 
 const AuthCard = ({isLogin}) => {
-    const [showPassword, setShowPassword] = useState(false)    
+    const [showPassword, setShowPassword] = useState(false)
+    const [username, setUsername] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+
 
     return (
        <div className=" font-primary w-full flex flex-col my-10 md:my-20">
@@ -28,6 +32,8 @@ const AuthCard = ({isLogin}) => {
                     type="text"
                     id="username"
                     placeholder="username"
+                    value={username} required
+                    onChange={e => setUsername(e.target.value)} 
                     className="bg-white px-4 py-3 border-3 shadow-buttons border-neroNonNero"></input>
                 </div>
             )}
@@ -38,6 +44,8 @@ const AuthCard = ({isLogin}) => {
                 type="text"
                 id="email"
                 placeholder="nome@esempio.it"
+                value={email} required
+                onChange={e => setEmail(e.target.value)}
                 className="bg-white px-4 py-3 border-3 border-shadow border-neroNonNero placeholder:text-gray-400 normal-case shadow-buttons"></input>
             </div>
 
@@ -47,12 +55,14 @@ const AuthCard = ({isLogin}) => {
                 <div className="relative">
                     <input
                     type={showPassword ? "text" : "password"}
-                    id="password" required minLength={6}
+                    id="password"
                     placeholder="••••••••"
+                    value={password} required
+                    minLength={6}
+                    onChange={e => setPassword(e.target.value)}
                     className="w-full bg-white px-4 py-3 border-3 border-neroNonNero shadow-buttons"/>
-
-                    <button type="button"
-                    className="absolute top-4 right-3 cursor-pointer"
+                    <button 
+                    type="button" className="absolute top-4 right-3 cursor-pointer"
                     onClick={() => setShowPassword(!showPassword)}> 
                         <Icon icon={showPassword ? "mdi:eye-off" : "mdi-eye"} width={22}/>
                     </button>
