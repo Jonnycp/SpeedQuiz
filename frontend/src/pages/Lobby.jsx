@@ -17,7 +17,7 @@ const Lobby = () => {
         underPhase="In attesa di giocatori..."
         username={username}
       />
-      <div className="flex gap-20 mx-22 font-primary items-center">
+      <div className="flex-1 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 px-4 md:px-8 max-w-7xl mx-auto w-full">
         <aside className="bg-secondary flex flex-col items-center py-5 px-4 shadow-buttons flex-1 uppercase font-extrabold border-3 z-10 rounded-xl h-fit">
           <h3 className="bg-black text-white w-fit px-3 py-1 rounded-xl mb-4 select-none">
             codice stanza
