@@ -42,12 +42,12 @@ const Lobby = () => {
           </form>
         </aside>
 
-        <section className="rotate-1 bg-transparent md:bg-white md:border-4 md:border-neroNonNero md:shadow-buttons md:p-10 flex-col gap-6 w-full flex-3 relative">
+        <section className="md:rotate-1 bg-transparent md:bg-white md:border-4 md:border-neroNonNero md:shadow-buttons md:p-10 flex-col gap-6 w-full flex-3 relative">
            <div className="hidden md:flex flex-col items-center gap-3">
                 <h1 className="text-4xl font-black uppercase tracking-wide text-black text-center">
                     Lobby di {username}
                 </h1>
-                <h3 className="bg-primary text-white border-3 border-neroNonNero rounded-full px-6 py-1.5 font-extrabold text-sm uppercase shadow-buttons">
+                <h3 className="bg-primary text-white border-3 border-neroNonNero rounded-full px-6 py-1.5 font-extrabold text-sm uppercase shadow-buttons -rotate-1">
                     In attesa... ({players.length}/{maxPlayers})
                 </h3>
           </div>
@@ -55,41 +55,17 @@ const Lobby = () => {
             <span className="uppercase font-bold tracking-wide">GIOCATORI ({players.length}/{maxPlayers})</span>
             <span className="text-white/80">In attesa...</span>
           </div>
-          <div className="hidden md:flex flex-col gap-3 my-8"> 
+          <div className="flex md:flex-col gap-5 md:gap-3 my-8 flex-wrap"> 
                    {players.map((player, index) => (
                     <Gamer
                         key={index}
                         username={player}
                         isHost={index === 0}
                         imageUser={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${player}`}
-                        rotation={index % 2 === 0 ? "rotate-0" : "-rotate-1"}
+                        rotation={index % 2 === 0 ? "md:rotate-0" : "md:-rotate-1"}
                     />
                 ))}
-          </div>
-
-          {/*/ Lista dei giocatori in versione mobile */}
-          <div className="flex md:hidden flex-wrap gap-5 mb-8">
-            {players.map((player, index) => (
-              <div key={index} className="flex flex-col items-center w-[72px]">
-                <div className="relative">
-                  <img
-                    className="w-16 h-16 rounded-full border-3 border-neroNonNero shadow-[4px_4px_0_0_#000] object-cover bg-gray-200"
-                    src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${player}`}
-                    alt={player}
-                  />
-                  {index === 0 && (
-                     <div className="absolute top-0 -right-3 bg-verdinoCarino border-2 border-neroNonNero px-1 py-0.5 text-[9px] font-black text-black uppercase z-10">
-                       HOST
-                     </div>
-                  )}
-                </div>
-                <span className="text-white font-black uppercase mt-3 text-xs tracking-wide truncate max-w-full text-center">
-                  {player}
-                </span>
-              </div>
-            ))}
-
-            <div className="flex items-center justify-center w-[72px] h-16 text-white/50">
+            <div className="md:hidden flex items-center justify-center w-18 h-16 text-white/50">
                <Icon icon="mdi:plus" className="text-3xl" />
             </div>
           </div>
