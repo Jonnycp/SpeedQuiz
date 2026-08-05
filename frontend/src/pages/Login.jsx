@@ -2,8 +2,7 @@ import AuthCard from "../components/AuthCard";
 
 const Login = () => {
     return(
-        <AuthCard ></AuthCard>
-
+        <AuthCard isLogin={true}></AuthCard>
     )
 }
 

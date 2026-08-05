@@ -1,6 +1,8 @@
 import { Link } from "react-router";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
+import ConfirmButton from "./ConfirmButton";
+
 
 const AuthCard = ({isLogin=true}) => {
     const [showPassword, setPassword] = useState(false)    
@@ -14,12 +16,12 @@ const AuthCard = ({isLogin=true}) => {
            <form className="bg-white border-3 border-neroNonNero shadow-buttons px-6 py-10 flex flex-col gap-6">
             <div className="text-center">
                 <h1 className="font-extrabold text-3xl uppercase">
-                    {!isLogin? "Accedi" : "Crea un account"}
+                    {isLogin? "Accedi" : "Crea un account"}
                 </h1>
                 <p className="text-black text-sm normal-case">Pronto a sfidare i tuoi amici?</p>
             </div>
 
-            {isLogin && (
+            {!isLogin && (
                 <div className="flex flex-col gap-1">
                     <label htmlFor="username" className="font-bold uppercase text-block">Username</label>
                     <input 
@@ -48,8 +50,6 @@ const AuthCard = ({isLogin=true}) => {
                 placeholder="••••••••"
                 className="bg-white px-4 py-3 border-3 border-neroNonNero border-shadow">
                 </input>
-
-
                 
             </div>
 

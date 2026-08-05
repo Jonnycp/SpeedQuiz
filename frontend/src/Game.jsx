@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import { BrowserRouter, Route, Routes } from "react-router";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx"
+import Register from "./pages/Register.jsx";
 
 const Game = () => {
   return (
@@ -12,6 +13,7 @@ const Game = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </main>
       <footer className="text-white/50 font-primary text-sm text-center my-5 font-extrabold uppercase">©{new Date().getFullYear()} - SpeedQuiz Team ❤️</footer>
