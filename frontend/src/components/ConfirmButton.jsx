@@ -1,8 +1,12 @@
-const ConfirmButton = ({ content, onClick, color, text_color}) => {
+const ConfirmButton = ({ content, onClick, customClasses }) => {
+
+  const defaultClasses = "w-full mt-4 -rotate-1 bg-verdinoCarino py-4 md:py-5 text-xl md:text-4xl text-black";
+  const classToUse = customClasses || defaultClasses;
+
   return (
     <button 
       onClick={onClick}
-      className={`w-full mt-4 md:-rotate-1 ${color || "bg-verdinoCarino"} border-3 border-neroNonNero shadow-buttons py-4 md:py-5 text-1xl md:text-4xl font-black uppercase ${text_color || "text-black"} hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer`}
+      className={`border-3 border-neroNonNero shadow-buttons font-black uppercase hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer ${classToUse}`}
     >
       {content}
     </button>
