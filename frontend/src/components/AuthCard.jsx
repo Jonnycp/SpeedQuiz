@@ -29,7 +29,7 @@ const AuthCard = ({isLogin}) => {
                     <input 
                     type="text"
                     id="username"
-                    placeholder="username"
+                    placeholder="Nome di gioco"
                     value={username} required
                     onChange={e => setUsername(e.target.value)} 
                     className="bg-white px-4 py-3 border-3 shadow-buttons border-neroNonNero"></input>
@@ -39,7 +39,7 @@ const AuthCard = ({isLogin}) => {
             <div className="flex flex-col gap-1">
                 <label htmlFor="email" className="font-bold uppercase text-black select-none">Email</label>
                 <input
-                type="text"
+                type="email"
                 id="email"
                 placeholder="nome@esempio.it"
                 value={email} required
