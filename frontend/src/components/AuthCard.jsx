@@ -12,12 +12,12 @@ const AuthCard = ({isLogin}) => {
        <div className=" font-primary w-full flex flex-col my-10 md:my-20">
             <div className="relative w-full max-w-md mx-auto">
                 <div className="absolute -top-6 left-4 z-10 bg-white border-3 border-neroNonNero shadow-buttons px-4 py-2">
-                   <h2 className="text-terziary font-extrabold text-xl uppercase select-none">SPEEDQUIZ</h2>
+                   <h2 className="text-terziary font-extrabold text-2xl uppercase select-none">SPEEDQUIZ</h2>
             </div>
        
            <form className="w-full bg-white border-3 border-neroNonNero shadow-buttons px-10 py-10 flex flex-col gap-6">
             <div className="text-center">
-                <h1 className="font-extrabold md:text-5xl uppercase mt-3 select-none">
+                <h1 className="font-extrabold text-5xl uppercase mt-3 select-none">
                     {isLogin? "Accedi" : "Crea un account"}
                 </h1>
                 <p className="text-black text-sm normal-case select-none">Pronto a sfidare i tuoi amici?</p>
