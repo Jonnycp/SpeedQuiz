@@ -1,7 +1,7 @@
 const ResultPlayer = ({ username, position, points }) => {
   return (
     <div
-      className={`flex items-center bg-white border-3 border-neroNonNero shadow-buttons p-5 font-primary`}
+      className={`flex items-center bg-white border-3 border-neroNonNero shadow-buttons py-2 md:py-5 px-5 font-primary`}
     >
       <div className="flex items-center grow gap-3">
         <span className="text-black/40 text-2xl font-bold mr-6">
