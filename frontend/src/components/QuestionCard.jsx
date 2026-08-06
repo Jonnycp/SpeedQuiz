@@ -7,7 +7,7 @@ import GamePhase from "./GamePhase"
 const Question = () => {
 
     return(
-        <div className="flex flex-col items-center mt-10 md:mt-40 px-4 gap-6 w-full max-w-2xl mx-auto"> 
+        <div className="flex flex-col items-center mt-30 md:mt-50 px-4 gap-6 w-full max-w-2xl mx-auto"> 
             <div className="relative w-full bg-white shadow-buttons border-3 border-neroNonNero px-6 py-6 md:px-17 md:py-8 rounded-2xl select-none">
                 <h2 className="text-lg md:text-3xl font-extrabold text-center">Tre cose che vorresti dire a Ferrara
 
@@ -21,7 +21,7 @@ const Question = () => {
                 <div className="flex flex-col gap-5 *:w-full *:px-4 md:*:px-6 *:py-3 md:*:py-4 *:text-sm md:*:text-lg *:border-3 *:border-neroNonNero *:shadow-buttons mt-7 *:placeholder:text-gray-400">
                     <input placeholder="Inserisci la risposta..." className="bg-white py-3 -rotate-[1.2deg]"></input>
                     <input placeholder="Inserisci la risposta..." className="bg-white py-3 rotate-1"></input>
-                    <input placeholder="Inserisci la risposta..." className="bg-white py-3"></input>
+                    <input placeholder="Inserisci la risposta..." className="bg-white py-3 md:z-10"></input>
                 </div>
             
                 <div className="w-1/2 mx-auto mt-9">
