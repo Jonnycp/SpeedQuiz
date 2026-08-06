@@ -5,6 +5,9 @@ import background from "../assets/background.png";
 
 import Home from "./pages/Home.jsx";
 import Lobby from "./pages/Lobby.jsx";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
+import Question from "./components/QuestionCard.jsx";
 
 const Game = () => {
   return (
@@ -15,6 +18,9 @@ const Game = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/lobby" element={<Lobby />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/question" element={<Question />} />
         </Routes>
       </main>
       <footer className="text-white/50 font-primary text-sm text-center my-5 font-extrabold uppercase selection:bg-primary selection:text-black">©{new Date().getFullYear()} - SpeedQuiz Team ❤️</footer>
@@ -23,3 +29,4 @@ const Game = () => {
 };
 
 export default Game;
+
