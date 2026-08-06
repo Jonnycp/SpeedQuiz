@@ -7,7 +7,7 @@ import Home from "./pages/Home.jsx";
 import Lobby from "./pages/Lobby.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
-import Question from "./components/QuestionCard.jsx";
+import Question from "./pages/Question.jsx";
 
 const Game = () => {
   return (
