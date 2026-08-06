@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 
 import Home from "./pages/Home.jsx";
 import Lobby from "./pages/Lobby.jsx";
+import Leaderboard from "./pages/Leaderboard.jsx";
 
 const Game = () => {
   return (
@@ -13,6 +14,7 @@ const Game = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/lobby" element={<Lobby />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
         </Routes>
       </main>
       <footer className="text-white/50 font-primary text-sm text-center my-5 font-extrabold uppercase selection:bg-primary selection:text-black">©{new Date().getFullYear()} - SpeedQuiz Team ❤️</footer>
