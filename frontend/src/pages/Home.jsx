@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import Header from "../components/Header";
 import LobbyCard from "../components/LobbyCard";
+import SectionTitle from "../components/SectionTitle";
 
 const Home = () => {
   const username = "Jonathan";
@@ -67,11 +68,7 @@ const Home = () => {
       </section>
 
       <section className="mx-10">
-        <div className="flex items-center gap-2 after:flex-1 after:h-0.5 after:bg-black/80">
-          <h2 className="text-xl -rotate-1 uppercase bg-terziary border-3 border-neroNonNero shadow-buttons inline py-2 px-3 mx-auto select-none text-white font-extrabold">
-            Esplora le stanze
-          </h2>
-        </div>
+        <SectionTitle title="Esplora le stanze" />
 
         <div className="flex flex-wrap justify-center gap-10 mt-10 pb-10">
           {mockLobbies.map((lobby, index) => (
