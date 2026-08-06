@@ -10,9 +10,9 @@ const AuthCard = ({isLogin}) => {
 
     return (
        <div className=" font-primary w-full flex flex-col my-10 md:my-20">
-            <div className="relative w-full max-w-md mx-auto">
-                <div className="absolute -top-6 left-4 z-10 bg-white border-3 border-neroNonNero shadow-buttons px-4 py-2">
-                   <h2 className="text-terziary font-extrabold text-2xl uppercase select-none">SPEEDQUIZ</h2>
+            <div className="relative w-full max-w-xl mx-auto mt-15">
+                <div className="absolute -top-6 left-4 z-10 bg-white border-3 border-neroNonNero shadow-buttons px-4 py-2 -rotate-2 ">
+                   <h2 className="text-terziary font-extrabold text-2xl uppercase select-none ">SPEEDQUIZ</h2>
             </div>
        
            <form className="w-full bg-white border-3 border-neroNonNero shadow-buttons px-10 py-10 flex flex-col gap-6">
