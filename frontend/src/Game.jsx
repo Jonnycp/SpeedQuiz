@@ -6,6 +6,7 @@ import background from "../assets/background.png";
 import Home from "./pages/Home.jsx";
 import Lobby from "./pages/Lobby.jsx";
 import Vote from "./pages/Vote.jsx";
+import Profile from "./pages/Profile.jsx";
 
 const Game = () => {
   return (
@@ -17,6 +18,7 @@ const Game = () => {
           <Route path="/" element={<Home />} />
           <Route path="/lobby" element={<Lobby />} />
           <Route path="/vote" element={<Vote />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>
       <footer className="text-white/50 font-primary text-sm text-center my-5 font-extrabold uppercase selection:bg-primary selection:text-black">©{new Date().getFullYear()} - SpeedQuiz Team ❤️</footer>
