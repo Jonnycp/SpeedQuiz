@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import ConfirmButton from "../components/ConfirmButton";
 import VoteCard from "../components/VoteCard";
 import TimeSlider from "../components/TimeSlider";
+import MainTitle from "../components/MainTitle";
 
 const Vote = () => {
   const [selectedVote, setSelectedVote] = useState(null);
@@ -43,13 +44,9 @@ const Vote = () => {
 
   return (
     <>
-        <GamePhase username={ternaData[0]?.username} />
-      <div className="flex flex-col items-center justify-center gap-4">
-        <h1 className="text-4xl uppercase font-extrabold tracking-wide text-white text-center">
-          Vota la terna migliore!
-        </h1>
-      </div>
-      <div className="flex justify-center mt-6">
+      <GamePhase username={ternaData[0]?.username} />
+      <div className="flex flex-col items-center justify-center relative z-10 md:mt-10 mt-5">
+        <MainTitle title="Vota la terna migliore!" />
         <TimeSlider tempoIniziale={60} />
       </div>
         
