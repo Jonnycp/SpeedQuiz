@@ -2,13 +2,11 @@ import { Link } from "react-router";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 
-
 const AuthCard = ({isLogin}) => {
     const [showPassword, setShowPassword] = useState(false)
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-
 
     return (
        <div className=" font-primary w-full flex flex-col my-10 md:my-20">
@@ -50,7 +48,7 @@ const AuthCard = ({isLogin}) => {
             </div>
 
             <div className="flex flex-col gap-1">
-                <label htmlFor="password"className="font-bold uppercase text-black select-none">Password</label>
+                <label htmlFor="password" className="font-bold uppercase text-black select-none">Password</label>
 
                 <div className="relative">
                     <input
@@ -61,11 +59,13 @@ const AuthCard = ({isLogin}) => {
                     minLength={6}
                     onChange={e => setPassword(e.target.value)}
                     className="w-full bg-white px-4 py-3 border-3 border-neroNonNero shadow-buttons"/>
+                    
                     <button 
                     type="button" className="absolute top-4 right-3 cursor-pointer"
                     onClick={() => setShowPassword(!showPassword)}> 
                         <Icon icon={showPassword ? "mdi:eye-off" : "mdi-eye"} width={22}/>
                     </button>
+                    
                 </div>
             </div>
 
