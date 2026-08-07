@@ -78,6 +78,7 @@ const Home = () => {
               players={lobby.playersConnected}
               players_max={lobby.maxPlayers}
               rotation={index % 2 === 0 ? "rotate-2" : "-rotate-2"}
+              content="Unisciti"
             />
           ))}
         </div>
