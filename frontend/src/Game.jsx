@@ -6,8 +6,9 @@ import background from "../assets/background.png";
 import Home from "./pages/Home.jsx";
 import Lobby from "./pages/Lobby.jsx";
 import Vote from "./pages/Vote.jsx";
-import Login from "./pages/Login.jsx"
+import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import Question from "./pages/Question.jsx";
 
 const Game = () => {
   return (
@@ -24,10 +25,11 @@ const Game = () => {
         </div>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/lobby" element={<Lobby />} />
-          <Route path="/vote" element={<Vote />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/lobby" element={<Lobby />} />
+          <Route path="/vote" element={<Vote />} />
+          <Route path="/question" element={<Question />} />
         </Routes>
         <footer className="text-white/50 font-primary text-sm text-center py-5 font-extrabold uppercase selection:bg-primary selection:text-black">
           ©{new Date().getFullYear()} - SpeedQuiz Team ❤️
