@@ -44,13 +44,13 @@ const Vote = () => {
 
   return (
     <>
-      <GamePhase username={ternaData[0]?.username} />
-      <div className="flex flex-col items-center justify-center relative z-10 md:mt-10 mt-5">
+      <GamePhase underPhase="Round 1 di 3" username={ternaData[0]?.username} />
+      <section className="flex flex-col items-center justify-center relative z-10 md:mt-10 mt-5">
         <MainTitle title="Vota la terna migliore!" />
         <TimeSlider tempoIniziale={60} />
-      </div>
+      </section>
         
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 mt-6 flex-1 md:px-30">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-x-8 mt-6 flex-1 md:px-30">
         {ternaData.map((data) => (
           <VoteCard 
             key={data.id} 
@@ -61,7 +61,7 @@ const Vote = () => {
             onSelect={() => setSelectedVote(data.id)} 
           />
         ))}
-      </div>
+      </section>
     </>
   );
 };
