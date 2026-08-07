@@ -1,6 +1,6 @@
-const MainTitle = ({title}) => {
+const MainTitle = ({title, className}) => {
     return(
-        <h1 className="text-2xl md:text-4xl uppercase font-extrabold tracking-wide text-white text-center">
+        <h1 className={`uppercase font-extrabold tracking-wide text-white text-center ${className || "text-2xl md:text-4xl"}`}>
             {title}
         </h1>
     )
