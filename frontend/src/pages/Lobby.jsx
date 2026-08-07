@@ -61,7 +61,6 @@ const Lobby = () => {
                         key={index}
                         username={player}
                         isHost={index === 0}
-                        imageUser={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${player}`}
                         rotation={index % 2 === 0 ? "md:rotate-0" : "md:-rotate-1"}
                     />
                 ))}

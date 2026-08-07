@@ -2,7 +2,7 @@ import { Link } from "react-router";
 
 const Header = ({ username }) => {
   return (
-    <header className="font-primary bg-white px-5 md:px-10 py-3 flex items-center border-b-3 border-neroNonNero shadow-buttons select-none z-10">
+    <header className="font-primary bg-white px-5 md:px-10 py-3 flex items-center border-b-3 border-neroNonNero shadow-buttons select-none relative z-10">
       <Link className="flex-1" to="/">
         <h1 className="text-terziary inline-block font-primary font-extrabold text-3xl uppercase -rotate-1 hover:scale-110 transition-all duration-300">
           SPEEDQUIZ
