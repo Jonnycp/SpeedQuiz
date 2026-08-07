@@ -5,7 +5,7 @@ const Question = () => {
 
     return(
         <>
-        <GamePhase/>
+        <GamePhase underPhase="Round 1 di 3" username="Jonathan" />
         <QuestionCard/>
         </>
 
