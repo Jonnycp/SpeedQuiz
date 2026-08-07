@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 
 const VoteCard = ({ username, phrases = [], host=false, isSelected, onSelect }) => {
     return(
-        <div className="relative m-8 bg-white font-primary font-extrabold flex flex-col items-start pt-12 pb-6 px-4 md:py-10 md:px-8 border-3 border-neroNonNero shadow-buttons rounded-xl hover:-translate-y-1 transition-transform">
+        <div className="relative m-8 bg-white font-primary font-extrabold flex flex-col items-start pt-12 pb-6 px-4 md:py-10 md:px-8 border-3 border-neroNonNero shadow-buttons hover:-translate-y-1 transition-transform">
             
             <div className="absolute -top-6 left-6 flex items-center z-10">
                 <div className="w-12 h-12 rounded-full border-3 border-neroNonNero flex items-center justify-center overflow-hidden z-10 ">
@@ -22,14 +22,14 @@ const VoteCard = ({ username, phrases = [], host=false, isSelected, onSelect }) 
             </div>
             <div className="flex flex-col gap-4 w-full mt-2">
                 {phrases.map((phrase, index) => (
-                    <div key={index} className="text-neroNonNero italic text-lg md:text-xl font-extrabold leading-tight">
+                    <span key={index} className="text-neroNonNero italic text-lg md:text-xl font-extrabold leading-tight">
                         "{phrase}"
-                    </div>
+                    </span>
                 ))}
             </div>
             <div className="w-[92%] mx-auto md:w-full mt-5">
                 <ConfirmButton 
-                    content={`VOTA`} 
+                    content={isSelected ? `già VOTATO` : `VOTA`} 
                     onClick={onSelect} 
                     customClasses={`w-full py-4 md:py-5 text-xl md:text-2xl ${
                         isSelected 
