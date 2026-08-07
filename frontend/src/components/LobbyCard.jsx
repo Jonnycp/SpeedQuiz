@@ -1,4 +1,5 @@
-const LobbyCard = ({ title, players,players_max, rotation }) => {
+const LobbyCard = ({ title, players,players_max, rotation, content}) => {
+  const extraPlayers = players_max - players;
   return (
     <div className={`bg-white border-3 border-neroNonNero shadow-buttons p-6 py-8 ${rotation} flex flex-col justify-between font-primary hover:-translate-y-2 transition-transform cursor-pointer`}>
       <div>
@@ -22,15 +23,13 @@ const LobbyCard = ({ title, players,players_max, rotation }) => {
             className="w-8 h-8 rounded-full border-3 border-neroNonNero"
             src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=genbi`}
             alt={`Avatar di Genbi`}
-          /><img
-            className="w-8 h-8 rounded-full border-3 border-neroNonNero"
-            src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=genbi`}
-            alt={`Avatar di Genbi`}
-          />+3
+          />
+            {extraPlayers > 0 && <span className="ml-2">+{extraPlayers}</span>}
+
         </div>
 
         <button className="uppercase px-4 py-2 bg-secondary text-black shadow-buttons border-3 border-neroNonNero font-extrabold">
-          Unisciti →
+          {content} →
         </button>
       </div>
     </div>
