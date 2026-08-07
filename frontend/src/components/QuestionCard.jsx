@@ -31,6 +31,3 @@ const Question = () => {
     )
 }
 export default Question
-
-// mx-30 nel primo div al posto di max-w-2xl mx-auto
-// w-[80%] nel form 

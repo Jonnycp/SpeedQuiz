@@ -2,6 +2,8 @@ import { Link } from "react-router";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 
+import ConfirmButton from "./ConfirmButton";
+
 const AuthCard = ({isLogin}) => {
     const [showPassword, setShowPassword] = useState(false)
     const [username, setUsername] = useState("")
@@ -17,7 +19,7 @@ const AuthCard = ({isLogin}) => {
        
            <form className="w-full bg-white border-3 border-neroNonNero shadow-buttons px-10 py-10 flex flex-col gap-6">
             <div className="text-center">
-                <h1 className="font-extrabold text-5xl uppercase mt-3 select-none">
+                <h1 className="font-extrabold text-5xl uppercase mt-4 select-none">
                     {isLogin? "Accedi" : "Crea un account"}
                 </h1>
                 <p className="text-black text-sm normal-case select-none">Pronto a sfidare i tuoi amici?</p>
@@ -25,14 +27,15 @@ const AuthCard = ({isLogin}) => {
 
             {!isLogin && (
                 <div className="flex flex-col gap-1">
-                    <label htmlFor="username" className="font-bold uppercase text-black ">Username</label>
+                    <label htmlFor="username" className="font-bold uppercase text-black">Username</label>
                     <input 
                         type="text"
                         id="username"
                         placeholder="Nome di gioco"
+                        maxLength={15}
                         value={username} required
                         onChange={e => setUsername(e.target.value)} 
-                        className="bg-white px-4 py-3 border-3 shadow-buttons border-neroNonNero"></input>
+                        className="bg-white px-4 py-3 border-3 shadow-buttons border-neroNonNero placeholder:text-gray-500"></input>
                 </div>
             )}
 
@@ -44,7 +47,7 @@ const AuthCard = ({isLogin}) => {
                     placeholder="nome@esempio.it"
                     value={email} required
                     onChange={e => setEmail(e.target.value)}
-                    className="bg-white px-4 py-3 border-3 border-shadow border-neroNonNero placeholder:text-gray-400 normal-case shadow-buttons"></input>
+                    className="bg-white px-4 py-3 border-3 border-shadow border-neroNonNero placeholder:text-gray-500 shadow-buttons"></input>
             </div>
 
             <div className="flex flex-col gap-1">
@@ -58,7 +61,7 @@ const AuthCard = ({isLogin}) => {
                         value={password} required
                         minLength={6}
                         onChange={e => setPassword(e.target.value)}
-                        className="w-full bg-white px-4 py-3 border-3 border-neroNonNero shadow-buttons"/>
+                        className="w-full bg-white px-4 py-3 border-3 border-neroNonNero shadow-buttons placeholder:text-gray-500"/>
                     
                     <button 
                         type="button" className="absolute top-4 right-3 cursor-pointer"
@@ -69,11 +72,10 @@ const AuthCard = ({isLogin}) => {
                 </div>
             </div>
 
-            <button 
-                type="submit"
-                className="bg-primary border-3 py-3 px-3 border-neroNonNero shadow-buttons cursor-pointer hover:scale-105 text-white uppercase font-bold">
-                {isLogin ? "Accedi" : "Registrati"}
-            </button>
+            <ConfirmButton content={isLogin ? "Accedi" : "Registrati"} 
+                customClasses="bg-primary font-white text-white uppercase font-bold text-2xl py-3 mt-3">
+            </ConfirmButton>
+
             </form>
 
             <p className="text-white text-center mt-6 text-sm normal-case select-none"> 
