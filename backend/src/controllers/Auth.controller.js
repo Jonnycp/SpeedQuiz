@@ -4,7 +4,7 @@ const generateJWT = require("../utils/generateJWT.js")
 
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 
-function gestioneRefresh(userId){
+async function gestioneRefresh(userId){
     const refreshToken = generateJWT.refreshToken(userId);
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
 
@@ -24,7 +24,7 @@ function gestioneRefresh(userId){
 
 /**
  * Enpoint POST /login
- * Effettua il login creando un JWT token
+ * Effettua il login creando un JWT token e Refresh token
  * Parametri body: email, password
  */
 async function login(req, res) {
@@ -50,6 +50,11 @@ async function login(req, res) {
     }
 
     //* Gestione refreshToken (genera, salva in db, invia cookie)
+    //Se un attaccante fa più volte il login (attacco DDos), invalido il precedente token
+    const refreshToken = req.cookies.refreshToken
+    if(refreshToken){
+        await RefreshToken.deleteOne({token: refreshToken})
+    }
     gestioneRefresh()
 
     //* Logga correttamente e invia risposta json
@@ -68,7 +73,7 @@ async function login(req, res) {
 
 /**
  * Enpoint POST /register
- * Effettua la registrazione di un nuovo utente
+ * Effettua la registrazione di un nuovo utente (e fai il login automatico)
  * Parametri body: email, password, username
  */
 async function register(req, res) {
@@ -109,7 +114,7 @@ async function register(req, res) {
 
     //* Gestione refreshToken (genera, salva in db, invia cookie)
     gestioneRefresh()
-    
+
     //* Restituzione json user
     return res.status(201).json({
       token: generateJWT.accessToken(newUser._id),
@@ -123,8 +128,32 @@ async function register(req, res) {
   }
 }
 
+/**
+ * Enpoint POST /logout
+ * Cancella sessione e invalida refreshToken del dispositivo
+ * Lascia loggato su altri dispositivi
+ */
+async function logout(req, res){
+  try{
+    const refreshToken = req.cookies.refreshToken
+    if(refreshToken){
+        await RefreshToken.deleteOne({token: refreshToken})
+    }
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.MODE === "production",
+      sameSite: "strict"
+    })
+    return res.status(200).json({message: "Logout effettuato con successo."})
+
+  } catch (err){
+    return res.status(500).json({ message: "Impossibile effettuare il logout ora." });
+  }
+}
+
 module.exports = {
   login,
   register,
+  logout
 };
-
