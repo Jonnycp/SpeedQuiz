@@ -1,10 +1,11 @@
 const User = require("../models/User.js");
 const RefreshToken = require("../models/RefreshToken.js")
 const generateJWT = require("../utils/generateJWT.js")
+const jwt = require("jsonwebtoken");
 
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 
-async function gestioneRefresh(userId){
+async function gestioneRefresh(res, userId){
     const refreshToken = generateJWT.refreshToken(userId);
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
 
@@ -55,7 +56,7 @@ async function login(req, res) {
     if(refreshToken){
         await RefreshToken.deleteOne({token: refreshToken})
     }
-    await gestioneRefresh()
+    await gestioneRefresh(res, user._id)
 
     //* Logga correttamente e invia risposta json
     return res.status(200).json({
@@ -113,7 +114,7 @@ async function register(req, res) {
     await newUser.save();
 
     //* Gestione refreshToken (genera, salva in db, invia cookie)
-    await gestioneRefresh()
+    await gestioneRefresh(res, newUser._id)
 
     //* Restituzione json user
     return res.status(201).json({
@@ -152,8 +153,51 @@ async function logout(req, res){
   }
 }
 
+/**
+ * Enpoint POST /refresh
+ * Nuovo accessToken da refreshToken
+ * Lascia loggato su altri dispositivi
+ */
+async function refresh(req, res){
+  try{
+    //* Verifica refreshToken
+    const refreshToken = req.cookies.refreshToken
+    if (!token) {
+      return res.status(401).json({ message: "Refresh token mancante." });
+    }
+
+    //* Decodifica per capire utente
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
+    const user = await User.findById(decoded.userId);
+    const refreshTokenDB = RefreshToken.findOne({token: refreshToken})
+
+    if(!user || refreshTokenDB !== token){
+        return res.status(403).json({message: "Refresh token non valido."})
+    }
+
+    //* Genera nuovo access Token
+    const newAccessToken = generateJWT.accessToken(user._id)
+    return res.status(200).json({
+        accessToken: newAccessToken
+    }) 
+
+    //* Rotation del refreshToken (refresh del refresh, per sicurezza ed evitare scadenza del refreshToken giusto quando viene chiamata)
+    await RefreshToken.deleteOne({token: refreshToken})
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.MODE === "production",
+      sameSite: "strict"
+    })
+
+    gestioneRefresh(res, user._id)
+  } catch (err){
+    return res.status(500).json({ message: "Refresh token scaduto o non valido." });
+  }
+}
+
 module.exports = {
   login,
   register,
-  logout
+  logout,
+  refresh
 };
