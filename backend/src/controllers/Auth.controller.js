@@ -55,7 +55,7 @@ async function login(req, res) {
     if(refreshToken){
         await RefreshToken.deleteOne({token: refreshToken})
     }
-    gestioneRefresh()
+    await gestioneRefresh()
 
     //* Logga correttamente e invia risposta json
     return res.status(200).json({
@@ -113,7 +113,7 @@ async function register(req, res) {
     await newUser.save();
 
     //* Gestione refreshToken (genera, salva in db, invia cookie)
-    gestioneRefresh()
+    await gestioneRefresh()
 
     //* Restituzione json user
     return res.status(201).json({
