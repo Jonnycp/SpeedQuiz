@@ -1,6 +1,8 @@
 const express = require("express"); //import express from "express";
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
+
 const indexRouter = require("./routes/index.js");
 
 dotenv.config();
@@ -10,6 +12,9 @@ const mongoUri = process.env.MONGODB_URI;
 
 // Parsing del body in JSON
 app.use(express.json());
+
+// Parsing dei cookie (per refresh token)
+app.use(cookieParser());
 
 //Router
 app.use("/api/v1/", indexRouter);
