@@ -1,16 +1,25 @@
 const User = require("../models/User.js");
-const jwt = require("jsonwebtoken");
+const RefreshToken = require("../models/RefreshToken.js")
+const generateJWT = require("../utils/generateJWT.js")
 
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 
-function generateJWT(userId){
-  const token = jwt.sign({
-        userId: userId,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" },
-    );
-  return token;
+function gestioneRefresh(userId){
+    const refreshToken = generateJWT.refreshToken(userId);
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+
+    await new RefreshToken({
+      token: refreshToken, 
+      userId: userId, 
+      expiresAt: expiresAt
+    }).save()
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true, //non accessibile da js
+      secure: process.env.MODE === "production", //solo per https (in prod)
+      sameSite: "strict", //cookie inviato solo se richiesta parte da stesso sito
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 giorni
+    })
 }
 
 /**
@@ -20,25 +29,32 @@ function generateJWT(userId){
  */
 async function login(req, res) {
   try {
+    //* Verifica presenza parametri body
     if (!req.body || !req.body.email.trim() || !req.body.password.trim()) {
       return res.status(400).json({ message: "Email e password sono obbigatori." });
     }
     const email = req.body.email.trim().toLowerCase();
     const password = req.body.password.trim();
 
+    //* Check se utente è registrato
     const user = await User.findOne({ email: email });
     if (!user) {
       return res.status(401).json({ message: "Email o password non valide" });
     }
 
+    //* Check se password è giusta
     // Confronta la password in db con quella inserita nel login con il metodo nello schema
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ message: "Email o password non valide" });
     }
 
+    //* Gestione refreshToken (genera, salva in db, invia cookie)
+    gestioneRefresh()
+
+    //* Logga correttamente e invia risposta json
     return res.status(200).json({
-        token: generateJWT(user._id),
+        token: generateJWT.accessToken(user._id),
         user: { 
           id: user._id, 
           username: user.username, 
@@ -57,7 +73,7 @@ async function login(req, res) {
  */
 async function register(req, res) {
   try {
-
+    //* Verifica presenza parametri body
     if (!req.body || !req.body.email.trim() || !req.body.password.trim() || !req.body.username.trim()) {
       return res.status(400).json({ message: "Email, password e username sono obbigatori." });
     }
@@ -66,6 +82,7 @@ async function register(req, res) {
     const password = req.body.password.trim();
     const username = req.body.username.trim().toLowerCase();
 
+    //* Verifica correttezza parametri
     if(password.length < 8){
       return res.status(400).json({message: "Scegli una password più sicura."})
     }
@@ -76,6 +93,7 @@ async function register(req, res) {
       return res.status(400).json({message: "Username non valido."})
     }
     
+    //* Check se email o username già usati
     const existingEmail = await User.findOne({email});
     const existingUsername = await User.findOne({username});
     
@@ -85,18 +103,22 @@ async function register(req, res) {
       return res.status(400).json({message: "Username già esistente. Prova con un altro ;)"});
     }
     
+    //* Salva utente in db
     const newUser = new User({username, email, password});
     await newUser.save();
+
+    //* Gestione refreshToken (genera, salva in db, invia cookie)
+    gestioneRefresh()
     
+    //* Restituzione json user
     return res.status(201).json({
-      token: generateJWT(newUser._id),
+      token: generateJWT.accessToken(newUser._id),
       user: { 
         id: newUser._id, 
         username: newUser.username, 
         email: newUser.email },
     });
   } catch (err){
-    console.error(err)
     return res.status(500).json({ message: "Impossibile effettuare la registrazione ora." });
   }
 }
@@ -105,3 +127,4 @@ module.exports = {
   login,
   register,
 };
+
