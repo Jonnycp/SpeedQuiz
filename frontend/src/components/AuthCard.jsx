@@ -59,7 +59,7 @@ const AuthCard = ({isLogin}) => {
                         id="password"
                         placeholder="••••••••"
                         value={password} required
-                        minLength={6}
+                        minLength={8}
                         onChange={e => setPassword(e.target.value)}
                         className="w-full bg-white px-4 py-3 border-3 border-neroNonNero shadow-buttons placeholder:text-gray-500"/>
                     
