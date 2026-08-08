@@ -1,21 +1,23 @@
-import express from "express";
-import dotenv from "dotenv";
-import mongoose from "mongoose";
-import indexRouter from "./routes/index.js";
+const express = require("express"); //import express from "express";
+const dotenv = require("dotenv");
+const mongoose = require("mongoose");
+const indexRouter = require("./routes/index.js");
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const mongoUri = process.env.MONGODB_URI;
 
+// Parsing del body in JSON
+app.use(express.json());
+
 //Router
 app.use("/api/v1/", indexRouter);
 
 // Rotta fallback (404)
 app.use((req, res) => {
-  res.status(404).json({ code: 404, error: "Route non trovata" });
+  res.status(404).json({ error: "Route non trovata" });
 });
-
 
 //Start mongo e  server
 if (mongoUri || mongoUri.length > 0) {

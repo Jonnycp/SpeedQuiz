@@ -13,16 +13,17 @@
   ],
   "license": "ISC",
   "author": "Jonathan Caputo, Luca Gentile, Angelica DeFeudis",
-  "type": "module",
+  "type": "commonjs",
   "main": "./src/server.js",
   "scripts": {
     "start": "node ./src/server.js",
-    "dev": "nodemon --watch src --ext ts,json --exec \"node src/server.js\"",
+    "dev": "nodemon --watch src --ext js,json --exec \"node src/server.js\"",
     "build": "tsc"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.9.1",
     "nodemon": "^3.1.14"
   }
