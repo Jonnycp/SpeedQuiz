@@ -26,7 +26,3 @@ function isAuth(req, res, next){
 module.exports = {
     isAuth
 }
-
-// controlla che la firma del token sia valida ossia che sia stata generata con la stessa chiave
-// verifica che il jwt non sia scaduto
-// decodifica il payload, restituendo il contenuto del token tipo lo userId

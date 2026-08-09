@@ -161,23 +161,23 @@ async function logout(req, res){
 async function refresh(req, res){
   try{
     //* Verifica refreshToken
-    const refreshToken = req.cookies.refreshToken
-    if (!token) {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
       return res.status(401).json({ message: "Refresh token mancante." });
     }
 
     //* Decodifica per capire utente
-    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
     const user = await User.findById(decoded.userId);
-    const refreshTokenDB = RefreshToken.findOne({token: refreshToken})
+    const refreshTokenDB = await RefreshToken.findOne({token: refreshToken});
 
-    if(!user || refreshTokenDB !== token){
-        return res.status(403).json({message: "Refresh token non valido."})
+    if(!user || !refreshTokenDB || refreshTokenDB.token !== refreshToken){
+        return res.status(401).json({message: "Refresh token non valido."})
     }
 
     //* Genera nuovo access Token
-    const newAccessToken = generateJWT.accessToken(user._id)
-    return res.status(200).json({
+    const newAccessToken = generateJWT.accessToken(user._id);
+    res.status(200).json({
         accessToken: newAccessToken
     }) 
 
@@ -189,9 +189,9 @@ async function refresh(req, res){
       sameSite: "strict"
     })
 
-    gestioneRefresh(res, user._id)
+    await gestioneRefresh(res, user._id)
   } catch (err){
-    return res.status(500).json({ message: "Refresh token scaduto o non valido." });
+    return res.status(401).json({ message: "Refresh token scaduto o non valido." });
   }
 }
 
