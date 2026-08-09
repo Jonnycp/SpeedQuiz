@@ -26,16 +26,13 @@ app.use((req, res) => {
 
 //Start mongo e  server
 if (mongoUri || mongoUri.length > 0) {
-  mongoose
-    .connect(mongoUri)
-    .then(() => {
+  mongoose.connect(mongoUri).then(() => {
       console.log("Connessione a MongoDB riuscita!");
 
       app.listen(PORT, () => {
         console.log(`Backend server partito su: http://localhost:${PORT}`);
       });
-    })
-    .catch((err) => {
+    }).catch((err) => {
       console.error("ERRORE: Connessione MongoDB - Causa:", err);
     });
 } else {
