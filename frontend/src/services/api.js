@@ -1,0 +1,76 @@
+const API_BASE = "/api/v1";
+
+async function fetchCustom(endpoint, options = {}) {
+  const accessToken = localStorage.getItem("accessToken");
+
+  //* Inseriamo headers Content Type e Bearer se abbiamo accessToken
+  const config = {
+    ...options,
+    credentials: "include", 
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    },
+  };
+
+  //* Fetch iniziale a /endpoint
+  let resIniziale = await fetch(`${API_BASE}${endpoint}`, config);
+
+  //* Gestione refreshToken
+  if (resIniziale.status == 401) {
+    try {
+      const refreshRes = await fetch(`${API_BASE}/refresh`, {
+        method: "POST",
+        credentials: "include", //includere cookie refreshToken
+      });
+    
+      //* Se refresh va in errore... slogga utente
+      const refreshData = await refreshRes.json();
+      if (!refreshRes.ok)
+        throw new Error(refreshData.message || "Refresh dell'accessToken non riuscito.");
+      
+      //* Se refresh tutto ok... set localStore nuovo accessToken
+      const newAccessToken = refreshData.accessToken;
+      localStorage.setItem("accessToken", newAccessToken);
+
+      //* Riprova richiesta iniziale con nuovo accessToken
+      config.headers.Authorization = `Bearer ${newAccessToken}`
+      resIniziale = await fetch(`${API_BASE}${endpoint}`, config);
+
+    } catch (refreshErr) {
+        localStorage.removeItem("accessToken")
+        throw refreshErr;
+    }
+  }
+
+  //* Gestione altri errori della richiesta iniziale
+  const data = await resIniziale.json();
+  if (!resIniziale.ok) throw new Error(data.message || "Errore del server");
+  return data;
+}
+
+export async function loginAPI(email, password){
+    return fetchCustom("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({
+            email, password
+        })
+    })
+}
+
+export async function registerAPI(email, password, username){
+    return fetchCustom("/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+            username, email, password
+        })
+    })
+}
+
+export async function logoutAPI(){
+    return fetchCustom("/auth/logout", {
+        method: "POST"
+    })
+}
+
