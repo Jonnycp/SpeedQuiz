@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   //* Login utente
-  async function loginUser(email, password) {
+  async function login(email, password) {
     const data = await loginAPI(email, password);
     localStorage.setItem("accessToken", data.token);
     localStorage.setItem("loggedUser", JSON.stringify(data.user));
@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
   }
 
   //* Registra utente
-  async function registerUser(username, email, pasword) {
+  async function register(username, email, pasword) {
     const data = await registerAPI(username, email, password);
     localStorage.setItem("accessToken", data.token);
     localStorage.setItem("loggedUser", JSON.stringify(data.user));
@@ -35,7 +35,7 @@ export function AuthProvider({ children }) {
   }
 
   //* Logout utente
-  async function logoutUtente() {
+  async function logout() {
     const data = await logoutAPI();
     localStorage.removeItem("accessToken");
     localStorage.removeItem("loggedUser");
