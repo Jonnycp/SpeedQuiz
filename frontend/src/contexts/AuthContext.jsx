@@ -1,0 +1,55 @@
+import { createContext, useContext, useState, useEffect } from "react";
+import { loginAPI, registerAPI, logoutAPI } from "../services/api";
+
+const AuthContext = createContext();
+
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    const storedUser = localStorage.getItem("loggedUser");
+
+    if (token && storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+
+    setIsLoading(false);
+  }, []);
+
+  //* Login utente
+  async function loginUser(email, password) {
+    const data = await loginAPI(email, password);
+    localStorage.setItem("accessToken", data.token);
+    localStorage.setItem("loggedUser", JSON.stringify(data.user));
+    setUser(data.user);
+  }
+
+  //* Registra utente
+  async function registerUser(username, email, pasword) {
+    const data = await registerAPI(username, email, password);
+    localStorage.setItem("accessToken", data.token);
+    localStorage.setItem("loggedUser", JSON.stringify(data.user));
+    setUser(data.user);
+  }
+
+  //* Logout utente
+  async function logoutUtente() {
+    const data = await logoutAPI();
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("loggedUser");
+    setUser(null);
+  }
+
+  return (
+    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+//* Hook personalizzato per accedere a context
+export function useAuth() {
+  return useContext(AuthContext);
+}
