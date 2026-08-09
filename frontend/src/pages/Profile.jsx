@@ -9,21 +9,46 @@ const Profile = () => {
     const partiteVinte = 10;
     const partiteGiocate = 15;
     const percentualeVittoria = Math.round((partiteVinte / partiteGiocate) * 100);
+    const username = "Jonny";
+    const displayUsername = "GERARDO";
+    const email = "jonny@speedquiz.it"; 
 
     return (
         <>
 
         <div>
-            <Header username="Jonathan" />
+            <Header username={username} />
         </div>
 
+        <section className="bg-white border-4 border-neroNonNero shadow-[12px_12px_0_0_#000] w-full max-w-5xl p-6 md:p-10 mb-12 flex flex-col md:flex-row items-center gap-8 -rotate-[0.5deg]">
+        
+        {/* Avatar Grande */}
+        <div className="w-32 h-32 md:w-40 md:h-40 shrink-0 rounded-full border-4 border-neroNonNero shadow-[6px_6px_0_0_#000] bg-[#FFD13B] overflow-hidden flex items-center justify-center">
+          <img 
+            src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${username}`} 
+            alt="Avatar" 
+            className="w-[90%] h-[90%] object-cover"
+          />
+        </div>
 
+        {/* Info Testuali & Statistiche */}
+        <div className="flex flex-col w-full text-center md:text-left">
+          <h1 className="text-xl md:text-2xl font-black uppercase text-[#5945FF] tracking-wide mb-1">
+            CIAO, {username}
+          </h1>
+          <p className="text-sm md:text-base font-bold text-gray-600 mb-6">
+            {email}
+          </p>
+
+          {/* Griglia Statistiche */}
         <div className="flex flex-col md:flex-row gap-4 md:gap-8 mt-10 mx-5 md:mx-28 xl:mx-72">
             <StatCardProfile value='7083' label="Punti" bgColor="bg-primary" rotation="-rotate-1" />
             <StatCardProfile value='10' label="Partite vinte" bgColor="bg-secondary" rotation="-rotate-1" />
             <StatCardProfile value='15' label="Partite giocate" bgColor="bg-[#cac0ff]" rotation="-rotate-1" />
             <StatCardProfile value='66' label="Percentuale di vittoria" bgColor="bg-verdinoCarino" rotation="-rotate-1" />
         </div>
+        </div>
+      </section>
 
         <div>
             <SectionTitle title="Le tue partite" />
