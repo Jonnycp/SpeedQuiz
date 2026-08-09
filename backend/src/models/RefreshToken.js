@@ -14,8 +14,8 @@ const refreshTokenSchema = new mongoose.Schema({
     expiresAt: {
         type: Date,
         required: true,
+        expires: 0, // aggiunge un indice TTL che somma alla Date 0 secondi in modo che non appena scade la Date l'intero documento viene cancellato tramite un thread dedicato
     }
 })
 
-
-module.exports = mongoose.model("RefreshToken", refreshTokenSchema)
+module.exports = mongoose.model("RefreshToken", refreshTokenSchema);
