@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router";
 
 const Header = ({ username }) => {
   const location = useLocation();
-  const isProfilePage = location.pathname === "/Profile";
+  const isProfilePage = location.pathname === "/profile";
   return (
     <header className="font-primary bg-white px-5 md:px-10 py-3 flex items-center border-b-3 border-neroNonNero shadow-buttons select-none z-10">
       <Link className="flex-1" to="/">
