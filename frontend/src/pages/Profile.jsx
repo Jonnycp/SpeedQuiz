@@ -16,7 +16,7 @@ const Profile = () => {
             { id: 1, title: "Stanza di tizio 1", players: 3, maxPlayers: 3, isWinner: false },
             { id: 2, title: "Vittoria #1", players: 2, maxPlayers: 3, isWinner: true },
             { id: 3, title: "Stanza di tizio 2", players: 1, maxPlayers: 3, isWinner: false },
-            { id: 4, title: "Stanza di tizio 3", players: 3, maxPlayers: 6, isWinner: false }
+            { id: 4, title: "Stanza di tizio 3", players: 5, maxPlayers: 6, isWinner: false }
         ]
     };
     const winRate = datiUtente.partiteVinte / datiUtente.partiteGiocate * 100;
@@ -80,15 +80,14 @@ const Profile = () => {
                     <div className="w-full">
                         <SectionTitle title="Le tue partite" />
                         
-                        <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 hide-scrollbar">
-                            {datiUtente.partite.map((partita) => (
-                                <div key={partita.id} className="w-[80vw] snap-center md:w-auto h-full">
-                                    <LobbyCard 
+                            <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 hide-scrollbar">                            {datiUtente.partite.map((partita) => (
+                                <div key={partita.id} className="w-[80vw] shrink-0 snap-center md:w-auto h-full">
+                                    <LobbyCard
                                         title={partita.title} 
                                         players={partita.players} 
                                         players_max={partita.maxPlayers} 
                                         rotation="-rotate-1" 
-                                        content={partita.isWinner ? "UNISCITI" : "RIVEDI"} 
+                                        content={"RIVEDI"} 
                                         isWinner={partita.isWinner} 
                                     />
                                 </div>
