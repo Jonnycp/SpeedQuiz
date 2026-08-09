@@ -9,7 +9,7 @@ function isAuth(req, res, next){
         return token = authHeader.split(" ")[1];
     }
     if(!token){
-        return res.status(401).json({message: 'Access Token mancante.'})
+        return res.status(401).json({message: 'Access Token mancante.'});
     }
 
     //* Decodifica e verifica accessToken

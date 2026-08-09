@@ -37,8 +37,7 @@ const SingleInput = ({
           <button
             type="button"
             className="absolute top-4 right-3 cursor-pointer"
-            onClick={() => setShowPassword(!showPassword)}
-          >
+            onClick={() => setShowPassword(!showPassword)}>
             <Icon icon={showPassword ? "mdi:eye-off" : "mdi-eye"} width={22} />
           </button>
         )}
