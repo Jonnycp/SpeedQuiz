@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import ConfirmButton from "./ConfirmButton";
 
-const AuthCard = ({ isLogin, children }) => {
+const AuthCard = ({ isLogin, children, onSubmit }) => {
   return (
     <div className="font-primary w-full flex flex-col my-10 md:my-20">
       
@@ -12,7 +12,7 @@ const AuthCard = ({ isLogin, children }) => {
           </h2>
         </div>
 
-        <section className="w-full bg-white border-3 border-neroNonNero shadow-buttons px-10 py-10 flex flex-col gap-6">
+        <form className="w-full bg-white border-3 border-neroNonNero shadow-buttons px-10 py-10 flex flex-col gap-6" onSubmit={onSubmit}>
           <div className="text-center">
             <h1 className="font-extrabold text-4xl uppercase mt-4 select-none">
               {isLogin ? "Accedi" : "Crea un account"}
@@ -26,9 +26,10 @@ const AuthCard = ({ isLogin, children }) => {
 
           <ConfirmButton
             content={isLogin ? "Accedi" : "Registrati"}
+            type="submit"
             customClasses="bg-primary font-white text-white uppercase font-bold text-2xl py-3"
           />
-        </section>
+        </form>
 
         <p className="text-white text-center mt-6 text-sm normal-case select-none">
           {isLogin ? "Non hai un account?" : "Hai già un account?"}
