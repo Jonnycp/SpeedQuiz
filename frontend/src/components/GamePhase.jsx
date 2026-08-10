@@ -1,3 +1,4 @@
+import ConfirmButton from "./ConfirmButton";
 const GamePhase = ({ phase, underPhase, username }) => {
   return (
     <header className="font-primary px-4 md:px-10 py-3 md:py-5 flex flex-wrap items-center justify-between gap-4 select-none z-10 w-full">
@@ -13,21 +14,31 @@ const GamePhase = ({ phase, underPhase, username }) => {
       </div>
 
       <div className="flex items-center gap-2 md:gap-4 ml-auto">
-        <button className="flex items-center gap-2 bg-white px-2 py-1.5 md:px-4 md:py-2 border-3 border-neroNonNero shadow-buttons cursor-pointer hover:bg-primary hover:text-white hover:scale-90 hover:rotate-1 transition-all duration-200">
-          <img
-            className="w-6 h-6 md:w-8 md:h-8 rounded-full border-2 border-neroNonNero bg-gray-100"
-            src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${username}`}
-            alt={`Avatar di ${username}`}
-          />
+        <ConfirmButton
+                  bgColor="white"
+                  textColor="black"
+                  content={
+                    <div className="flex items-center gap-2">
+                      <img
+                        className="w-6 h-6 md:w-8 md:h-8 rounded-full border-2 border-neroNonNero bg-gray-100"
+                        src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${username}`}
+                        alt={`Avatar di ${username}`}
+                      />
+                      <span className="font-extrabold text-xs md:text-sm uppercase max-w-20 md:max-w-none">
+                        {username}
+                      </span>
+                    </div>
+                  }
+                  customClasses="!px-2 !py-1.5 md:!px-4 md:!py-2 hover:bg-primary hover:text-white hover:scale-90 hover:rotate-1"
+                />
 
-          <span className="font-extrabold text-xs md:text-sm uppercase text-black max-w-20 md:max-w-none">
-            {username}
-          </span>
-        </button>
-
-        <button className="bg-[#E53935] text-white font-black px-6 py-2 uppercase border-3 border-neroNonNero shadow-buttons cursor-pointer hover:bg-red-700 hover:scale-95 active:translate-y-1 active:translate-x-1 active:shadow-none transition-all duration-300">
-          Esci
-        </button>
+          <ConfirmButton
+                    bgColor="[#E53935]"
+                    textColor="white"
+                    content="ESCI"
+                    onClick={() => console.log("Uscita dalla fase di gioco...")}
+                    customClasses="hover:bg-red-700"
+                  />
       </div>
     </header>
   );
