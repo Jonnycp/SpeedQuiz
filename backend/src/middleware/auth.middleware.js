@@ -6,7 +6,7 @@ function isAuth(req, res, next){
 
     //* Ottieni accessToken
     if(authHeader && authHeader.startsWith('Bearer')){
-        return token = authHeader.split(" ")[1];
+        token = authHeader.split(" ")[1];
     }
     if(!token){
         return res.status(401).json({message: 'Access Token mancante.'});
@@ -15,7 +15,7 @@ function isAuth(req, res, next){
     //* Decodifica e verifica accessToken
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET); 
-        req.userId = { id: decoded.userId };
+        req.userId = decoded.userId;
         next();
         
     } catch (err) {
