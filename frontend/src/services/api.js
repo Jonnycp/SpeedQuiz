@@ -1,8 +1,8 @@
 const API_BASE = "/api/v1";
 
-async function fetchCustom(endpoint, options = {}) {
+async function fetchCustom(endpoint, options = {}, noRefresh=false) {
   const accessToken = localStorage.getItem("accessToken");
-
+  
   //* Inseriamo headers Content Type e Bearer se abbiamo accessToken
   const config = {
     ...options,
@@ -18,9 +18,9 @@ async function fetchCustom(endpoint, options = {}) {
   let resIniziale = await fetch(`${API_BASE}${endpoint}`, config);
 
   //* Gestione refreshToken
-  if (resIniziale.status == 401) {
+  if (resIniziale.status == 401 && !noRefresh) {
     try {
-      const refreshRes = await fetch(`${API_BASE}/refresh`, {
+      const refreshRes = await fetch(`${API_BASE}/auth/refresh`, {
         method: "POST",
         credentials: "include", //includere cookie refreshToken
       });
@@ -56,16 +56,16 @@ export async function loginAPI(email, password){
         body: JSON.stringify({
             email, password
         })
-    })
+    }, true)
 }
 
-export async function registerAPI(email, password, username){
+export async function registerAPI(username, email, password){
     return fetchCustom("/auth/register", {
         method: "POST",
         body: JSON.stringify({
             username, email, password
         })
-    })
+    }, true)
 }
 
 export async function logoutAPI(){
