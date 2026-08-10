@@ -10,6 +10,7 @@ import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Question from "./pages/Question.jsx";
 import Leaderboard from "./pages/Leaderboard.jsx";
+import Profile from "./pages/Profile.jsx";
 
 const Game = () => {
   return (
@@ -32,6 +33,7 @@ const Game = () => {
           <Route path="/vote" element={<Vote />} />
           <Route path="/question" element={<Question />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         <footer className="text-white/50 font-primary text-sm text-center py-5 font-extrabold uppercase selection:bg-primary selection:text-black">
           ©{new Date().getFullYear()} - SpeedQuiz Team ❤️

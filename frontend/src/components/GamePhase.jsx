@@ -25,7 +25,7 @@ const GamePhase = ({ phase, underPhase, username }) => {
           </span>
         </button>
 
-        <button className="bg-red-600 text-white italic font-extrabold text-sm md:text-xl px-3 py-1.5 md:px-6 md:py-2 border-3 border-neroNonNero shadow-buttons cursor-pointer hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#000] transition-all duration-200 uppercase">
+        <button className="bg-[#E53935] text-white font-black px-6 py-2 uppercase border-3 border-neroNonNero shadow-buttons cursor-pointer hover:bg-red-700 hover:scale-95 active:translate-y-1 active:translate-x-1 active:shadow-none transition-all duration-300">
           Esci
         </button>
       </div>
