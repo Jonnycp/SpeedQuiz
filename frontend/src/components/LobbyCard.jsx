@@ -1,3 +1,4 @@
+import ConfirmButton from "./ConfirmButton";
 const LobbyCard = ({ title, players, players_max, rotation, content,
   avatars = ["jonny", "genbi", "angelica", "marco", "andrea"] 
 }) => {
@@ -34,9 +35,12 @@ const LobbyCard = ({ title, players, players_max, rotation, content,
           )}
         </div>
 
-        <button className="w-full uppercase px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-base bg-secondary text-black shadow-buttons border-2 md:border-3 border-neroNonNero font-extrabold shrink-0">
-          {content} →
-        </button>
+
+        <ConfirmButton 
+          content={content +  " →"} 
+          bgColor="secondary" 
+          textColor="neroNonNero" 
+          customClasses="w-full" />
         
       </div>
     </div>

@@ -15,10 +15,9 @@ const Home = () => {
         partiteGiocate: 15,
         partite: [
             { id: 1, title: "Stanza di tizio 1", players: 3, maxPlayers: 3, isWinner: false },
-            { id: 2, title: "Vittoria #1", players: 2, maxPlayers: 3, isWinner: true },
-            { id: 3, title: "Stanza di tizio 2", players: 1, maxPlayers: 3, isWinner: false },
-            { id: 4, title: "Stanza di tizio 3", players: 5, maxPlayers: 6, isWinner: false },
-            { id: 4, title: "Stanza di tizio 3", players: 5, maxPlayers: 6, isWinner: false }
+            { id: 2, title: "Stanza di tizio 2", players: 1, maxPlayers: 3, isWinner: false },
+            { id: 3, title: "Stanza di tizio 3", players: 5, maxPlayers: 6, isWinner: false },
+            { id: 4, title: "Stanza di tizio 4", players: 4, maxPlayers: 6, isWinner: false }
         ]
     };
 
@@ -69,7 +68,7 @@ const Home = () => {
                       players={partita.players} 
                       players_max={partita.maxPlayers} 
                       rotation="-rotate-1" 
-                      content={"RIVEDI"} 
+                      content={"Unisciti"} 
                       isWinner={partita.isWinner} 
                   />
               </div>
