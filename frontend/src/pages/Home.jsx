@@ -5,37 +5,20 @@ import SectionTitle from "../components/SectionTitle";
 
 const Home = () => {
   const username = "Jonathan";
-  const mockLobbies = [
-            {
-              id: "1",
-              title: "Stanza di tizio 1",
-              playersConnected: 3,
-              maxPlayers: 6,
-            },
-            {
-              id: "2",
-              title: "Stanza di tizio 2",
-              playersConnected: 3,
-              maxPlayers: 6,
-            },
-            {
-              id: "3",
-              title: "Stanza di tizio 3",
-              playersConnected: 3,
-              maxPlayers: 6,
-            },{
-              id: "4",
-              title: "Stanza di tizio 4",
-              playersConnected: 3,
-              maxPlayers: 6,
-            },{
-              id: "5",
-              title: "Stanza di tizio 5",
-              playersConnected: 3,
-              maxPlayers: 6,
-            },
-            
-          ]
+      const datiUtente = {
+        username: "Jonny",
+        email: "jonny@speedquiz.it",
+        punti: 7083,
+        partiteVinte: 10,
+        partiteGiocate: 15,
+        partite: [
+            { id: 1, title: "Stanza di tizio 1", players: 3, maxPlayers: 3, isWinner: false },
+            { id: 2, title: "Vittoria #1", players: 2, maxPlayers: 3, isWinner: true },
+            { id: 3, title: "Stanza di tizio 2", players: 1, maxPlayers: 3, isWinner: false },
+            { id: 4, title: "Stanza di tizio 3", players: 5, maxPlayers: 6, isWinner: false },
+            { id: 4, title: "Stanza di tizio 3", players: 5, maxPlayers: 6, isWinner: false }
+        ]
+    };
 
   return (
     <>
@@ -70,18 +53,20 @@ const Home = () => {
       <section className="mx-10">
         <SectionTitle title="Esplora le stanze" />
 
-        <div className="flex flex-wrap justify-center gap-10 mt-10 pb-10">
-          {mockLobbies.map((lobby, index) => (
-            <LobbyCard
-              key={lobby.id}
-              title={lobby.title}
-              players={lobby.playersConnected}
-              players_max={lobby.maxPlayers}
-              rotation={index % 2 === 0 ? "rotate-2" : "-rotate-2"}
-              content="Unisciti"
-            />
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 hide-scrollbar flex md:flex-wrap md:justify-center md:gap-10 md:mt-10 md:pb-10">
+              {datiUtente.partite.map((partita) => (
+              <div key={partita.id} className="w-[80vw] shrink-0 snap-center md:w-auto h-full">
+                  <LobbyCard
+                      title={partita.title} 
+                      players={partita.players} 
+                      players_max={partita.maxPlayers} 
+                      rotation="-rotate-1" 
+                      content={"RIVEDI"} 
+                      isWinner={partita.isWinner} 
+                  />
+              </div>
           ))}
-        </div>
+      </div>
       </section>
     </>
   );
