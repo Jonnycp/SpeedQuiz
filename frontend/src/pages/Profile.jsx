@@ -80,7 +80,8 @@ const Profile = () => {
                     <div className="w-full">
                         <SectionTitle title="Le tue partite" />
                         
-                            <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 hide-scrollbar">                            {datiUtente.partite.map((partita) => (
+                            <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 hide-scrollbar">
+                                {datiUtente.partite.map((partita) => (
                                 <div key={partita.id} className="w-[80vw] shrink-0 snap-center md:w-auto h-full">
                                     <LobbyCard
                                         title={partita.title} 
