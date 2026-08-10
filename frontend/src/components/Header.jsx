@@ -24,7 +24,7 @@ const Header =() => {
       ) : (
         <Link
           to="/profile"
-          className="flex items-center bg-gray-300 font-semibold px-4 py-2 uppercase border-3 border-neroNonNero shadow-buttons cursor-pointer hover:bg-primary hover:text-white hover:scale-90 hover:rotate-1 transition-all duration-300"
+          className="flex items-center bg-gray-300 font-semibold px-4 py-2 uppercase border-3 border-neroNonNero shadow-buttons cursor-pointer hover:bg-primary hover:text-white hover:scale-95 active:translate-y-1 active:translate-x-1 active:shadow-none transition-all duration-300"
         >
           <img
             className="w-8 h-8 rounded-full mr-2 border-3 border-neroNonNero bg-white"
