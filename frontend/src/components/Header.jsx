@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router";
 import { useAuth } from "../contexts/AuthContext"
 
-const Header = ({ username }) => {
+const Header =() => {
   const location = useLocation();
   const isProfilePage = location.pathname === "/profile";
 
@@ -28,10 +28,10 @@ const Header = ({ username }) => {
         >
           <img
             className="w-8 h-8 rounded-full mr-2 border-3 border-neroNonNero bg-white"
-            src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${username}`}
-            alt={`Avatar di ${username}`}
+            src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${user.id}`}
+            alt={`Avatar di ${user.username}`}
           />
-          {username}
+          {user.username}
         </Link>
       )}
       </header>
