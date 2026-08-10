@@ -7,7 +7,8 @@ const ConfirmButton = ({ content, onClick, type, disabled, customClasses }) => {
     <button 
       onClick={onClick}
       type={type}
-      className={`border-3 border-neroNonNero shadow-buttons font-black uppercase hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer ${classToUse}`}
+      disabled={disabled}
+      className={`border-3 border-neroNonNero shadow-buttons font-black uppercase hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer disabled:bg-gray-500 disabled:cursor-not-allowed ${classToUse}`}
     >
       {content}
     </button>
