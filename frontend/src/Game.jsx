@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 
 import background from "../assets/background.png";
+import {ProtectedRoute, MessagePage} from "./components/ProtectedRoute";
 
 import Home from "./pages/Home.jsx";
 import Lobby from "./pages/Lobby.jsx";
@@ -27,13 +28,14 @@ const Game = () => {
         </div>
         <AuthProvider>
             <Routes>
-              <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/lobby" element={<Lobby />} />
-              <Route path="/vote" element={<Vote />} />
-              <Route path="/question" element={<Question />} />
-              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/" element={<ProtectedRoute> <Home /> </ProtectedRoute>} />
+              <Route path="/lobby" element={<ProtectedRoute> <Lobby /></ProtectedRoute>} />
+              <Route path="/vote" element={<ProtectedRoute> <Vote /> </ProtectedRoute>} />
+              <Route path="/question" element={<ProtectedRoute> <Question /> </ProtectedRoute>} />
+              <Route path="/leaderboard" element={<ProtectedRoute> <Leaderboard /> </ProtectedRoute>} />
+              <Route path="*" element={<MessagePage/>}/>
             </Routes>
         </AuthProvider>
         <footer className="text-white/50 font-primary text-sm text-center py-5 font-extrabold uppercase selection:bg-primary selection:text-black">
