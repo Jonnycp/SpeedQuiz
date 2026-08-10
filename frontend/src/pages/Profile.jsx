@@ -4,6 +4,7 @@ import LobbyCard from "../components/LobbyCard";
 import SectionTitle from "../components/SectionTitle";
 import StatCardProfile from "../components/StatCardProfile";
 import { Icon } from "@iconify/react";
+import ConfirmButton from "../components/ConfirmButton";
 
 const Profile = () => {
     const datiUtente = {
@@ -137,18 +138,20 @@ const Profile = () => {
                                 />
                             </form>
 
-                            <button 
+                            <ConfirmButton 
                                 type="button" 
                                 onClick={invioDati}
                                 disabled={!seModifico}
-                                className={`w-full mt-6 text-white border-3 border-neroNonNero py-4 font-black uppercase text-base md:text-lg flex justify-center items-center gap-2 transition-all duration-300 ${
-                                    seModifico 
-                                    ? "bg-verdinoCarino shadow-[6px_6px_0_0_#000] hover:-translate-y-1 active:translate-y-0 active:shadow-none cursor-pointer"
-                                    : "bg-gray-400 shadow-[4px_4px_0_0_#000] cursor-not-allowed opacity-80"
-                                }`}
-                            >
-                                SALVA MODIFICHE <Icon icon="mdi:send" className="text-xl"/>
-                            </button>
+                                bgColor="verdinoCarino" 
+                                textColor="white"
+                                content={
+                                    <span className="flex items-center justify-center gap-2">
+                                        SALVA MODIFICHE <Icon icon="mdi:send" className="text-xl"/>
+                                    </span>
+                                }
+                                customClasses="w-full mt-6 py-4 text-base md:text-lg"
+                            />
+
                         </div>
                     </div>
                 </section>
