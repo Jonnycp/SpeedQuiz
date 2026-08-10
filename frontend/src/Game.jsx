@@ -1,7 +1,9 @@
 import { Icon } from "@iconify/react";
 import { BrowserRouter, Route, Routes } from "react-router";
+import { AuthProvider } from "./contexts/AuthContext.jsx";
 
 import background from "../assets/background.png";
+import { ProtectedRoute, MessagePage } from "./components/ProtectedRoute";
 
 import Home from "./pages/Home.jsx";
 import Lobby from "./pages/Lobby.jsx";
@@ -25,16 +27,19 @@ const Game = () => {
         <div className="absolute top-160 right-5 md:top-130 md:right-10 text-9xl -rotate-12 select-none pointer-events-none">
           <Icon icon="noto:party-popper" />
         </div>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/lobby" element={<Lobby />} />
-          <Route path="/vote" element={<Vote />} />
-          <Route path="/question" element={<Question />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
+        <AuthProvider>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/" element={<ProtectedRoute> <Home /> </ProtectedRoute>} />
+              <Route path="/lobby" element={<ProtectedRoute> <Lobby /></ProtectedRoute>} />
+              <Route path="/vote" element={<ProtectedRoute> <Vote /> </ProtectedRoute>} />
+              <Route path="/question" element={<ProtectedRoute> <Question /> </ProtectedRoute>} />
+              <Route path="/leaderboard" element={<ProtectedRoute> <Leaderboard /> </ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute> <Profile /> </ProtectedRoute>} />
+              <Route path="*" element={<MessagePage/>}/>
+            </Routes>
+        </AuthProvider>
         <footer className="text-white/50 font-primary text-sm text-center py-5 font-extrabold uppercase selection:bg-primary selection:text-black">
           ©{new Date().getFullYear()} - SpeedQuiz Team ❤️
         </footer>
