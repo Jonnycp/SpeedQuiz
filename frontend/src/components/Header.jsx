@@ -27,7 +27,7 @@ const Header =() => {
           className="flex items-center bg-gray-300 font-semibold px-4 py-2 uppercase border-3 border-neroNonNero shadow-buttons cursor-pointer hover:bg-primary hover:text-white hover:scale-95 active:translate-y-1 active:translate-x-1 active:shadow-none transition-all duration-300"
         >
           <img
-            className="w-8 h-8 rounded-full mr-2 border-3 border-neroNonNero bg-white"
+            className="w-6 h-6 rounded-full mr-2 border-3 border-neroNonNero bg-white"
             src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${user.id}`}
             alt={`Avatar di ${user.username}`}
           />
