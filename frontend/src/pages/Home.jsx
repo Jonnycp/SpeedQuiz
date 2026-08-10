@@ -2,9 +2,10 @@ import { Icon } from "@iconify/react";
 import Header from "../components/Header";
 import LobbyCard from "../components/LobbyCard";
 import SectionTitle from "../components/SectionTitle";
+import { useAuth } from "../contexts/AuthContext"
 
 const Home = () => {
-  const username = "Jonathan";
+  const { user } = useAuth();
   const mockLobbies = [
             {
               id: "1",
@@ -39,9 +40,9 @@ const Home = () => {
 
   return (
     <>
-      <Header username={username} />
+      <Header />
       <section className="rotate-1 my-10 mx-5 md:mx-28 xl:mx-72 bg-white font-primary font-extrabold flex flex-col items-start justify-center gap-5 py-5 px-8 md:py-10 md:px-12 border-3 border-neroNonNero shadow-buttons">
-        <h3 className="text-3xl uppercase text-background">Ciao, {username}!</h3>
+        <h3 className="text-3xl uppercase text-background">Ciao, {user.username}!</h3>
         <h2 className="text-xl -rotate-1 uppercase text-center md:text-left bg-secondary border-3 border-neroNonNero shadow-buttons inline py-2 px-3 mx-auto select-none">
           1 domanda, 3 risposte, il più veloce vince!
         </h2>

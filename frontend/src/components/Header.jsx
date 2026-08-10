@@ -1,8 +1,12 @@
 import { Link, useLocation } from "react-router";
+import { useAuth } from "../contexts/AuthContext"
 
 const Header = ({ username }) => {
   const location = useLocation();
   const isProfilePage = location.pathname === "/profile";
+
+  const { user } = useAuth();
+  
   return (
     <header className="font-primary bg-white px-5 md:px-10 py-3 flex items-center border-b-3 border-neroNonNero shadow-buttons select-none relative z-10">
       <Link className="flex-1" to="/">
@@ -28,7 +32,7 @@ const Header = ({ username }) => {
             alt={`Avatar di ${username}`}
           />
           {username}
-      </Link>
+        </Link>
       )}
       </header>
   );

@@ -10,7 +10,7 @@ import MainTitle from "../components/MainTitle";
 const Leaderboard = () => {
   return (
     <>
-      <Header username="Jonathan" />
+      <Header />
       <Confetti />
       <section className="my-10">
         <MainTitle title="Partita conclusa!" className="text-5xl"/>
