@@ -31,11 +31,10 @@ const Header = () => {
       {isProfilePage ? (
 
         <ConfirmButton
-           bgColor="red-600" 
+          bgColor="red-600"  
           textColor="white"
-          content="Esci"
+          content="Esci dal gioco"
           onClick={handleLogout}
-          customClasses="hover:bg-red-600"
         />
 
       ) : (

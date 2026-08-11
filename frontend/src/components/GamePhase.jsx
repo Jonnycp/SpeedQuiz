@@ -1,5 +1,24 @@
 import ConfirmButton from "./ConfirmButton";
+import { useNavigate } from "react-router"
+
+import { useAuth } from "../contexts/AuthContext";
+
+
 const GamePhase = ({ phase, underPhase, username }) => {
+  
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleLogout(){
+    try{
+      await logout();
+      navigate("/login");
+    }catch(err){
+      console.log(err.message)
+    }
+  }
+
+
   return (
     <header className="font-primary px-4 md:px-10 py-3 md:py-5 flex flex-wrap items-center justify-between gap-4 select-none z-10 w-full">
       <div className="flex flex-col items-start">
@@ -33,11 +52,11 @@ const GamePhase = ({ phase, underPhase, username }) => {
                 />
 
           <ConfirmButton
-                    bgColor="[#E53935]"
                     textColor="white"
-                    content="ESCI"
-                    onClick={() => console.log("Uscita dalla fase di gioco...")}
-                    customClasses="hover:bg-red-700"
+                    content="Esci dal gicoo"
+                    bgColor="red-600" 
+                    onClick={handleLogout}
+                    
                   />
       </div>
     </header>

@@ -18,9 +18,9 @@ const Leaderboard = () => {
   async function handleLogout(){
     try{
       await logout();
-      navigate("/ ");
+      navigate("/login");
     }catch(err){
-      console.log("Impossibile uscire.")
+      console.log("Impossibile uscire dal gioco.")
     }
   }
 
