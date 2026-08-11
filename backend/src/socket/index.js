@@ -1,6 +1,8 @@
 const { Server } = require("socket.io");
 const jwt = require('jsonwebtoken')
 
+const lobbyHandlers = require("./handlers/lobby.handler")
+
 module.exports = function initSocket(server) {
   const io = new Server(server, {
     cors: {
@@ -35,7 +37,7 @@ module.exports = function initSocket(server) {
   io.on("connection", (socket) => {
     console.log(`[socket] - connesso ${socket.user.username}`);
 
-    registerLobbyHandles(io, socket);
+    lobbyHandlers(io, socket);
 
     socket.on("disconnect", () => {
       console.log(`[socket] - disconnesso ${socket.user.username}`);

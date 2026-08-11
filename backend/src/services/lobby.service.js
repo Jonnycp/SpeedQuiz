@@ -25,7 +25,7 @@ function createLobby(ownerId) {
 
 function addPlayer(lobby, socket){
     //* Gestione persone che erano entrate e si sono disconnesse per sbaglio
-    const existingPlayer = lobby.player.get(socket.user.id)
+    const existingPlayer = lobby.players.get(socket.user.id)
     
     //* Attaccante che è connesso e chiama dinuovo la funzione
     if(existingPlayer && existingPlayer.connected){
