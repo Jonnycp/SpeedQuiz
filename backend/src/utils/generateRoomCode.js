@@ -1,3 +1,5 @@
+const { hasLobby } = require("../store/lobbyStore");
+
 const LENGTH_CODICE = 5;
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; //senza O e 0, senza I e 1
 
@@ -7,7 +9,13 @@ function generateRoomCode() {
     code += ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
   }
   
-  return code;
+  //anche se non arriveremo mai a circa 268mln di utenti contemporanei... (32^5 * 8)
+  if(hasLobby(code)){
+    return generateRoomCode();
+  }else{
+    return code;
+  }
+
 }
 
 module.exports = generateRoomCode;
