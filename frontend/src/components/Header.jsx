@@ -3,11 +3,22 @@ import { useAuth } from "../contexts/AuthContext";
 import ConfirmButton from "./ConfirmButton";
 
 const Header = () => {
+
   const location = useLocation();
   const navigate = useNavigate();
   const isProfilePage = location.pathname === "/profile";
 
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+
+  async function handleLogout(){
+    try{
+      await logout();
+      navigate("/login");
+    }catch(err){
+      console.log("Logout non riuscito.");
+    }
+  }
+
   
   return (
     <header className="font-primary bg-white px-5 md:px-10 py-3 flex items-center border-b-3 border-neroNonNero shadow-buttons select-none relative z-10">
@@ -24,8 +35,8 @@ const Header = () => {
           bgColor="[#E53935]"
           textColor="white"
           content="Logout"
-          onClick={() => console.log("funziono!")}
-          customClasses="hover:bg-red-700"
+          onClick={handleLogout}
+          customClasses="bg-red-600 hover:bg-red-700"
         />
 
       ) : (

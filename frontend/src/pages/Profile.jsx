@@ -3,10 +3,12 @@ import Header from "../components/Header";
 import LobbyCard from "../components/LobbyCard";
 import SectionTitle from "../components/SectionTitle";
 import StatCardProfile from "../components/StatCardProfile";
+
 import { Icon } from "@iconify/react";
 import ConfirmButton from "../components/ConfirmButton";
 
 const Profile = () => {
+
     const datiUtente = {
         username: "Jonny",
         email: "jonny@speedquiz.it",
@@ -99,7 +101,7 @@ const Profile = () => {
 
                     {/* dx */}
                     <div className="w-full">
-                        <SectionTitle title="IL TUO PROFILO" />     
+                        <SectionTitle title="modifica il tuo profilo" />     
                         
                         <div className="bg-white border-4 border-neroNonNero shadow-[12px_12px_0_0_#000] p-6 md:p-8 rotate-[0.5deg]">
                             <form className="flex flex-col gap-2">
