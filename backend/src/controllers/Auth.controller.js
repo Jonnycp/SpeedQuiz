@@ -175,12 +175,6 @@ async function refresh(req, res){
         return res.status(401).json({message: "Refresh token non valido."})
     }
 
-    //* Genera nuovo access Token
-    const newAccessToken = generateJWT.accessToken(user._id);
-    res.status(200).json({
-        accessToken: newAccessToken
-    }) 
-
     //* Rotation del refreshToken (refresh del refresh, per sicurezza ed evitare scadenza del refreshToken giusto quando viene chiamata)
     await RefreshToken.deleteOne({token: refreshToken})
     res.clearCookie("refreshToken", {
@@ -188,8 +182,15 @@ async function refresh(req, res){
       secure: process.env.MODE === "production",
       sameSite: "strict"
     })
-
     await gestioneRefresh(res, user._id)
+
+      //* Genera e invia nuovo access Token: res.json() chiude la risposta quindi va eseguito dopo la rotation del cookie 
+      //* altrimenti va in crash
+    const newAccessToken = generateJWT.accessToken(user._id);
+    return res.status(200).json({
+        accessToken: newAccessToken
+    }) 
+
   } catch (err){
     return res.status(401).json({ message: "Refresh token scaduto o non valido." });
   }
