@@ -18,7 +18,6 @@ const Header = () => {
       console.log("Logout non riuscito.");
     }
   }
-
   
   return (
     <header className="font-primary bg-white px-5 md:px-10 py-3 flex items-center border-b-3 border-neroNonNero shadow-buttons select-none relative z-10">
@@ -32,11 +31,11 @@ const Header = () => {
       {isProfilePage ? (
 
         <ConfirmButton
-          bgColor="[#E53935]"
+           bgColor="red-600" 
           textColor="white"
-          content="Logout"
+          content="Esci"
           onClick={handleLogout}
-          customClasses="bg-red-600 hover:bg-red-700"
+          customClasses="hover:bg-red-600"
         />
 
       ) : (

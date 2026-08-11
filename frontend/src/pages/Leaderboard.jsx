@@ -7,7 +7,23 @@ import PodiumPlayer from "../components/PodiumPlayer";
 import ConfirmButton from "../components/ConfirmButton";
 import MainTitle from "../components/MainTitle";
 
+import { useNavigate } from "react-router"
+import { useAuth } from "../contexts/AuthContext";
+
 const Leaderboard = () => {
+
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleLogout(){
+    try{
+      await logout();
+      navigate("/ ");
+    }catch(err){
+      console.log("Impossibile uscire.")
+    }
+  }
+
   return (
     <>
       <Header />
@@ -28,8 +44,9 @@ const Leaderboard = () => {
       <ResultPlayer username="Charlie" position={5} points={300} />
       </section>
       <section className="flex justify-center gap-4 mt-10 mb-6 mx-32 pt-6">
-        <ConfirmButton 
-          content="Esci" 
+        <ConfirmButton
+          onClick={handleLogout}
+          content="Esci dal gioco" 
           bgColor="red-600" 
           textColor="white"/>
       </section>
