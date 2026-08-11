@@ -60,7 +60,7 @@ async function login(req, res) {
 
     //* Logga correttamente e invia risposta json
     return res.status(200).json({
-        token: generateJWT.accessToken(user._id),
+        token: generateJWT.accessToken(user._id, user.username),
         user: { 
           id: user._id, 
           username: user.username, 
@@ -118,7 +118,7 @@ async function register(req, res) {
 
     //* Restituzione json user
     return res.status(201).json({
-      token: generateJWT.accessToken(newUser._id),
+      token: generateJWT.accessToken(newUser._id, newUser.username),
       user: { 
         id: newUser._id, 
         username: newUser.username, 
@@ -186,7 +186,7 @@ async function refresh(req, res){
 
       //* Genera e invia nuovo access Token: res.json() chiude la risposta quindi va eseguito dopo la rotation del cookie 
       //* altrimenti va in crash
-    const newAccessToken = generateJWT.accessToken(user._id);
+    const newAccessToken = generateJWT.accessToken(user._id, user.username);
     return res.status(200).json({
         accessToken: newAccessToken
     }) 
