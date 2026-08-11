@@ -74,3 +74,10 @@ export async function logoutAPI(){
     })
 }
 
+//* 
+export async function createLobbyAPI(){
+  return fetchCustom('/lobbies', {
+    method: "POST"
+  })
+}
+

@@ -3,12 +3,15 @@ import Gamer from "../components/Gamer";
 import { Icon } from "@iconify/react";
 import ConfirmButton from "../components/ConfirmButton";
 import SettingsInput from "../components/SettingsInput";
+import { useParams } from "react-router";
 
 const Lobby = () => {
   const username = "Jonathan";
   const players = ["Jonathan", "Alice", "Bob", "Charlie"];
   const maxPlayers = 6;
   const isCurrentHost = true;
+
+  const { code } = useParams();
 
   return (
     <>
@@ -22,7 +25,7 @@ const Lobby = () => {
           <h3 className="bg-black text-white w-fit px-3 py-1 rounded-xl mb-4 select-none">
             codice stanza
           </h3>
-          <span className="block text-6xl tracking-wider ">ABCD12</span>
+          <span className="block text-6xl tracking-wider "> {code} </span>
           <div className="flex gap-3 mt-5 mb-8 mx-auto select-none w-[80%]">
             <ConfirmButton content="Invita amici" bgColor="primary" textColor="neroNonNero"/>
             <ConfirmButton content={<Icon icon="tabler:copy" className="text-neroNonNero" />} bgColor="white" textColor="neroNonNero"/>

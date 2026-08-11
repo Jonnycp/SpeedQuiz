@@ -5,8 +5,22 @@ import SectionTitle from "../components/SectionTitle";
 import { useAuth } from "../contexts/AuthContext"
 import ConfirmButton from "../components/ConfirmButton";
 
+import { useNavigate } from "react-router"
+import { createLobbyAPI } from "../services/api"
+
 const Home = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleCreateLobby(){
+    try{
+      const data = await createLobbyAPI();
+      navigate(`/lobby/${data.code}`)
+    }catch(err){
+      console.log(err.message)
+    }
+  }
+
       const datiUtente = {
         username: "Jonny",
         email: "jonny@speedquiz.it",
@@ -39,6 +53,7 @@ const Home = () => {
             } 
             bgColor="primary" 
             textColor="white" 
+            onClick={handleCreateLobby}
             customClasses="flex flex-col flex-1 items-center text-2xl justify-center -rotate-1 gap-2 cursor-pointer hover:scale-110 transition-all duration-300"
           />
           <form className="flex flex-col flex-1 p-4 gap-2 text-xl bg-gray-200 text-black shadow-buttons border-3 border-neroNonNero cursor-pointer">
@@ -52,7 +67,8 @@ const Home = () => {
             <ConfirmButton 
             content="Entra" 
             bgColor="secondary" 
-            textColor="neroNonNero" />
+            textColor="neroNonNero"
+            />
           </form>
         </div>
       </section>

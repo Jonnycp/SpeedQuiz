@@ -32,7 +32,7 @@ const Game = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/" element={<ProtectedRoute> <Home /> </ProtectedRoute>} />
-              <Route path="/lobby" element={<ProtectedRoute> <Lobby /></ProtectedRoute>} />
+              <Route path="/lobby/:code" element={<ProtectedRoute> <Lobby /></ProtectedRoute>} />
               <Route path="/vote" element={<ProtectedRoute> <Vote /> </ProtectedRoute>} />
               <Route path="/question" element={<ProtectedRoute> <Question /> </ProtectedRoute>} />
               <Route path="/leaderboard" element={<ProtectedRoute> <Leaderboard /> </ProtectedRoute>} />
