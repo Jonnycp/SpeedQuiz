@@ -1,4 +1,4 @@
-const { getLobby } = require("../../store/lobbyStore");
+const { getLobby, serializeLobby } = require("../../store/lobbyStore");
 const { addPlayer } = require("../../services/lobby.service");
 
 function lobbyHandlers(io, socket) {
@@ -24,17 +24,16 @@ function lobbyHandlers(io, socket) {
 
     socket.data.lobbyCode = lobby.code;
     socket.join(lobby.code);
-    //TODO: serializzazione lobby??? purtroppo
 
     socket.emit("lobby:joined", {
-      lobby: lobby,
+      lobby: serializeLobby(lobby),
       amIhost: lobby.hostId === socket.user.id,
     });
 
     //* Notifichiamo altri giocatori (tranne se stesso)
     socket.to(lobby.code).emit("lobby:player_joined", {
       player: newPlayer,
-      lobby: lobby,
+      lobby: serializeLobby(lobby),
     });
 
     //TODO: gestione riconessione giocatore

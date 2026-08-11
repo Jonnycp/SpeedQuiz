@@ -24,10 +24,19 @@ function getPublicLobbies(code){
     return [...lobbies.values()].filter(l => l.config.public && l.players.size < l.config.maxPlayers && l.status === "LOBBY");
 }
 
+function serializeLobby(lobby){
+    return {
+        ...lobby,
+        players: [...lobby.players.values()],
+        rounds: [...lobby.rounds.values()]
+    } 
+}
+
 module.exports = {
     getLobby,
     setLobby,
     hasLobby,
     lobbyOwned,
-    getPublicLobbies
+    getPublicLobbies,
+    serializeLobby
 }
