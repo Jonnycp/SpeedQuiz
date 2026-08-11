@@ -1,4 +1,5 @@
-const { createLobby, lobbyOwned } = require("../store/lobbyStore")
+const { lobbyOwned } = require("../store/lobbyStore")
+const { createLobby } = require("../services/lobby.service")
 /**
  * Enpoint POST /lobbies
  * Crea una nuova stanza (in RAM) con il lobbyStore
