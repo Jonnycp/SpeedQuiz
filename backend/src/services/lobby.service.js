@@ -1,11 +1,12 @@
 const generateRoomCode = require("../utils/generateRoomCode")
 const { setLobby } = require("../store/lobbyStore")
 
-function createLobby(ownerId) {
+function createLobby(ownerId, owenerUsername) {
     const code = generateRoomCode()
     const newLobby = {
         code: code,
         hostId: ownerId,
+        hostUsername: owenerUsername,
         status: "LOBBY", //LOBBY, ANSWERING, VOTING, REVEAL, ENDED
         createdAt: Date.now(),
         config: {
@@ -19,7 +20,7 @@ function createLobby(ownerId) {
         currentRound: -1,
         rounds: new Map() //indexRound => {}
     }
-    setLobby(code, newLobby)
+    setLobby(code, newLobby) // modifica la Map lobbies aggiungendo una nuova lobby con chiave code e valore new lobby 
     return newLobby
 }
 
