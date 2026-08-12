@@ -81,3 +81,9 @@ export async function createLobbyAPI(){
   })
 }
 
+//*
+export async function getPublicLobbiesAPI(){
+  return fetchCustom('/lobbies/public', {
+    method: "GET",
+  })
+}
