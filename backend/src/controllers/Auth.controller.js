@@ -202,52 +202,61 @@ async function refresh(req, res){
  */
 async function updateUser(req, res){
   try {
-    const email = req.body.email.trim().toLowerCase();
-    const password = req.body.password.trim();
-    const username = req.body.username.trim().toLowerCase();
-
     if (!req.body || (!req.body.email.trim() && !req.body.password.trim() && !req.body.username.trim())) {
       return res.status(400).json({ message: "Inserisci almeno un parametro tra email, password o username modificato." });
     }
 
-      let updateToDo;
-      //* Controllo modifica username
-      if (req.body.username.trim()){
-        const existingUsername = await User.findOne(req.body.username.trim().toLowerCase());
+    let updateToDo;
+    //* Controllo modifica username
+    if (req.body.username.trim()){
+      const existingUsername = await User.findOne({username: req.body.username.trim().toLowerCase(), _id: {$ne: req.userId}});
 
-        if (existingUsername) {
-          return res.status(400).json({message: "Username già esistente. Prova con un altro ;)"});
-        } else if (req.body.username.trim().length < 2 || req.body.username.trim().length > 15) {
-            return res.status(400).json({message: "Username non valido."})
-        }else{
-          updateToDo = {...updateToDo, username: req.body.username.trim().toLowerCase()}
-        }
-
-      //* Controlla modifica email
-      if (email){
-        const existingEmail = await User.findOne(req.body.email.trim().toLowerCase());
-
-        if (existingEmail) {
-          return res.status(400).json({message: "Email già esistente. Prova con un'altra ;)"});
-        } else if (!EMAIL_REGEX.test(req.body.email.trim().toLowerCase())) {
-          return res.status(400).json({message: "Email non valida."})
-        }else{
-          updateToDo = {...updateToDo, email: req.body.email.trim().toLowerCase()}
-        }
+      if (existingUsername) {
+        return res.status(400).json({message: "Username già esistente. Prova con un altro ;)"});
+      } else if (req.body.username.trim().length < 2 || req.body.username.trim().length > 15) {
+          return res.status(400).json({message: "Username non valido."})
+      }else{
+        updateToDo = {...updateToDo, username: req.body.username.trim().toLowerCase()}
       }
-      //* Controlla modifica password
-      if (req.body.password.trim()){
-        if (req.body.password.trim().length < 8) {
-          return res.status(400).json({message: "Scegli una password più sicura."})
-        }else{
-          updateToDo = {...updateToDo, password: req.body.password.trim()}
-        }
-      }
-
-      //* Salvataggio in db
-      const updatedUser = await User.findByIdAndUpdate(req.userId, updateToDo, {new: true})
-      return res.status(200).json({message: "Dati aggiornati con successo.", user: updatedUser})
     }
+
+    //* Controlla modifica email
+    if (req.body.email.trim()){
+      const existingEmail = await User.findOne({email: req.body.email.trim().toLowerCase(), _id: {$ne: req.userId}});
+
+      if (existingEmail) {
+        return res.status(400).json({message: "Email già esistente. Prova con un'altra ;)"});
+      } else if (!EMAIL_REGEX.test(req.body.email.trim().toLowerCase())) {
+        return res.status(400).json({message: "Email non valida."})
+      }else{
+        updateToDo = {...updateToDo, email: req.body.email.trim().toLowerCase()}
+      }
+    }
+
+    //* Controlla modifica password
+    if (req.body.password.trim()){
+      if (req.body.password.trim().length < 8) {
+        return res.status(400).json({message: "Scegli una password più sicura."})
+      }else{
+        updateToDo = {...updateToDo, password: req.body.password.trim()}
+      }
+    }
+
+    //* Salvataggio in db
+    const user = await User.findById(req.userId);
+
+    user.username = updateToDo.username || user.username;
+    user.email = updateToDo.email || user.email;
+    user.password = updateToDo.password || user.password;
+
+    await user.save();
+
+    return res.status(200).json({message: "Dati aggiornati con successo.", user: {
+      id: user._id,
+      username: user.username,
+      email: user.email
+    }})
+    
   }catch (err){
     return res.status(500).json({ message: "Impossibile aggiornare i dati ora." });
   }
