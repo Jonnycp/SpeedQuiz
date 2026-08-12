@@ -40,8 +40,8 @@ const Home = () => {
           <ConfirmButton 
             content={
             <>
-              <Icon icon="mdi:plus-circle" width={30} />
-              <span className="ml-2">Crea un partita</span>
+              <Icon icon="mdi:plus-circle" width={40} />
+              Crea un partita
             </>
             } 
             bgColor="primary" 
