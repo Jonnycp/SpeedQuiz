@@ -74,3 +74,10 @@ export async function logoutAPI(){
     })
 }
 
+export async function updateProfileAPI(username, email, password){
+  console.log("updateProfileAPI called with:", username, email, password);
+  return fetchCustom("/auth/profile", {
+    method: "PUT",
+    body: JSON.stringify({username:username, email:email, password:password})
+  })
+}
