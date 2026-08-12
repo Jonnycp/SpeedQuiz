@@ -31,11 +31,11 @@ async function gestioneRefresh(res, userId){
 async function login(req, res) {
   try {
     //* Verifica presenza parametri body
-    if (!req.body || !req.body.email.trim() || !req.body.password.trim()) {
+    if (!req.body || !email || !password.trim()) {
       return res.status(400).json({ message: "Email e password sono obbigatori." });
     }
-    const email = req.body.email.trim().toLowerCase();
-    const password = req.body.password.trim();
+    const email = email.toLowerCase();
+    const password = password.trim();
 
     //* Check se utente è registrato
     const user = await User.findOne({ email: email });
@@ -80,13 +80,13 @@ async function login(req, res) {
 async function register(req, res) {
   try {
     //* Verifica presenza parametri body
-    if (!req.body || !req.body.email.trim() || !req.body.password.trim() || !req.body.username.trim()) {
+    if (!req.body || !email || !password.trim() || !username.trim()) {
       return res.status(400).json({ message: "Email, password e username sono obbigatori." });
     }
 
-    const email = req.body.email.trim().toLowerCase();
-    const password = req.body.password.trim();
-    const username = req.body.username.trim().toLowerCase();
+    const email = email.toLowerCase();
+    const password = password.trim();
+    const username = username.trim().toLowerCase();
 
     //* Verifica correttezza parametri
     if(password.length < 8){
@@ -195,9 +195,68 @@ async function refresh(req, res){
   }
 }
 
+/**
+ * Enpoint PUT /profile
+ * Modifica su dati utente (username, email, password)
+ * Parametri body: email, password, username
+ */
+async function updateUser(req, res){
+  try {
+    const email = req.body.email.trim().toLowerCase();
+    const password = req.body.password.trim();
+    const username = req.body.username.trim().toLowerCase();
+
+    if (!req.body || (!req.body.email.trim() && !req.body.password.trim() && !req.body.username.trim())) {
+      return res.status(400).json({ message: "Inserisci almeno un parametro tra email, password o username modificato." });
+    }
+
+      let updateToDo;
+      //* Controllo modifica username
+      if (req.body.username.trim()){
+        const existingUsername = await User.findOne(req.body.username.trim().toLowerCase());
+
+        if (existingUsername) {
+          return res.status(400).json({message: "Username già esistente. Prova con un altro ;)"});
+        } else if (req.body.username.trim().length < 2 || req.body.username.trim().length > 15) {
+            return res.status(400).json({message: "Username non valido."})
+        }else{
+          updateToDo = {...updateToDo, username: req.body.username.trim().toLowerCase()}
+        }
+
+      //* Controlla modifica email
+      if (email){
+        const existingEmail = await User.findOne(req.body.email.trim().toLowerCase());
+
+        if (existingEmail) {
+          return res.status(400).json({message: "Email già esistente. Prova con un'altra ;)"});
+        } else if (!EMAIL_REGEX.test(req.body.email.trim().toLowerCase())) {
+          return res.status(400).json({message: "Email non valida."})
+        }else{
+          updateToDo = {...updateToDo, email: req.body.email.trim().toLowerCase()}
+        }
+      }
+      //* Controlla modifica password
+      if (req.body.password.trim()){
+        if (req.body.password.trim().length < 8) {
+          return res.status(400).json({message: "Scegli una password più sicura."})
+        }else{
+          updateToDo = {...updateToDo, password: req.body.password.trim()}
+        }
+      }
+
+      //* Salvataggio in db
+      const updatedUser = await User.findByIdAndUpdate(req.userId, updateToDo, {new: true})
+      return res.status(200).json({message: "Dati aggiornati con successo.", user: updatedUser})
+    }
+  }catch (err){
+    return res.status(500).json({ message: "Impossibile aggiornare i dati ora." });
+  }
+}
+
 module.exports = {
   login,
   register,
   logout,
-  refresh
+  refresh,
+  updateUser
 };
