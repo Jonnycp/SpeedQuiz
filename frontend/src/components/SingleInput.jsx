@@ -24,6 +24,7 @@ const SingleInput = ({
             type === "password" ? (showPassword ? "text" : "password") : type
           }
           id={name}
+          name={name}
           placeholder={placeholder}
           maxLength={maxLength}
           value={value}
