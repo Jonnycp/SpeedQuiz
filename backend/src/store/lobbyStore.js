@@ -20,10 +20,12 @@ function lobbyOwned(userId){
     return lobby;
 }
 
-function getPublicLobbies(code){
+function getPublicLobbies(){
     return [...lobbies.values()].filter(l => l.config.public && l.players.size < l.config.maxPlayers && l.status === "LOBBY");
 }
 
+// ritorna un nuovo oggetto lobby in cui le Map (players e rounds) sono trasformate in array grazie a .values(), 
+// che restituisce un iteratore, e allo spread operator, che consuma quell'iteratore prendendo ogni valore e salvandolo in un nuovo array -> necessario perché JSON.strinfigy() non sa serializzare le Map
 function serializeLobby(lobby){
     return {
         ...lobby,
