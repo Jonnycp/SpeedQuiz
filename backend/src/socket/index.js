@@ -2,6 +2,7 @@ const { Server } = require("socket.io");
 const jwt = require('jsonwebtoken')
 
 const lobbyHandlers = require("./handlers/lobby.handler")
+const connectionHandlers = require("./handlers/connection.handler")
 
 module.exports = function initSocket(server) {
   const io = new Server(server, {
@@ -38,9 +39,6 @@ module.exports = function initSocket(server) {
     console.log(`[socket] - connesso ${socket.user.username}`);
 
     lobbyHandlers(io, socket);
-
-    socket.on("disconnect", () => {
-      console.log(`[socket] - disconnesso ${socket.user.username}`);
-    });
+    connectionHandlers(io, socket);
   });
 };
