@@ -34,14 +34,10 @@ const LobbyCard = ({ title, players, players_max, rotation, content,
             </span>
           )}
         </div>
-
-
-        <ConfirmButton 
-          content={content +  " →"} 
-          bgColor="secondary" 
-          textColor="neroNonNero" 
-          customClasses="w-full" />
         
+        <ConfirmButton color="secondary" customClasses="w-full">
+          {content +  " →"}
+        </ConfirmButton>
       </div>
     </div>
   );
