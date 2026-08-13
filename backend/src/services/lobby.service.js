@@ -18,8 +18,10 @@ function createLobby(ownerId, owenerUsername) {
         },
         players: new Map(), //idPlayer => {}
         currentRound: -1,
-        rounds: new Map() //indexRound => {}
+        rounds: new Map(), //indexRound => {}
+        disconnectedTimers: new Map(),
     }
+    
     setLobby(code, newLobby) // modifica la Map lobbies aggiungendo una nuova lobby con chiave code e valore new lobby 
     return newLobby
 }
@@ -28,17 +30,23 @@ function addPlayer(lobby, socket){
     //* Gestione persone che erano entrate e si sono disconnesse per sbaglio
     const existingPlayer = lobby.players.get(socket.user.id)
     
-    //* Attaccante che è connesso e chiama dinuovo la funzione
-    if(existingPlayer && existingPlayer.connected){
-        throw new Error("Sei già in questa stanza!")
-    }
+    // //* Attaccante che è connesso e chiama dinuovo la funzione
+    // Sembra baggato... rimosso
+    // if(existingPlayer && existingPlayer.connected){
+    //     throw new Error("Sei già in questa stanza!")
+    // }
 
     //* Fai rientrare utente disconnesso
     if(existingPlayer && !existingPlayer.connected){
         existingPlayer.socketId = socket.id;
         existingPlayer.connected = true;
         existingPlayer.disconnectedAt = null;
-
+        
+        const timer = lobby.disconnectedTimers.get(socket.user.id)
+        if(timer){
+            clearTimeout(timer)
+            lobby.disconnectedTimers.delete(socket.user.id)
+        }
         return existingPlayer
     }
 
@@ -65,7 +73,50 @@ function addPlayer(lobby, socket){
     return newPlayer
 }
 
+function removePlayer(lobby, socket, callback){
+    //* Controllo se è lo stesso giocatore connesso dallo stesso dispositivo
+    const player = lobby.players.get(socket.user.id);
+    if(!player || player.socketId !== socket.id) return false;
+
+    lobby.players.delete(socket.user.id)
+
+    //* Gestione se esce host
+    if (lobby.hostId === socket.user.id && lobby.players.size > 0){
+        lobby.hostId = [...lobby.players.keys()][0] 
+        lobby.hostUsername = lobby.players.get(lobby.hostId).username
+    }
+
+    //* Chiamata callback (solitamente evento per notificare altri giocatori)
+    callback && callback()
+    return true
+}
+
+function markPlayerAsDisconnected(socket, lobby, callback){
+    //* CHECK SE GIOCATORE ESISTE
+    if(!lobby) throw new Error("Partita non trovata");
+    const player = lobby.players.get(socket.user.id)
+    if(!player || player.socketId !== socket.id) return;
+
+    //* AGGIORNA DATI GIOCATORE (offline, tempo di disconnessione)
+    player.connected = false;
+    player.disconnectedAt = Date.now();
+
+    //* TIMER PER RICONESSIONE (se si riconnette entro X sec, altrimenti eliminalo)
+    const timer = setTimeout(() => {
+        if(!player.connected){
+            removePlayer(lobby, socket, callback)
+        }
+        lobby.disconnectedTimers.delete(socket.user.id)
+    }, process.env.DISCONNECTED_TIME || "30000")
+    
+    //* SALVA TIMER NELLA MAP lobby.disconnectedTimers
+    lobby.disconnectedTimers.set(socket.user.id, timer)
+}
+
+
 module.exports = {
     createLobby,
-    addPlayer
+    addPlayer,
+    removePlayer,
+    markPlayerAsDisconnected
 }

@@ -35,8 +35,6 @@ function lobbyHandlers(io, socket) {
       player: newPlayer,
       lobby: serializeLobby(lobby),
     });
-
-    //TODO: gestione riconessione giocatore
   });
 }
 
