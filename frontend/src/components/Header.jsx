@@ -19,7 +19,6 @@ const Header = () => {
     }
   }
 
-  
   return (
     <header className="font-primary bg-white px-5 md:px-10 py-3 flex items-center border-b-3 border-neroNonNero shadow-buttons select-none relative z-10">
 
@@ -32,31 +31,29 @@ const Header = () => {
       {isProfilePage ? (
 
         <ConfirmButton
-          bgColor="[#E53935]"
-          textColor="white"
-          content="Logout"
+          color="red"
           onClick={handleLogout}
-          customClasses="bg-red-600 hover:bg-red-700"
-        />
+        >
+          Logout
+        </ConfirmButton>
 
       ) : (
 
         <ConfirmButton
-          bgColor="gray-300"
-          textColor="black"
           onClick={() => navigate("/profile")}
-          content={
-            <div className="flex items-center">
-              <img
-                className="w-6 h-6 rounded-full mr-2 border-3 border-neroNonNero bg-white"
-                src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${user.id}`}
-                alt={`Avatar di ${user.username}`}
-              />
-              <span>{user.username}</span>
-            </div>
-          }
-          customClasses="!px-4 !font-semibold hover:bg-primary hover:text-white"
-        />
+          color="gray"
+          customClasses="!px-4 !font-semibold hover:!bg-primary hover:!text-white"
+        >
+          <div className="flex items-center">
+            <img
+              className="w-6 h-6 rounded-full mr-2 border-3 border-neroNonNero bg-white"
+              src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${user.id}`}
+              alt={`Avatar di ${user.username}`}
+            />
+            <span>{user.username}</span>
+          </div>
+        </ConfirmButton>
+        
       )}
       
     </header>
