@@ -31,16 +31,12 @@ const Home = () => {
         </h2>
         <div className="flex flex-col md:flex-row mt-5 gap-8 md:gap-4 uppercase w-full">
           <ConfirmButton 
-            content={
-            <>
-              <Icon icon="mdi:plus-circle" width={30} />
-              <span className="ml-2">Crea un partita</span>
-            </>
-            } 
-            bgColor="primary" 
-            textColor="white" 
+            color="primary" 
             customClasses="flex flex-col flex-1 items-center text-2xl justify-center -rotate-1 gap-2 cursor-pointer hover:scale-110 transition-all duration-300"
-          />
+          >
+            <Icon icon="mdi:plus-circle" width={30} />
+            <span className="ml-2">Crea una partita</span>
+          </ConfirmButton>
           <form className="flex flex-col flex-1 p-4 gap-2 text-xl bg-gray-200 text-black shadow-buttons border-3 border-neroNonNero cursor-pointer">
             Unisciti a una partita
             <input
@@ -49,10 +45,9 @@ const Home = () => {
               maxLength={6}
               className="mt-3 bg-white p-2 uppercase border-3 border-neroNonNero placeholder:text-gray-400 placeholder:text-lg placeholder:font-medium focus:outline-none"
             />
-            <ConfirmButton 
-            content="Entra" 
-            bgColor="secondary" 
-            textColor="neroNonNero" />
+            <ConfirmButton color="secondary">
+                Entra
+            </ConfirmButton>
           </form>
         </div>
       </section>
