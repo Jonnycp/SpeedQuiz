@@ -24,8 +24,15 @@ const Lobby = () => {
           </h3>
           <span className="block text-6xl tracking-wider ">ABCD12</span>
           <div className="flex gap-3 mt-5 mb-8 mx-auto select-none w-[80%]">
-            <ConfirmButton content="Invita amici" bgColor="primary" textColor="neroNonNero"/>
-            <ConfirmButton content={<Icon icon="tabler:copy" className="text-neroNonNero" />} bgColor="white" textColor="neroNonNero"/>
+            
+            <ConfirmButton color="primary" customClasses="!text-neroNonNero">
+              Invita amici
+            </ConfirmButton>
+            
+            <ConfirmButton customClasses="!bg-white !text-neroNonNero">
+              <Icon icon="tabler:copy" className="text-neroNonNero" />
+            </ConfirmButton>
+
           </div>
 
           <form className="flex flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
@@ -64,11 +71,13 @@ const Lobby = () => {
             </div>
           </div>
 
-            <ConfirmButton 
-              content="Inizia partita" 
-              bgColor="verdinoCarino" 
-              textColor="black" 
-              customClasses="w-full -rotate-1 py-4 md:py-5 text-xl md:text-4xl" />
+          <ConfirmButton 
+            color="verdinoCarino" 
+            customClasses="w-full -rotate-1 py-4 md:py-5 text-xl md:text-4xl"
+          >
+            Inizia partita
+          </ConfirmButton>
+            
         </section>
       </div>
     </>
