@@ -24,12 +24,9 @@ const AuthCard = ({ isLogin, children, onSubmit, isLoading }) => {
 
           {children}
 
-          <ConfirmButton
-            content={isLogin ? "Accedi" : "Registrati"}
-            type="submit"
-            customClasses="bg-primary font-white text-white uppercase font-bold text-2xl py-3"
-            disabled={isLoading}
-          />
+          <ConfirmButton type="submit" color="primary" customClasses="text-2xl py-3" disabled={isLoading}>
+            {isLogin ? "Accedi" : "Registrati"}
+          </ConfirmButton>
         </form>
 
         <p className="text-white text-center mt-6 text-sm normal-case select-none">
