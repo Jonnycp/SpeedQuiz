@@ -1,10 +1,12 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd());
+  return{
   plugins: [
     react(),
     tailwindcss(),
@@ -13,10 +15,11 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: import.meta.env.VITE_BACKEND_URL,
+        target: env.VITE_BACKEND_URL,
         changeOrigin: true,
-        secure: import.meta.env.VITE_MODE === "production",
+        secure: env.VITE_MODE === "production",
       },
     },
-  },
+    },
+  };
 });
