@@ -9,7 +9,6 @@ const LobbyCard = ({ title, players, players_max, rotation, content,
 
   return (
     <div className={`bg-white border-3 border-neroNonNero shadow-buttons p-4 md:p-6 py-6 md:py-8 ${rotation} flex flex-col justify-between font-primary hover:-translate-y-2 transition-transform cursor-pointer h-full`}>
-      
       <div>
         <h4 className="font-extrabold text-lg md:text-xl uppercase mb-2 text-black leading-tight">{title}</h4>
         <p className="font-extrabold text-xs md:text-sm mb-4 md:mb-6 text-gray-700 uppercase">Players: {players}/{players_max}</p>

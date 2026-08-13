@@ -16,7 +16,7 @@ const Home = () => {
         partite: [
             { id: 1, title: "Stanza di tizio 1", players: 3, maxPlayers: 3, isWinner: false },
             { id: 2, title: "Stanza di tizio 2", players: 1, maxPlayers: 3, isWinner: false },
-            { id: 3, title: "Stanza di tizio 3", players: 5, maxPlayers: 6, isWinner: false },
+            { id: 3, title: "Stanza di tizio 3", players: 2, maxPlayers: 6, isWinner: false },
             { id: 4, title: "Stanza di tizio 4", players: 4, maxPlayers: 6, isWinner: false }
         ]
     };
@@ -55,9 +55,9 @@ const Home = () => {
       <section className="mx-10">
         <SectionTitle title="Esplora le stanze" />
 
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 hide-scrollbar flex md:flex-wrap md:justify-center md:gap-10 md:mt-10 md:pb-10">
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 hide-scrollbar md:flex-wrap md:justify-center md:gap-10 md:mt-10 md:pb-10">
               {datiUtente.partite.map((partita) => (
-              <div key={partita.id} className="w-[80vw] shrink-0 snap-center md:w-auto h-full">
+              <div key={partita.id} className="w-[85vw] max-w-[300px] shrink-0 snap-center h-auto">
                   <LobbyCard
                       title={partita.title} 
                       players={partita.players} 
