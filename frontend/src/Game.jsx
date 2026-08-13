@@ -22,10 +22,10 @@ const Game = () => {
     >
       <BrowserRouter>
         <div className="absolute top-15 left- 5 md:top-32 md:left-10 text-9xl -rotate-12 select-none pointer-events-none">
-          <Icon icon="noto:star" />
+          <Icon icon="noto:star" opacity={0.8} />
         </div>
         <div className="absolute top-160 right-5 md:top-130 md:right-10 text-9xl -rotate-12 select-none pointer-events-none">
-          <Icon icon="noto:party-popper" />
+          <Icon icon="noto:party-popper" opacity={0.7} />
         </div>
         <AuthProvider>
             <Routes>
