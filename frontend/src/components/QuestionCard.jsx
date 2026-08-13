@@ -22,7 +22,9 @@ const Question = () => {
                 </div>
 
                 <div className="w-1/2 mx-auto mt-10 mb-5">
-                    <ConfirmButton content="Invia" bgColor="primary" textColor="white" customClasses="w-full -rotate-1 py-4 md:py-3 text-3xl md:text-4xl"/>
+                    <ConfirmButton color="primary" type="submit" customClasses="w-full -rotate-1 py-4 md:py-3 text-3xl md:text-4xl">
+                        Invia
+                    </ConfirmButton>
                 </div>
 
             </form>
