@@ -31,11 +31,11 @@ async function gestioneRefresh(res, userId){
 async function login(req, res) {
   try {
     //* Verifica presenza parametri body
-    if (!req.body || !email || !password.trim()) {
+    if (!req.body || !req.body.email.trim() || !req.body.password.trim()) {
       return res.status(400).json({ message: "Email e password sono obbigatori." });
     }
-    const email = email.toLowerCase();
-    const password = password.trim();
+    const email = req.body.email.trim().toLowerCase();
+    const password = req.body.password.trim();
 
     //* Check se utente è registrato
     const user = await User.findOne({ email: email });
@@ -60,7 +60,7 @@ async function login(req, res) {
 
     //* Logga correttamente e invia risposta json
     return res.status(200).json({
-        token: generateJWT.accessToken(user._id),
+        token: generateJWT.accessToken(user._id, user.username),
         user: { 
           id: user._id, 
           username: user.username, 
