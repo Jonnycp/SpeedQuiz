@@ -9,7 +9,12 @@ import StatCardProfile from "../components/StatCardProfile";
 import ConfirmButton from "../components/ConfirmButton";
 import SingleInput from "../components/SingleInput";
 
+import EmptyState from "../components/EmptyState";
+
 const Profile = () => {
+
+  const tuePartite = [];
+
   const { user, updateProfile } = useAuth();
 
   const [username, setUsername] = useState(user.username);
@@ -93,21 +98,27 @@ const Profile = () => {
             <SectionTitle title="Le tue partite" />
 
             <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 hide-scrollbar">
-              {[].map((partita) => (
-                <div
-                  key={partita.id}
-                  className="w-[80vw] shrink-0 snap-center md:w-auto h-full"
-                >
-                  <LobbyCard
-                    title={partita.title}
-                    players={partita.players}
-                    players_max={partita.maxPlayers}
-                    rotation="-rotate-1"
-                    content={"RIVEDI"}
-                    isWinner={partita.isWinner}
-                  />
+              {tuePartite.length > 0 ? (
+                tuePartite.map((partita) => (
+                  <div
+                    key={partita.id}
+                    className="w-[85vw] max-w-[300px] shrink-0 snap-center h-auto"
+                  >
+                    <LobbyCard
+                      title={partita.title}
+                      players={partita.players}
+                      players_max={partita.maxPlayers}
+                      rotation="-rotate-1"
+                      content={"RIVEDI"}
+                      isWinner={partita.isWinner}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="md:col-span-2 w-full mt-4">
+                  <EmptyState message="Non hai giocato nessuna partita" />
                 </div>
-              ))}
+              )}
             </div>
           </div>
 
