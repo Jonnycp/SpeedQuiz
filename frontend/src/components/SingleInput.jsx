@@ -10,6 +10,7 @@ const SingleInput = ({
   maxLength,
   onChange,
   placeholder,
+  required = true,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -24,10 +25,11 @@ const SingleInput = ({
             type === "password" ? (showPassword ? "text" : "password") : type
           }
           id={name}
+          name={name}
           placeholder={placeholder}
           maxLength={maxLength}
           value={value}
-          required
+          required={required}
           minLength={minLength}
           onChange={onChange}
           autoComplete={type === "email" ? "email" : "false"}

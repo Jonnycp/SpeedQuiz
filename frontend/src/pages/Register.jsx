@@ -40,7 +40,7 @@ const Register = () => {
     
     return (
     <AuthCard isLogin={false} onSubmit={handleSubmit} isLoading={isLoading}>
-        {error && <p className="text-red-500 text-center text-md mb-2">{error.essage}</p>}
+        {error && <p className="text-red-500 text-center text-md mb-2">{error.message}</p>}
          <SingleInput
           label="Username"
           type="text"
