@@ -4,6 +4,7 @@ import LobbyCard from "../components/LobbyCard";
 import SectionTitle from "../components/SectionTitle";
 import { useAuth } from "../contexts/AuthContext"
 import ConfirmButton from "../components/ConfirmButton";
+import EmptyState from "../components/EmptyState";
 
 const Home = () => {
   const { user } = useAuth();
@@ -13,11 +14,12 @@ const Home = () => {
         punti: 7083,
         partiteVinte: 10,
         partiteGiocate: 15,
-        partite: [
+        partite: [/*
             { id: 1, title: "Stanza di tizio 1", players: 3, maxPlayers: 3, isWinner: false },
             { id: 2, title: "Stanza di tizio 2", players: 1, maxPlayers: 3, isWinner: false },
             { id: 3, title: "Stanza di tizio 3", players: 2, maxPlayers: 6, isWinner: false },
             { id: 4, title: "Stanza di tizio 4", players: 4, maxPlayers: 6, isWinner: false }
+            */
         ]
     };
 
@@ -56,18 +58,22 @@ const Home = () => {
         <SectionTitle title="Esplora le stanze" />
 
           <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 hide-scrollbar md:flex-wrap md:justify-center md:gap-10 md:mt-10 md:pb-10">
-              {datiUtente.partite.map((partita) => (
-              <div key={partita.id} className="w-[85vw] max-w-[300px] shrink-0 snap-center h-auto">
-                  <LobbyCard
-                      title={partita.title} 
-                      players={partita.players} 
-                      players_max={partita.maxPlayers} 
-                      rotation="-rotate-1" 
-                      content={"Unisciti"} 
-                      isWinner={partita.isWinner} 
-                  />
-              </div>
-          ))}
+            {datiUtente.partite && datiUtente.partite.length > 0 ? (
+                datiUtente.partite.map((partita) => (
+                    <div key={partita.id} className="w-[85vw] max-w-[300px] shrink-0 snap-center h-auto">
+                        <LobbyCard
+                            title={partita.title} 
+                            players={partita.players} 
+                            players_max={partita.maxPlayers} 
+                            rotation="-rotate-1" 
+                            content={"Unisciti"} 
+                            isWinner={partita.isWinner} 
+                        />
+                    </div>
+                ))
+            ) : (
+                <EmptyState message="Nessuna stanza disponibile" />
+            )}
       </div>
       </section>
     </>
