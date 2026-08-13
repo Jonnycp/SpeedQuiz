@@ -29,14 +29,13 @@ const VoteCard = ({ username, phrases = [], host=false, isSelected, onSelect }) 
             </div>
             <div className="w-[92%] mx-auto md:w-full mt-5">
                 <ConfirmButton 
-                    content={isSelected ? `già VOTATO` : `VOTA`} 
+                    color="secondary"
                     onClick={onSelect} 
-                    customClasses={`w-full py-4 md:py-5 text-xl md:text-2xl ${
-                        isSelected 
-                        ? "bg-gray-300 text-neroNonNero shadow-none translate-x-[2px] translate-y-[2px]" 
-                        : "bg-secondary text-neroNonNero"
-                    }`}
-                />
+                    disabled={isSelected}
+                    customClasses="w-full py-4 md:py-5 text-xl md:text-2xl"
+                >
+                    {isSelected ? "GIÀ VOTATO" : "VOTA"}
+                </ConfirmButton>
             </div>
         </div>
     );
