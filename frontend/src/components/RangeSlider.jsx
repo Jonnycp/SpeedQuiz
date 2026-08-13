@@ -1,4 +1,4 @@
-const RangeSlider = ({ min, max, value, onChange }) => {
+const RangeSlider = ({ min, max, value, onChange, name }) => {
   return (
     <div className="flex flex-col w-full">
       <div className="mt-2 w-full h-4 bg-white rounded-md border-3 border-neroNonNero relative">

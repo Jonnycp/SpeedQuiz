@@ -15,8 +15,7 @@ export function GameProvider({ children }) {
     const token = localStorage.getItem("accessToken");
     const socket = initSocketConnection(token);
     socket.connect();
-
-    console.log(user, socket)
+    
     setSocket(socket);
 
     socket.on("connect_error", async (err) => {

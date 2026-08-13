@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 
 import { Navigate, Link } from "react-router";

@@ -32,7 +32,7 @@ app.use((req, res) => {
 });
 
 //Start mongo e server express + socket
-if (mongoUri || mongoUri.length > 0) {
+if (mongoUri && mongoUri.length > 0) {
   mongoose.connect(mongoUri).then(() => {
       console.log("Connessione a MongoDB riuscita!");
 

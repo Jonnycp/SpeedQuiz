@@ -22,7 +22,7 @@ const Game = () => {
       className="bg-repeat bg-center"
     >
       <BrowserRouter>
-        <div className="absolute top-15 left- 5 md:top-32 md:left-10 text-9xl -rotate-12 select-none pointer-events-none">
+        <div className="absolute top-15 left-5 md:top-32 md:left-10 text-9xl -rotate-12 select-none pointer-events-none">
           <Icon icon="noto:star" />
         </div>
         <div className="absolute top-160 right-5 md:top-130 md:right-10 text-9xl -rotate-12 select-none pointer-events-none">
