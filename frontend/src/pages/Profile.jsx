@@ -147,20 +147,12 @@ const Profile = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="• • • • • • • •"
                 />
-
-                <ConfirmButton
-                  type="submit"
-                  disabled={isDisabled}
-                  bgColor="verdinoCarino"
-                  textColor="white"
-                  content={
+                <ConfirmButton type="submit" disabled={isDisabled} color="verdinoCarino" customClasses="w-full mt-6 py-4 text-base md:text-lg">
                     <span className="flex items-center justify-center gap-2">
                       SALVA MODIFICHE
                       <Icon icon="mdi:send" className="text-xl" />
                     </span>
-                  }
-                  customClasses="w-full mt-6 py-4 text-base md:text-lg"
-                />
+                </ConfirmButton>
               </form>
             </div>
           </div>
