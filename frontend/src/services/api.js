@@ -40,6 +40,7 @@ async function fetchCustom(endpoint, options = {}, noRefresh=false) {
 
     } catch (refreshErr) {
         localStorage.removeItem("accessToken")
+        window.location.reload()
         throw refreshErr;
     }
   }
