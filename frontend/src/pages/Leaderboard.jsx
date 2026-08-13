@@ -28,10 +28,9 @@ const Leaderboard = () => {
       <ResultPlayer username="Charlie" position={5} points={300} />
       </section>
       <section className="flex justify-center gap-4 mt-10 mb-6 mx-32 pt-6">
-        <ConfirmButton 
-          content="Esci" 
-          bgColor="red-600" 
-          textColor="white"/>
+        <ConfirmButton color="red">
+          Esci
+        </ConfirmButton>
       </section>
     </>
   );
