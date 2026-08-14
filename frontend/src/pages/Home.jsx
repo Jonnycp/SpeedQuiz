@@ -8,10 +8,15 @@ import ConfirmButton from "../components/ConfirmButton";
 import { useNavigate } from "react-router"
 import { createLobbyAPI, getPublicLobbiesAPI } from "../services/api"
 import { useState, useEffect } from "react";
+import { useGame } from "../contexts/GameContext";
 
 const Home = () => {
   const { user } = useAuth();
+  const { socket } = useGame();
   const [publicLobbies, setPublicLobbies] = useState([]);
+  const [lobbycode, setLobbyCode] = useState("");
+  const [joinError, setJoinError] = useState("");
+  const { joinLobby } = useGame();
 
   const navigate = useNavigate();
 
@@ -24,6 +29,19 @@ const Home = () => {
     }
   }
 
+  async function handleSubmit(e){
+    e.preventDefault();
+    if(!lobbycode) return;
+    setJoinError("");
+    try{
+      await joinLobby(lobbycode);
+      navigate(`/lobby/${lobbycode.trim().toUpperCase()}`);  
+    }catch(err){
+      setJoinError(err.message)
+      setLobbyCode("");
+    }
+  }
+  
   useEffect(() => {
     getPublicLobbiesAPI().then((data) => setPublicLobbies(data.lobbies))
   }, []);
@@ -49,15 +67,19 @@ const Home = () => {
             onClick={handleCreateLobby}
             customClasses="flex flex-col flex-1 items-center text-2xl justify-center -rotate-1 gap-2 cursor-pointer hover:scale-110 transition-all duration-300"
           />
-          <form className="flex flex-col flex-1 p-4 gap-2 text-xl bg-gray-200 text-black shadow-buttons border-3 border-neroNonNero cursor-pointer">
+          <form onSubmit={handleSubmit} className="flex flex-col flex-1 p-4 gap-2 text-xl bg-gray-200 text-black shadow-buttons border-3 border-neroNonNero cursor-pointer">
             Unisciti a una partita
             <input
               type="text"
               placeholder="Codice stanza"
-              maxLength={6}
+              maxLength={5}
+              value={lobbycode}
+              onChange={(e) => setLobbyCode(e.target.value)}
               className="mt-3 bg-white p-2 uppercase border-3 border-neroNonNero placeholder:text-gray-400 placeholder:text-lg placeholder:font-medium focus:outline-none"
             />
+            {joinError && <p className="text-red-500 text-sm">{joinError}</p>}
             <ConfirmButton 
+            type="onsubmit"
             content="Entra" 
             bgColor="secondary" 
             textColor="neroNonNero"
