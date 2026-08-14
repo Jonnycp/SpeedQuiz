@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react";
 import { useParams } from "react-router";
 import { useGame } from "../contexts/GameContext";
 import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router"
 
 import GamePhase from "../components/GamePhase";
 import Gamer from "../components/Gamer";
@@ -13,15 +14,19 @@ const Lobby = () => {
   const { code } = useParams();
   const { socket, lobby, joinLobby } = useGame();
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    joinLobby(code);
-  }, [code, socket]);
+  
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!lobby) setIsLoading(true);
     else setIsLoading(false);
   }, [lobby]);
+
+  
+  useEffect(() => {
+    if (lobby && lobby.code === code) return; // se sei già joinato non ha senso fare un joinlobby
+    joinLobby(code).catch((err) => navigate("/"));
+  }, [code, socket]);
 
   return (
     <>
