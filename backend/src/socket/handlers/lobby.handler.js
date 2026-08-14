@@ -2,16 +2,15 @@ const { getLobby, serializeLobby } = require("../../store/lobbyStore");
 const { addPlayer } = require("../../services/lobby.service");
 
 function lobbyHandlers(io, socket) {
-  socket.on("lobby:join", (lobbyCode) => {
+
+  socket.on("lobby:join", (lobbyCode, callback) => {
     if (!lobbyCode.trim()) {
-      return socket.emit("lobby:error", {
-        message: "Il codice della stanza è obbligatorio",
-      });
+      return callback( { error: "Il codice della stanza è obbligatorio" });
     }
 
     const lobby = getLobby(lobbyCode.trim().toUpperCase());
     if (!lobby) {
-      return socket.emit("lobby:error", { message: "Stanza inesistente" });
+      return callback({ error: "La stanza non esiste"} );
     }
 
     //* Giocatore ufficialmente entra in stanza (aggiungilo in RAM, entra in stanza, notificalo)
@@ -19,11 +18,16 @@ function lobbyHandlers(io, socket) {
     try {
         newPlayer = addPlayer(lobby, socket);
     } catch(err) {
-        return socket.emit("lobby:error", { message: err.message });
+        return callback({ error: err.message });
     }
 
     socket.data.lobbyCode = lobby.code;
     socket.join(lobby.code);
+
+    callback({
+      lobby: serializeLobby(lobby),
+      amIhost: lobby.hostId === socket.user.id 
+    })
 
     socket.emit("lobby:joined", {
       lobby: serializeLobby(lobby),

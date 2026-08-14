@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { initSocketConnection, disconnectSocket } from "../services/socket";
 import { useAuth } from "./AuthContext";
 import { useLobbySocket } from "../hooks/useLobbySocket";
+
 const GameContext = createContext();
 
 export function GameProvider({ children }) {
@@ -55,10 +56,13 @@ export function GameProvider({ children }) {
 
   useLobbySocket(socket, setLobby);
 
-  function joinLobby(code) {
-    if (socket) {
-      socket.emit("lobby:join", code.trim().toUpperCase().slice(0, 5));
-    }
+  async function joinLobby(code) {
+    if (!socket) throw new Error("Socket non connesso");
+    setLobby(null);  // pulisce la lobby dai valori della vecchia 
+    const response = await socket.emitWithAck("lobby:join", code.trim().toUpperCase().slice(0, 5));
+    if(response.error) throw new Error(response.error);
+    setLobby(response.lobby); 
+    return response;
   }
 
   return (
