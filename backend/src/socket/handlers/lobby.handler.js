@@ -1,5 +1,5 @@
-const { getLobby, serializeLobby } = require("../../store/lobbyStore");
-const { addPlayer } = require("../../services/lobby.service");
+const { getLobby, serializeLobby, deleteLobby } = require("../../store/lobbyStore");
+const { addPlayer, removePlayer } = require("../../services/lobby.service");
 
 function lobbyHandlers(io, socket) {
 
@@ -29,12 +29,45 @@ function lobbyHandlers(io, socket) {
       amIhost: lobby.hostId === socket.user.id 
     })
 
-    //* Notifichiamo altri giocatori (tranne se stesso)
-    socket.to(lobby.code).emit("lobby:player_joined", {
+    //* Notifichiamo altri giocatori (tranne se stesso) 
+    io.to(lobby.code).emit("lobby:player_joined", { //! ricorda in socket.io
       player: newPlayer,
       lobby: serializeLobby(lobby),
     });
   });
+
+
+  
+  socket.on("lobby:leave", (callback) => {
+    const lobbyCode = socket.data.lobbyCode; 
+    const lobby = getLobby(socket.data.lobbyCode);
+
+    //* se il socket non è in nessuna lobby o non ci è mai entrato
+    if(!lobbyCode || !lobby) {
+      socket.data.lobbyCode = null;
+      return callback && callback({ error: "Non sei in nessuna stanza" });
+    }
+
+    //* rimuovo il player e avviso tutti gli altri 
+    removePlayer(lobby, socket, (callback) => {
+      io.to(lobbyCode).emit("lobby:player_left", { // da cambiare in socket.to
+        playerLeft: socket.user.id,
+        lobby: serializeLobby(lobby)
+      })
+    })
+
+    if(lobby.players.size === 0){
+      deleteLobby(lobbyCode);
+    }
+
+    //* aggiorno il code perché chiaramente ha quittato
+    socket.data.lobbyCode = null;
+
+    //* il socket non riceve più eventi da io.to().emit 
+    socket.leave(lobbyCode);
+
+    callback && callback({success: true});
+});
 }
 
-module.exports = lobbyHandlers
+module.exports = lobbyHandlers;
