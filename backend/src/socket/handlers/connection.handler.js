@@ -15,7 +15,7 @@ function connectionHandlers(io, socket) {
     //* Rimuovi player al termine del grace time
     try {
       markPlayerAsDisconnected(socket, lobby, () => {
-        io.to(lobby.code).emit("lobby:player_disconnected", {
+        socket.to(lobby.code).emit("lobby:player_disconnected", {
           playerDisconnected: socket.user.id,
           lobby: serializeLobby(lobby),
         });
@@ -25,7 +25,7 @@ function connectionHandlers(io, socket) {
     }
 
     //* Evento per avvisare che player è andato offline
-     io.to(lobby.code).emit("lobby:player_offline", {
+     socket.to(lobby.code).emit("lobby:player_offline", {
         playerDisconnected: socket.user.id,
         lobby: serializeLobby(lobby),
       });
