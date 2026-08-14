@@ -1,6 +1,6 @@
 import ConfirmButton from "./ConfirmButton";
 
-const GamePhase = ({ phase, underPhase }) => {
+const GamePhase = ({ phase, underPhase, onLeave }) => {
   return (
     <header className="font-primary px-4 md:px-10 py-3 md:py-5 flex flex-wrap items-center justify-between gap-4 select-none z-10 w-full">
       <div className="flex flex-col items-start">
@@ -16,12 +16,12 @@ const GamePhase = ({ phase, underPhase }) => {
 
       <div className="flex items-center gap-2 md:gap-4 ml-auto">
           <ConfirmButton
-                    bgColor="[#E53935]"
-                    textColor="white"
-                    content="ESCI"
-                    onClick={() => console.log("Uscita dalla fase di gioco...")}
-                    customClasses="hover:bg-red-700"
-                  />
+            bgColor="[#E53935]"
+            textColor="white"
+            content="esci"
+            onClick={onLeave}
+            customClasses="hover:bg-red-700"
+        />
       </div>
     </header>
   );
