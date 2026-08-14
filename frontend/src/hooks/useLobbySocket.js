@@ -1,12 +1,6 @@
 import { useEffect } from "react";
 
-/* 1. capire se divisione in hook è giusta
-2. capire dove è il miglior posto per inserire emittori
-3. capire come usare ack
-4. far funzionare tutto...entro oggi :( ) */
-
 export function useLobbySocket(socket, setLobby) {
-  //* ASCOLTATORI
   useEffect(() => {
     if (!socket) return;
 

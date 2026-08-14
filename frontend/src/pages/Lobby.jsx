@@ -25,7 +25,9 @@ const Lobby = () => {
   
   useEffect(() => {
     if (lobby && lobby.code === code) return; // se sei già joinato non ha senso fare un joinlobby
-    joinLobby(code).catch((err) => navigate("/"));
+    joinLobby(code)
+    .then((data) => navigate("/lobby/" + data.lobby.code))
+    .catch((err) => navigate("/"));
   }, [code, socket]);
 
   return (
