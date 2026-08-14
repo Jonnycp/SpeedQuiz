@@ -16,10 +16,12 @@ const Home = () => {
   const [publicLobbies, setPublicLobbies] = useState([]);
   const [lobbycode, setLobbyCode] = useState("");
   const [joinError, setJoinError] = useState("");
+  const [isDisabled, setIsDisabled] = useState(true);
   const { joinLobby } = useGame();
 
   const navigate = useNavigate();
 
+  //* Gestione crea lobby
   async function handleCreateLobby(){
     try{
       const data = await createLobbyAPI();
@@ -29,8 +31,10 @@ const Home = () => {
     }
   }
 
+  //* Gestione entra in lobby
   async function handleSubmit(e){
     e.preventDefault();
+    setIsDisabled(true);
     if(!lobbycode) return;
     setJoinError("");
     try{
@@ -39,9 +43,18 @@ const Home = () => {
     }catch(err){
       setJoinError(err.message)
       setLobbyCode("");
+    }finally{
+      setIsDisabled(false);
     }
   }
   
+  //* Gestisci accensione pulsante ENTRA
+  useEffect(() => {
+    if(lobbycode.trim().length === 5) setIsDisabled(false);
+    else setIsDisabled(true);
+  }, [lobbycode]);
+
+  //* Ottieni lobby pubbliche
   useEffect(() => {
     getPublicLobbiesAPI().then((data) => setPublicLobbies(data.lobbies))
   }, []);
@@ -74,12 +87,16 @@ const Home = () => {
               placeholder="Codice stanza"
               maxLength={5}
               value={lobbycode}
-              onChange={(e) => setLobbyCode(e.target.value)}
+              onChange={(e) => {
+                const sanitizedValue = e.target.value.replace(/[^a-zA-Z2-9]/, "");
+                setLobbyCode(sanitizedValue.toUpperCase().trim());
+              }}
               className="mt-3 bg-white p-2 uppercase border-3 border-neroNonNero placeholder:text-gray-400 placeholder:text-lg placeholder:font-medium focus:outline-none"
             />
             {joinError && <p className="text-red-500 text-sm">{joinError}</p>}
             <ConfirmButton 
-            type="onsubmit"
+            type="submit"
+            disabled={isDisabled}
             content="Entra" 
             bgColor="secondary" 
             textColor="neroNonNero"
@@ -91,7 +108,7 @@ const Home = () => {
       <section className="mx-10">
         <SectionTitle title="Esplora le stanze" />
 
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 hide-scrollbar flex md:flex-wrap md:justify-center md:gap-10 md:mt-10 md:pb-10">
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 hide-scrollbar md:flex-wrap md:justify-center md:gap-10 md:mt-10 md:pb-10">
               {publicLobbies.map((lobby) => (
               <div key={lobby.code} className="w-[80vw] shrink-0 snap-center md:w-auto h-full">
                   <LobbyCard
