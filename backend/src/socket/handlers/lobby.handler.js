@@ -29,11 +29,6 @@ function lobbyHandlers(io, socket) {
       amIhost: lobby.hostId === socket.user.id 
     })
 
-    socket.emit("lobby:joined", {
-      lobby: serializeLobby(lobby),
-      amIhost: lobby.hostId === socket.user.id,
-    });
-
     //* Notifichiamo altri giocatori (tranne se stesso)
     socket.to(lobby.code).emit("lobby:player_joined", {
       player: newPlayer,
