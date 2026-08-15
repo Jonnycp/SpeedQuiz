@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useParams } from "react-router";
 import { useGame } from "../contexts/GameContext";
-import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router";
+import { ToastContainer, toast } from 'react-toastify';
+
 
 import GamePhase from "../components/GamePhase";
 import Gamer from "../components/Gamer";
@@ -32,12 +33,26 @@ const Lobby = () => {
 
   
   async function handleLeave(){
-    await leaveLobby();
-    navigate("/");
+    try{
+      await leaveLobby();
+      navigate("/");
+    }catch(err){
+      console.log(err);
+    }
+  }
+
+  async function handleClick(){
+    try{
+      await navigator.clipboard.writeText(code);
+      toast("Codice copiato con successo!");
+    }catch(err){
+      console.error("Impossibile copiare il codice ora.", err);
+    }
   }
 
   return (
     <>
+    <ToastContainer hideProgressBar={true} position="top-center"/>
       <GamePhase 
       phase="Sala d'attesa" 
       underPhase="In attesa di giocatori..." 
@@ -59,6 +74,7 @@ const Lobby = () => {
               content={<Icon icon="tabler:copy" className="text-neroNonNero" />}
               bgColor="white"
               textColor="neroNonNero"
+              onClick={handleClick}
             />
           </div>
 
