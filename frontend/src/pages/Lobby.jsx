@@ -5,7 +5,6 @@ import { useGame } from "../contexts/GameContext";
 import { useNavigate } from "react-router";
 import { ToastContainer, toast } from 'react-toastify';
 
-
 import GamePhase from "../components/GamePhase";
 import Gamer from "../components/Gamer";
 import ConfirmButton from "../components/ConfirmButton";
@@ -14,24 +13,17 @@ import SettingsInput from "../components/SettingsInput";
 const Lobby = () => {
   const { code } = useParams();
   const { socket, lobby, joinLobby, leaveLobby } = useGame();
-  const [isLoading, setIsLoading] = useState(true);
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!lobby) setIsLoading(true);
-    else setIsLoading(false);
-  }, [lobby]);
-
-  
-  useEffect(() => {
-    if (lobby && lobby.code === code) return; // se sei già joinato non ha senso fare un joinlobby
+    if(!socket) return; // senza questo, se il socket non fosse ancora connesso, il join fallirebbe per cui l'utente sarebbe rispedito in home  
+    if (lobby && lobby.code === code) return;
     joinLobby(code)
-    .then((data) => navigate("/lobby/" + data.lobby.code))
-    .catch((err) => navigate("/"));
-  }, [code, socket]);
+    .then((data) => navigate("/lobby/" + data.lobby.code, { replace: true })) // protegge dal doppio navigate in lobby a seguito di crea partita
+    .catch((err) => navigate("/", { replace: true }));
+  },[code, socket]);
 
-  
   async function handleLeave(){
     try{
       await leaveLobby();
@@ -109,11 +101,11 @@ const Lobby = () => {
         <section className="md:rotate-1 bg-transparent md:bg-white md:border-4 md:border-neroNonNero md:shadow-buttons md:p-10 flex-col gap-6 w-full flex-3 relative">
           <div className="hidden md:flex flex-col items-center gap-3">
             <h1 className="text-4xl font-black uppercase tracking-wide text-black text-center">
-              {isLoading ? "..." : "Stanza di " + lobby.hostUsername}
+              {!lobby ? "..." : "Stanza di " + lobby.hostUsername}
             </h1>
             <h3 className="bg-primary text-white border-3 border-neroNonNero rounded-full px-6 py-1.5 font-extrabold text-sm uppercase shadow-buttons -rotate-1">
               In attesa...
-              {isLoading
+              {!lobby
                 ? ""
                 : `(${lobby.players.length}/${lobby.config.maxPlayers})`}
             </h3>
@@ -121,7 +113,7 @@ const Lobby = () => {
           <div className="flex md:hidden justify-between items-end text-white font-medium text-sm mb-2 px-1">
             <span className="uppercase font-bold tracking-wide">
               GIOCATORI (
-              {isLoading
+              {!lobby
                 ? ""
                 : `${lobby.players.length}/${lobby.config.maxPlayers}`}
               )
@@ -129,7 +121,7 @@ const Lobby = () => {
             <span className="text-white/80">In attesa...</span>
           </div>
           <div className="flex md:flex-col gap-5 md:gap-3 my-8 flex-wrap">
-            {isLoading ? (
+            {!lobby ? (
               <p>Caricamento giocatori...</p>
             ) : (
               lobby.players.map((player, index) => (
