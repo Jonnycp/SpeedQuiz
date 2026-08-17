@@ -68,18 +68,33 @@ const Lobby = () => {
   }
 
   //* Gestione copia codice lobby
-  async function handleClick(){
+  async function handleCopy(){
     try{
       await navigator.clipboard.writeText(code);
-      toast("Codice copiato con successo!");
+      toast.success("Codice copiato con successo!");
     }catch(err){
+      toast.error("Errore nella copia del codice. Riprova più tardi.");
       console.error("Impossibile copiare il codice ora.", err);
+    }
+  }
+
+  async function handleShare(){
+    try{
+      await navigator.share({
+        title: "Unisciti alla mia partita di SpeedQuiz!",
+        text: `Unisciti alla mia partita di SpeedQuiz! Usa il codice: ${code}`,
+        url: window.location.href,
+      });
+    }
+    catch(err){
+      toast.error("Errore nella condivisione del codice. Riprova più tardi.");
+      console.error("Impossibile condividere il codice ora.", err);
     }
   }
   
   return (
     <>
-    <ToastContainer hideProgressBar={true} position="top-center"/>
+    <ToastContainer hideProgressBar={true} position="top-center" colored/>
       <GamePhase 
       phase="Sala d'attesa" 
       underPhase="In attesa di giocatori..." 
@@ -96,12 +111,13 @@ const Lobby = () => {
               content="Invita amici"
               bgColor="primary"
               textColor="neroNonNero"
+              onClick={handleShare}
             />
             <ConfirmButton
               content={<Icon icon="tabler:copy" className="text-neroNonNero" />}
               bgColor="white"
               textColor="neroNonNero"
-              onClick={handleClick}
+              onClick={handleCopy}
             />
           </div>
 
