@@ -11,9 +11,10 @@ function createLobby(ownerId, owenerUsername) {
         createdAt: Date.now(),
         config: {
             public: false,
+            rounds: 3,
             minPlayers: 3,
             maxPlayers: 8,
-            anwserTimeMs: 30000, //30sec default
+            answerTimeMs: 30000, //30sec default
             votingTimeMs: 30000, //30sec default
         },
         players: new Map(), //idPlayer => {}
@@ -79,6 +80,10 @@ function removePlayer(lobby, socket, callback){
     if(!player || player.socketId !== socket.id) return false;
 
     lobby.players.delete(socket.user.id)
+
+    //* Uscita da stanza multicast
+    socket.data.lobbyCode = null;
+    socket.leave(lobby.code)
 
     //* Gestione se esce host
     if (lobby.hostId === socket.user.id && lobby.players.size > 0){
