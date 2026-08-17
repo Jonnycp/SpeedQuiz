@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 import { useParams } from "react-router";
 import { useGame } from "../contexts/GameContext";
 import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router";
 
 import GamePhase from "../components/GamePhase";
 import Gamer from "../components/Gamer";
@@ -12,24 +12,50 @@ import SettingsInput from "../components/SettingsInput";
 
 const Lobby = () => {
   const { code } = useParams();
-  const { socket, lobby, joinLobby } = useGame();
-  const [isLoading, setIsLoading] = useState(true);
-  
+  const { user } = useAuth();
   const navigate = useNavigate();
+  const { socket, lobby, joinLobby, editSettings } = useGame();
+  const [isLoading, setIsLoading] = useState(true);
+  const [settings, setSettings] = useState({
+    rounds: lobby?.config.rounds || 3,
+    public: lobby?.config.public || false,
+    answerTimeMs: lobby?.config.answerTimeMs || 30 * 1000,
+  });
 
+  //* Gestione loading lobby
   useEffect(() => {
     if (!lobby) setIsLoading(true);
     else setIsLoading(false);
   }, [lobby]);
 
-  
+  //* Gestione join lobby (o join da link)
   useEffect(() => {
     if (lobby && lobby.code === code) return; // se sei già joinato non ha senso fare un joinlobby
     joinLobby(code)
-    .then((data) => navigate("/lobby/" + data.lobby.code))
-    .catch((err) => navigate("/"));
+      .then((data) => navigate("/lobby/" + data.lobby.code))
+      .catch((err) => navigate("/"));
   }, [code, socket]);
 
+  //* Visualizza impostazioni lobby da socket
+  useEffect(() => {
+    if (!lobby) return;
+    setSettings({
+      rounds: lobby.config.rounds,
+      public: lobby.config.public,
+      answerTimeMs: lobby.config.answerTimeMs,
+    });
+  }, [lobby]);
+
+  //* Gestione chiamata a modifica impostazioni lobby (solo host)
+  const handleSettingChange = (newSettings) => {
+    setSettings(newSettings);
+
+    if(lobby && lobby.hostId === user.id){ 
+      editSettings(newSettings)
+        .then((data) => console.log("Impostazioni modificate con successo", data))
+        .catch((err) => console.error("Errore nella modifica delle impostazioni", err));
+    }
+  }
   return (
     <>
       <GamePhase phase="Sala d'attesa" underPhase="In attesa di giocatori..." />
@@ -53,22 +79,33 @@ const Lobby = () => {
             />
           </div>
 
-          <form
-            className="flex flex-col gap-5"
-            onSubmit={(e) => e.preventDefault()}
-          >
+          <form className="flex flex-col gap-5">
+            {lobby && lobby.hostId !== user.id && (
+            <p className="text-xs text-center text-red-500 font-bold bg-white px-2 py-1 rounded-md border-2 border-neroNonNero shadow-buttons">
+              Solo l'host può modificare
+            </p>
+          )}
             <div className="flex w-full gap-6">
               <SettingsInput
                 label="Rounds"
                 name="rounds"
-                minValue={3}
-                maxValue={30}
+                minValue={1}
+                maxValue={9}
+                value={settings.rounds}
+                disabled={lobby && lobby.hostId !== user.id}
+                onChange={(value) =>
+                  handleSettingChange({ ...settings, rounds: value })
+                }
               />
               <SettingsInput
-                label="Max Giocatori"
-                name="maxPlayers"
-                minValue={3}
-                maxValue={8}
+                label="Visibilità"
+                name="visibility"
+                type="checkbox"
+                value={settings.public}
+                disabled={lobby && lobby.hostId !== user.id}
+                onChange={(value) =>
+                  handleSettingChange({ ...settings, public: value })
+                }
               />
             </div>
             <SettingsInput
@@ -77,6 +114,11 @@ const Lobby = () => {
               type="range"
               minValue={10}
               maxValue={60}
+              value={settings.answerTimeMs / 1000}
+              disabled={lobby && lobby.hostId !== user.id}
+              onChange={(value) =>
+                handleSettingChange({ ...settings, answerTimeMs: value * 1000 })
+              }
             />
           </form>
         </aside>
