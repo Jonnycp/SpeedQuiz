@@ -64,16 +64,16 @@ const Home = () => {
     <>
       <Header />
       <section className="rotate-1 my-10 mx-5 md:mx-28 xl:mx-72 bg-white font-primary font-extrabold flex flex-col items-start justify-center gap-5 py-5 px-8 md:py-10 md:px-12 border-3 border-neroNonNero shadow-buttons">
-        <h3 className="text-3xl uppercase text-background">
+        <h3 className="text-4xl uppercase text-background mt-3">
           Ciao, {user.username}!
         </h3>
-        <h2 className="text-xl -rotate-1 uppercase text-center md:text-left bg-secondary border-3 border-neroNonNero shadow-buttons inline py-2 px-3 mx-auto select-none">
-          1 domanda, 3 risposte, il più veloce vince!
+        <h2 className="text-base md:text-xl -rotate-1 uppercase text-center md:text-left bg-secondary border-3 border-neroNonNero shadow-buttons inline py-2 px-3 mx-auto select-none">
+          1 domanda, 3 risposte, il più divertente vince!
         </h2>
         <div className="flex flex-col md:flex-row mt-5 gap-8 md:gap-4 uppercase w-full">
           <ConfirmButton
             color="primary"
-            customClasses="flex flex-col flex-1 items-center text-2xl justify-center -rotate-1 gap-2 cursor-pointer hover:scale-110 transition-all duration-300"
+            customClasses="flex flex-col flex-1 items-center text-2xl justify-center -rotate-1 gap-2 cursor-pointer hover:scale-110 transition-all duration-300 py-12"
             onClick={handleCreateLobby}
           >
             <Icon icon="mdi:plus-circle" width={30} />
