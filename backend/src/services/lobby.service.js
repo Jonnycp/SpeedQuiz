@@ -1,4 +1,5 @@
 const generateRoomCode = require("../utils/generateRoomCode")
+const { pickRandom } = require("../store/questionStore")
 const { setLobby } = require("../store/lobbyStore")
 
 function createLobby(ownerId, owenerUsername) {
@@ -16,12 +17,21 @@ function createLobby(ownerId, owenerUsername) {
             maxPlayers: 8,
             answerTimeMs: 30000, //30sec default
             votingTimeMs: 30000, //30sec default
+            revealTimems: 15000, //15sec default
         },
         players: new Map(), //idPlayer => {}
+        questions: [],
         currentRound: -1,
-        rounds: new Map(), //indexRound => {}
         disconnectedTimers: new Map(),
+        gameTimers: {
+            answering: null,
+            voting: null,
+            reveal: null
+        },
+        rounds: new Map(), //indexRound => {}
+        phaseEndAt: null
     }
+    
     
     setLobby(code, newLobby) // modifica la Map lobbies aggiungendo una nuova lobby con chiave code e valore new lobby 
     return newLobby
@@ -110,19 +120,40 @@ function markPlayerAsDisconnected(socket, lobby, callback){
     //* TIMER PER RICONESSIONE (se si riconnette entro X sec, altrimenti eliminalo)
     const timer = setTimeout(() => {
         if(!player.connected){
-            removePlayer(lobby, socket, callback)
+            removePlayer(lobby, socket, callback);
         }
-        lobby.disconnectedTimers.delete(socket.user.id)
-    }, process.env.DISCONNECTED_TIME || "30000")
+        lobby.disconnectedTimers.delete(socket.user.id);
+    }, process.env.DISCONNECTED_TIME || "30000");
     
     //* SALVA TIMER NELLA MAP lobby.disconnectedTimers
-    lobby.disconnectedTimers.set(socket.user.id, timer)
+    lobby.disconnectedTimers.set(socket.user.id, timer);
 }
 
+function prepareStart(lobby, socket){
+    if(lobby.status !== "LOBBY"){
+      throw new Error("La partita è già stata avviata");
+    }
+    
+    if(lobby.hostId !== socket.user.id){
+      throw new Error("Solo l'host può avviare la partita");
+    }
+    
+    //*MINIMO persone online
+    const players = [...lobby.players.values()]
+    if(players.filter(p => p.connected).length < lobby.config.minPlayers){
+      throw new Error("Non ci sono abbastanza giocatori connessi");
+    }
+
+    //*Pesca domande per tutti i rounds
+    lobby.questions = pickRandom(lobby.config.rounds * player.length, "text");
+
+    return lobby;
+}
 
 module.exports = {
     createLobby,
     addPlayer,
     removePlayer,
-    markPlayerAsDisconnected
+    markPlayerAsDisconnected,
+    prepareStart
 }
