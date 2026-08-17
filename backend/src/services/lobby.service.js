@@ -23,7 +23,7 @@ function createLobby(ownerId, owenerUsername) {
         questions: [],
         currentRound: -1,
         disconnectedTimers: new Map(),
-        gameTimers: {
+        timers: {
             answering: null,
             voting: null,
             reveal: null
@@ -145,7 +145,7 @@ function prepareStart(lobby, socket){
     }
 
     //*Pesca domande per tutti i rounds
-    lobby.questions = pickRandom(lobby.config.rounds * player.length, "text");
+    lobby.questions = pickRandom(lobby.config.rounds * players.length, "text");
 
     return lobby;
 }
