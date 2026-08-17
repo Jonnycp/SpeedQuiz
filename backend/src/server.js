@@ -17,7 +17,7 @@ const mongoUri = process.env.MONGODB_URI;
 // Inizializzazione socket.io
 const io = initSocket(server);
 
-// Parsing del body in JSON
+// Parsing del body JSON in oggetto JS
 app.use(express.json());
 
 // Parsing dei cookie (per refresh token)
@@ -37,7 +37,7 @@ if (mongoUri && mongoUri.length > 0) {
       console.log("Connessione a MongoDB riuscita!");
 
       server.listen(PORT, () => {
-        console.log(`Backend server e Socket server partito su: http://localhost:${PORT}`);
+        console.log(`Backend server e Socket server partito su: http://localhost:${PORT}`); // un unico server in ascolto sulla porta 3000 che inoltra le richieste HTTP gestite da express ad app, dalle richieste di handshake Websocket
       });
     }).catch((err) => {
       console.error("ERRORE: Connessione MongoDB - Causa:", err);

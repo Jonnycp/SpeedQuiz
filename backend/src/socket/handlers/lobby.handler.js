@@ -5,7 +5,7 @@ function lobbyHandlers(io, socket) {
 
   socket.on("lobby:join", (lobbyCode, callback) => {
     if (!lobbyCode.trim()) {
-      return callback( { error: "Il codice della stanza è obbligatorio" });
+      return callback({ error: "Il codice della stanza è obbligatorio" });
     }
 
     const lobby = getLobby(lobbyCode.trim().toUpperCase());
@@ -30,15 +30,14 @@ function lobbyHandlers(io, socket) {
     })
 
     //* Notifichiamo altri giocatori (tranne se stesso) 
-    io.to(lobby.code).emit("lobby:player_joined", { //! ricorda in socket.io
+    socket.to(lobby.code).emit("lobby:player_joined", {
       player: newPlayer,
       lobby: serializeLobby(lobby),
     });
   });
 
-
   
-  socket.on("lobby:leave", (callback) => {
+  socket.on("lobby:leave", (callback) => { // Socket.IO fornisce come parametro della CB, un'altra CB per inviare la risposta al client quando è "pronta" e risolvere così la promise restituita da emitwithack
     const lobbyCode = socket.data.lobbyCode; 
     const lobby = getLobby(socket.data.lobbyCode);
 
@@ -49,18 +48,17 @@ function lobbyHandlers(io, socket) {
     }
 
     //* rimuovo il player e avviso tutti gli altri 
-    removePlayer(lobby, socket, (callback) => {
-      io.to(lobbyCode).emit("lobby:player_left", { // da cambiare in socket.to
+    removePlayer(lobby, socket, (callback) => { 
+      socket.to(lobbyCode).emit("lobby:player_left", {
         playerLeft: socket.user.id,
         lobby: serializeLobby(lobby)
       })
     })
 
-    if(lobby.players.size === 0){
+    if(lobby.players.size === 0){ // sposta questo controllo 
       deleteLobby(lobbyCode);
     }
 
-    //* aggiorno il code perché chiaramente ha quittato
     socket.data.lobbyCode = null;
 
     //* il socket non riceve più eventi da io.to().emit 

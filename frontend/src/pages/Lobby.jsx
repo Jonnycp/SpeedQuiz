@@ -41,7 +41,7 @@ const Lobby = () => {
       console.error("Impossibile copiare il codice ora.", err);
     }
   }
-
+  
   return (
     <>
     <ToastContainer hideProgressBar={true} position="top-center"/>
