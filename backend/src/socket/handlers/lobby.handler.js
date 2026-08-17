@@ -155,7 +155,7 @@ function lobbyHandlers(io, socket) {
       return callback({error: err});
     }
     
-    //TODO chiama startRound da game.service 
+    //* Chiama startRound da game.service 
     startRound(lobby)
     callback({lobby: serializeLobby(lobby)});
 

@@ -1,4 +1,4 @@
-const { getLobby } = require('../store/lobby.store');
+const { getLobby } = require('../store/lobbyStore');
 const { startTimer } = require("../store/timerManager")
 
 function createMatch(player1, player2, question){
