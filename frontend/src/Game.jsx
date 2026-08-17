@@ -13,6 +13,7 @@ import Register from "./pages/Register.jsx";
 import Question from "./pages/Question.jsx";
 import Leaderboard from "./pages/Leaderboard.jsx";
 import Profile from "./pages/Profile.jsx";
+import { GameProvider } from "./contexts/GameContext.jsx";
 
 const Game = () => {
   return (
@@ -28,17 +29,19 @@ const Game = () => {
           <Icon icon="noto:party-popper" opacity={0.7} />
         </div>
         <AuthProvider>
+          <GameProvider>
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/" element={<ProtectedRoute> <Home /> </ProtectedRoute>} />
-              <Route path="/lobby" element={<ProtectedRoute> <Lobby /></ProtectedRoute>} />
+              <Route path="/lobby/:code" element={<ProtectedRoute> <Lobby /></ProtectedRoute>} />
               <Route path="/vote" element={<ProtectedRoute> <Vote /> </ProtectedRoute>} />
               <Route path="/question" element={<ProtectedRoute> <Question /> </ProtectedRoute>} />
               <Route path="/leaderboard" element={<ProtectedRoute> <Leaderboard /> </ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute> <Profile /> </ProtectedRoute>} />
               <Route path="*" element={<MessagePage/>}/>
             </Routes>
+          </GameProvider>
         </AuthProvider>
         <footer className="text-white/50 font-primary text-sm text-center py-5 font-extrabold uppercase selection:bg-primary selection:text-black">
           ©{new Date().getFullYear()} - SpeedQuiz Team ❤️

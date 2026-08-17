@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken");
 
-function accessToken(userId){
+function accessToken(userId, username){
   const token = jwt.sign({
         userId: userId,
+        username: username
       },
       process.env.JWT_SECRET,
       { expiresIn: "1h" },

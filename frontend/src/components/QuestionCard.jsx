@@ -1,10 +1,8 @@
-import { useState } from "react"
-
 import ConfirmButton from "./ConfirmButton"
 import GamePhase from "./GamePhase"
 
 
-const Question = () => {
+const QuestionCard = () => {
 
     return(
         <div className="flex flex-col items-center mt-5 px-4 gap-3 w-full mx-auto md:max-w-3xl"> 
@@ -31,4 +29,4 @@ const Question = () => {
         </div>
     )
 }
-export default Question
+export default QuestionCard;

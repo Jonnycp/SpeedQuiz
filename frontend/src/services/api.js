@@ -40,6 +40,7 @@ async function fetchCustom(endpoint, options = {}, noRefresh=false) {
 
     } catch (refreshErr) {
         localStorage.removeItem("accessToken")
+        window.location.reload()
         throw refreshErr;
     }
   }
@@ -75,9 +76,20 @@ export async function logoutAPI(){
 }
 
 export async function updateProfileAPI(username, email, password){
-  console.log("updateProfileAPI called with:", username, email, password);
   return fetchCustom("/auth/profile", {
     method: "PUT",
     body: JSON.stringify({username:username, email:email, password:password})
+  })
+}
+
+export async function createLobbyAPI(){
+  return fetchCustom('/lobbies', {
+    method: "POST"
+  })
+}
+
+export async function getPublicLobbiesAPI(){
+  return fetchCustom('/lobbies/public', {
+    method: "GET",
   })
 }

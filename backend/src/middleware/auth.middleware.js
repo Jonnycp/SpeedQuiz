@@ -16,6 +16,7 @@ function isAuth(req, res, next){
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET); 
         req.userId = decoded.userId;
+        req.username = decoded.username;
         return next();
         
     } catch (err) {

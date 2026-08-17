@@ -1,73 +1,205 @@
+import { useState, useEffect } from "react";
+import { Icon } from "@iconify/react";
+import { useParams, useNavigate } from "react-router";
+import { useGame } from "../contexts/GameContext";
+import { useAuth } from "../contexts/AuthContext";
+import { ToastContainer, toast } from 'react-toastify';
+
 import GamePhase from "../components/GamePhase";
 import Gamer from "../components/Gamer";
-import { Icon } from "@iconify/react";
 import ConfirmButton from "../components/ConfirmButton";
 import SettingsInput from "../components/SettingsInput";
 
 const Lobby = () => {
-  const username = "Jonathan";
-  const players = ["Jonathan", "Alice", "Bob", "Charlie"];
-  const maxPlayers = 6;
-  const isCurrentHost = true;
+  const { code } = useParams();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { socket, lobby, joinLobby, editSettings, leaveLobby } = useGame();
+  const [isLoading, setIsLoading] = useState(true);
+  const [settings, setSettings] = useState({
+    rounds: lobby?.config.rounds || 3,
+    public: lobby?.config.public || false,
+    answerTimeMs: lobby?.config.answerTimeMs || 30 * 1000,
+  });
 
+  //* Gestione loading lobby
+  useEffect(() => {
+    if (!lobby) setIsLoading(true);
+    else setIsLoading(false);
+  }, [lobby]);
+
+  //* Gestione join lobby (o join da link)
+  useEffect(() => {
+    if (lobby && lobby.code === code) return; // se sei già joinato non ha senso fare un joinlobby
+     joinLobby(code)
+    .then((data) => navigate("/lobby/" + data.lobby.code, { replace: true }))
+    .catch((err) => navigate("/", { replace: true }));
+  }, [code, socket]);
+
+  //* Visualizza impostazioni lobby da socket
+  useEffect(() => {
+    if (!lobby) return;
+    setSettings({
+      rounds: lobby.config.rounds,
+      public: lobby.config.public,
+      answerTimeMs: lobby.config.answerTimeMs,
+    });
+  }, [lobby]);
+
+  //* Gestione chiamata a modifica impostazioni lobby (solo host)
+  const handleSettingChange = (newSettings) => {
+    setSettings(newSettings);
+
+    if(lobby && lobby.hostId === user.id){ 
+      editSettings(newSettings)
+        .then((data) => console.log("Impostazioni modificate con successo", data))
+        .catch((err) => console.error("Errore nella modifica delle impostazioni", err));
+    }
+  }
+
+  //* Gestione uscita dalla lobby
+  async function handleLeave(){
+    try{
+      await leaveLobby();
+      navigate("/");
+    }catch(err){
+      console.log(err);
+    }
+  }
+
+  //* Gestione copia codice lobby
+  async function handleCopy(){
+    try{
+      await navigator.clipboard.writeText(code);
+      toast.success("Codice copiato con successo!");
+    }catch(err){
+      toast.error("Errore nella copia del codice. Riprova più tardi.");
+      console.error("Impossibile copiare il codice ora.", err);
+    }
+  }
+
+  async function handleShare(){
+    try{
+      await navigator.share({
+        title: "Unisciti alla mia partita di SpeedQuiz!",
+        text: `Unisciti alla mia partita di SpeedQuiz! Usa il codice: ${code}`,
+        url: window.location.href,
+      });
+    }
+    catch(err){
+      toast.error("Errore nella condivisione del codice. Riprova più tardi.");
+      console.error("Impossibile condividere il codice ora.", err);
+    }
+  }
+  
   return (
     <>
-      <GamePhase
-        phase="Sala d'attesa"
-        underPhase="In attesa di giocatori..."
-        username={username}
-      />
+    <ToastContainer hideProgressBar={true} position="top-center" colored/>
+      <GamePhase 
+      phase="Sala d'attesa" 
+      underPhase="In attesa di giocatori..." 
+      onLeave={handleLeave}/>
+
       <div className="flex-1 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 px-4 md:px-8 max-w-7xl mx-auto w-full">
         <aside className="bg-secondary flex flex-col items-center py-5 px-4 shadow-buttons flex-1 uppercase font-extrabold border-3 z-10 rounded-xl h-fit">
           <h3 className="bg-black text-white w-fit px-3 py-1 rounded-xl mb-4 select-none">
             codice stanza
           </h3>
-          <span className="block text-6xl tracking-wider ">ABCD12</span>
+          <span className="block text-6xl tracking-wider "> {code} </span>
           <div className="flex gap-3 mt-5 mb-8 mx-auto select-none w-[80%]">
             
-            <ConfirmButton color="primary" customClasses="!text-neroNonNero">
+            <ConfirmButton color="primary" customClasses="!text-neroNonNero" onClick={handleCopy}>
               Invita amici
             </ConfirmButton>
             
-            <ConfirmButton customClasses="!bg-white !text-neroNonNero">
+            <ConfirmButton customClasses="!bg-white !text-neroNonNero" onClick={handleShare}>
               <Icon icon="tabler:copy" className="text-neroNonNero" />
             </ConfirmButton>
 
           </div>
 
-          <form className="flex flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex flex-col gap-5">
+            {lobby && lobby.hostId !== user.id && (
+            <p className="text-xs text-center text-red-500 font-bold bg-white px-2 py-1 rounded-md border-2 border-neroNonNero shadow-buttons">
+              Solo l'host può modificare
+            </p>
+          )}
             <div className="flex w-full gap-6">
-              <SettingsInput label="Rounds" name="rounds" minValue={3} maxValue={30} />
-              <SettingsInput label="Max Giocatori" name="maxPlayers" minValue={3} maxValue={8} />
+              <SettingsInput
+                label="Rounds"
+                name="rounds"
+                minValue={1}
+                maxValue={9}
+                value={settings.rounds}
+                disabled={lobby && lobby.hostId !== user.id}
+                onChange={(value) =>
+                  handleSettingChange({ ...settings, rounds: value })
+                }
+              />
+              <SettingsInput
+                label="Visibilità"
+                name="visibility"
+                type="checkbox"
+                value={settings.public}
+                disabled={lobby && lobby.hostId !== user.id}
+                onChange={(value) =>
+                  handleSettingChange({ ...settings, public: value })
+                }
+              />
             </div>
-            <SettingsInput label="Tempo per rispondere" name="answerTime" type="range" minValue={10} maxValue={60} />
+            <SettingsInput
+              label="Tempo per rispondere"
+              name="answerTime"
+              type="range"
+              minValue={10}
+              maxValue={60}
+              value={settings.answerTimeMs / 1000}
+              disabled={lobby && lobby.hostId !== user.id}
+              onChange={(value) =>
+                handleSettingChange({ ...settings, answerTimeMs: value * 1000 })
+              }
+            />
           </form>
         </aside>
 
         <section className="md:rotate-1 bg-transparent md:bg-white md:border-4 md:border-neroNonNero md:shadow-buttons md:p-10 flex-col gap-6 w-full flex-3 relative">
-           <div className="hidden md:flex flex-col items-center gap-3">
-                <h1 className="text-4xl font-black uppercase tracking-wide text-black text-center">
-                    Lobby di {username}
-                </h1>
-                <h3 className="bg-primary text-white border-3 border-neroNonNero rounded-full px-6 py-1.5 font-extrabold text-sm uppercase shadow-buttons -rotate-1">
-                    In attesa... ({players.length}/{maxPlayers})
-                </h3>
+          <div className="hidden md:flex flex-col items-center gap-3">
+            <h1 className="text-4xl font-black uppercase tracking-wide text-black text-center">
+              {!lobby ? "..." : "Stanza di " + lobby.hostUsername}
+            </h1>
+            <h3 className="bg-primary text-white border-3 border-neroNonNero rounded-full px-6 py-1.5 font-extrabold text-sm uppercase shadow-buttons -rotate-1">
+              In attesa...
+              {!lobby
+                ? ""
+                : `(${lobby.players.length}/${lobby.config.maxPlayers})`}
+            </h3>
           </div>
           <div className="flex md:hidden justify-between items-end text-white font-medium text-sm mb-2 px-1">
-            <span className="uppercase font-bold tracking-wide">GIOCATORI ({players.length}/{maxPlayers})</span>
+            <span className="uppercase font-bold tracking-wide">
+              GIOCATORI (
+              {!lobby
+                ? ""
+                : `${lobby.players.length}/${lobby.config.maxPlayers}`}
+              )
+            </span>
             <span className="text-white/80">In attesa...</span>
           </div>
-          <div className="flex md:flex-col gap-5 md:gap-3 my-8 flex-wrap"> 
-                   {players.map((player, index) => (
-                    <Gamer
-                        key={index}
-                        username={player}
-                        isHost={index === 0}
-                        rotation={index % 2 === 0 ? "md:rotate-0" : "md:-rotate-1"}
-                    />
-                ))}
+          <div className="flex md:flex-col gap-5 md:gap-3 my-8 flex-wrap">
+            {!lobby ? (
+              <p>Caricamento giocatori...</p>
+            ) : (
+              lobby.players.map((player, index) => (
+                <Gamer
+                  key={player.id}
+                  username={player.username}
+                  offline={!player.connected}
+                  isHost={player.id === lobby.hostId}
+                  rotation={index % 2 === 0 ? "md:rotate-0" : "md:-rotate-1"}
+                />
+              ))
+            )}
             <div className="md:hidden flex items-center justify-center w-18 h-16 text-white/50">
-               <Icon icon="mdi:plus" className="text-3xl" />
+              <Icon icon="mdi:plus" className="text-3xl" />
             </div>
           </div>
 

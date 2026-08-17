@@ -1,7 +1,7 @@
-const RangeSlider = ({ min, max, value, onChange }) => {
+const RangeSlider = ({ min, max, value, onChange, name, disabled }) => {
   return (
     <div className="flex flex-col w-full">
-      <div className="mt-2 w-full h-4 bg-white rounded-md border-3 border-neroNonNero relative">
+      <div className="mt-2 w-full h-4 disabled:cursor-not-allowed bg-white rounded-md border-3 border-neroNonNero relative">
         <input
           type="range"
           id={name}
@@ -9,18 +9,19 @@ const RangeSlider = ({ min, max, value, onChange }) => {
           min={min}
           max={max}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          disabled={disabled}
+          onChange={(e) => onChange(Number(e.target.value))}
           className="absolute w-full h-full opacity-0 cursor-pointer z-20 top-0 left-0"
         />
         {/* tondino custom */}
         <div
-          className="bg-primary w-8 h-5 absolute -top-1.25 border-3 border-neroNonNero rounded-md -translate-x-1/2 z-10"
+          className={`bg-primary w-8 h-5 absolute -top-1.25 border-3 border-neroNonNero rounded-md -translate-x-1/2 z-10 ${disabled ? "transition-all duration-300 ease-in-out" : ""}`}
           style={{ left: `${((value - min) / (max - min)) * 100}%` }}
         ></div>
 
         {/* track custom */}
         <div
-          className="bg-primary h-full absolute top-0 left-0 z-0"
+          className={`bg-primary h-full absolute top-0 left-0 z-0 ${disabled ? "transition-all duration-300 ease-in-out" : ""}`}
           style={{ width: `${((value - min) / (max - min)) * 100}%` }}
         ></div>
       </div>
