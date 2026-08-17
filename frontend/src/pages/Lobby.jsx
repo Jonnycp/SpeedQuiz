@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 import { useParams, useNavigate } from "react-router";
 import { useGame } from "../contexts/GameContext";
 import { useAuth } from "../contexts/AuthContext";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 
 import GamePhase from "../components/GamePhase";
 import Gamer from "../components/Gamer";
@@ -11,16 +11,19 @@ import ConfirmButton from "../components/ConfirmButton";
 import SettingsInput from "../components/SettingsInput";
 
 const Lobby = () => {
+  const navigate = useNavigate();
   const { code } = useParams();
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const { socket, lobby, joinLobby, editSettings, leaveLobby } = useGame();
+  const { socket, lobby, joinLobby, editSettings, leaveLobby, startLobby } =
+    useGame();
+
   const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState({
     rounds: lobby?.config.rounds || 3,
     public: lobby?.config.public || false,
     answerTimeMs: lobby?.config.answerTimeMs || 30 * 1000,
   });
+  const [isDisabled, setIsDisabled] = useState(true);
 
   //* Gestione loading lobby
   useEffect(() => {
@@ -28,12 +31,21 @@ const Lobby = () => {
     else setIsLoading(false);
   }, [lobby]);
 
+  useEffect(() => {
+    if (!lobby) return;
+    if (lobby.players.filter(p => p.connected).length >= lobby.config.minPlayers) {
+      setIsDisabled(false);
+    }else{
+      setIsDisabled(true)
+    }
+  }, [lobby]);
+
   //* Gestione join lobby (o join da link)
   useEffect(() => {
     if (lobby && lobby.code === code) return; // se sei già joinato non ha senso fare un joinlobby
-     joinLobby(code)
-    .then((data) => navigate("/lobby/" + data.lobby.code, { replace: true }))
-    .catch((err) => navigate("/", { replace: true }));
+    joinLobby(code)
+      .then((data) => navigate("/lobby/" + data.lobby.code, { replace: true }))
+      .catch((err) => navigate("/", { replace: true }));
   }, [code, socket]);
 
   //* Visualizza impostazioni lobby da socket
@@ -50,55 +62,72 @@ const Lobby = () => {
   const handleSettingChange = (newSettings) => {
     setSettings(newSettings);
 
-    if(lobby && lobby.hostId === user.id){ 
+    if (lobby && lobby.hostId === user.id) {
       editSettings(newSettings)
-        .then((data) => console.log("Impostazioni modificate con successo", data))
-        .catch((err) => console.error("Errore nella modifica delle impostazioni", err));
+        .then((data) =>
+          console.log("Impostazioni modificate con successo", data),
+        )
+        .catch((err) =>
+          console.error("Errore nella modifica delle impostazioni", err),
+        );
+    }
+  };
+
+  //* Gestione uscita dalla lobby
+  async function handleLeave() {
+    try {
+      await leaveLobby();
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+      toast.error(err);
     }
   }
 
   //* Gestione uscita dalla lobby
-  async function handleLeave(){
-    try{
-      await leaveLobby();
-      navigate("/");
-    }catch(err){
+  async function handleStart() {
+    try {
+      await startLobby();
+      navigate("/question");
+    } catch (err) {
+      toast.error(err);
       console.log(err);
     }
   }
 
   //* Gestione copia codice lobby
-  async function handleCopy(){
-    try{
+  async function handleCopy() {
+    try {
       await navigator.clipboard.writeText(code);
       toast.success("Codice copiato con successo!");
-    }catch(err){
+    } catch (err) {
       toast.error("Errore nella copia del codice. Riprova più tardi.");
       console.error("Impossibile copiare il codice ora.", err);
     }
   }
 
-  async function handleShare(){
-    try{
+  //* Gestione condividi link lobby
+  async function handleShare() {
+    try {
       await navigator.share({
         title: "Unisciti alla mia partita di SpeedQuiz!",
         text: `Unisciti alla mia partita di SpeedQuiz! Usa il codice: ${code}`,
         url: window.location.href,
       });
-    }
-    catch(err){
+    } catch (err) {
       toast.error("Errore nella condivisione del codice. Riprova più tardi.");
       console.error("Impossibile condividere il codice ora.", err);
     }
   }
-  
+
   return (
     <>
-    <ToastContainer hideProgressBar={true} position="top-center" colored/>
-      <GamePhase 
-      phase="Sala d'attesa" 
-      underPhase="In attesa di giocatori..." 
-      onLeave={handleLeave}/>
+      <ToastContainer hideProgressBar={true} position="top-center" colored />
+      <GamePhase
+        phase="Sala d'attesa"
+        underPhase="In attesa di giocatori..."
+        onLeave={handleLeave}
+      />
 
       <div className="flex-1 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 px-4 md:px-8 max-w-7xl mx-auto w-full">
         <aside className="bg-secondary flex flex-col items-center py-5 px-4 shadow-buttons flex-1 uppercase font-extrabold border-3 z-10 rounded-xl h-fit">
@@ -107,23 +136,28 @@ const Lobby = () => {
           </h3>
           <span className="block text-6xl tracking-wider "> {code} </span>
           <div className="flex gap-3 mt-5 mb-8 mx-auto select-none w-[80%]">
-            
-            <ConfirmButton color="primary" customClasses="!text-neroNonNero" onClick={handleShare}>
+            <ConfirmButton
+              color="primary"
+              customClasses="!text-neroNonNero"
+              onClick={handleShare}
+            >
               Invita amici
             </ConfirmButton>
-            
-            <ConfirmButton customClasses="!bg-white !text-neroNonNero" onClick={handleCopy}>
+
+            <ConfirmButton
+              customClasses="!bg-white !text-neroNonNero"
+              onClick={handleCopy}
+            >
               <Icon icon="tabler:copy" className="text-neroNonNero" />
             </ConfirmButton>
-
           </div>
 
           <form className="flex flex-col gap-5">
             {lobby && lobby.hostId !== user.id && (
-            <p className="text-xs text-center text-red-500 font-bold bg-white px-2 py-1 rounded-md border-2 border-neroNonNero shadow-buttons">
-              Solo l'host può modificare
-            </p>
-          )}
+              <p className="text-xs text-center text-red-500 font-bold bg-white px-2 py-1 rounded-md border-2 border-neroNonNero shadow-buttons">
+                Solo l'host può modificare
+              </p>
+            )}
             <div className="flex w-full gap-6">
               <SettingsInput
                 label="Rounds"
@@ -203,13 +237,16 @@ const Lobby = () => {
             </div>
           </div>
 
-          <ConfirmButton 
-            color="verdinoCarino" 
-            customClasses="w-full -rotate-1 py-4 md:py-5 text-xl md:text-4xl"
-          >
-            Inizia partita
-          </ConfirmButton>
-            
+          {!isLoading && (
+            <ConfirmButton
+              color="verdinoCarino"
+              customClasses="w-full -rotate-1 py-4 md:py-5 text-xl md:text-4xl"
+              disabled={user.id !== lobby.hostId || isDisabled}
+              onClick={handleStart}
+            >
+              {user.id === lobby.hostId ? "Inizia partita" : "Attendi l'host"}
+            </ConfirmButton>
+          )}
         </section>
       </div>
     </>

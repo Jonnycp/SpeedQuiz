@@ -12,11 +12,11 @@ export function GameProvider({ children }) {
 
   useEffect(() => {
     if (!user) return;
-  
+
     const token = localStorage.getItem("accessToken");
     const socket = initSocketConnection(token);
     socket.connect();
-    
+
     setSocket(socket);
 
     socket.on("connect_error", async (err) => {
@@ -58,32 +58,49 @@ export function GameProvider({ children }) {
 
   async function joinLobby(code) {
     if (!socket) throw new Error("Socket non connesso");
-    setLobby(null);  // pulisce la lobby dai valori della vecchia 
-    const response = await socket.emitWithAck("lobby:join", code.trim().toUpperCase().slice(0, 5));
-    if(response.error) throw new Error(response.error);
-    setLobby(response.lobby); 
+    setLobby(null); // pulisce la lobby dai valori della vecchia
+    const response = await socket.emitWithAck(
+      "lobby:join",
+      code.trim().toUpperCase().slice(0, 5),
+    );
+    if (response.error) throw new Error(response.error);
+    setLobby(response.lobby);
     return response;
   }
 
   async function editSettings(newSettings) {
     if (!socket) throw new Error("Socket non connesso");
-    const response = await socket.emitWithAck("lobby:modify_settings", newSettings);
-    if(response.error) throw new Error(response.error)
-    setLobby({...lobby, config: response.config})
+    const response = await socket.emitWithAck(
+      "lobby:modify_settings",
+      newSettings,
+    );
+    if (response.error) throw new Error(response.error);
+    setLobby({ ...lobby, config: response.config });
 
     return response;
   }
 
-  async function leaveLobby(code){
-    if(!socket) throw new Error("Socket non connesso");
+  async function leaveLobby(code) {
+    if (!socket) throw new Error("Socket non connesso");
     const response = await socket.emitWithAck("lobby:leave");
-    if(response.error) throw new Error(response.error);
+    if (response.error) throw new Error(response.error);
     setLobby(null);
     return response;
   }
 
+  async function startLobby(code) {
+    if (!socket) throw new Error("Socket non connesso");
+    const response = await socket.emitWithAck("lobby:start");
+    if (response.error) throw new Error(response.error);
+    setLobby(response.lobby);
+    
+    return response;
+  }
+
   return (
-    <GameContext.Provider value={{ socket, lobby, joinLobby, editSettings, leaveLobby }}>
+    <GameContext.Provider
+      value={{ socket, lobby, joinLobby, editSettings, leaveLobby, startLobby }}
+    >
       {children}
     </GameContext.Provider>
   );

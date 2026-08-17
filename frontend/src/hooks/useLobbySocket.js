@@ -27,6 +27,11 @@ export function useLobbySocket(socket, setLobby) {
     socket.on("lobby:player_left", (data) => {
       console.log("lobby:player_left", data);
       setLobby(data.lobby);
+    })
+
+     socket.on("lobby:started", (data) => {
+      console.log("lobby:started", data);
+      setLobby(data.lobby);
     } )
 
     return () => {
@@ -35,6 +40,7 @@ export function useLobbySocket(socket, setLobby) {
       socket.off("lobby:player_disconnected");
       socket.off("lobby:modified_settings");
       socket.off("lobby:player_left");
+      socket.off("lobby:started")
     };
   }, [socket, setLobby]);
 }
