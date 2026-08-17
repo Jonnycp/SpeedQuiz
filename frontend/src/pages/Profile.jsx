@@ -116,7 +116,7 @@ const Profile = () => {
                 ))
               ) : (
                 <div className="md:col-span-2 w-full mt-4">
-                  <EmptyState message="Non hai giocato nessuna partita" />
+                  <EmptyState message="Qui non c'è ancora nulla... ma solo per ora" />
                 </div>
               )}
             </div>

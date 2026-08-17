@@ -4,6 +4,7 @@ const { startRound } = require("../../services/game.service");
 
 function lobbyHandlers(io, socket) {
   //* JOIN LOBBY
+  
   // Parameters: lobbyCode, callback
   socket.on("lobby:join", (lobbyCode, callback) => {
     if (!lobbyCode.trim()) {
@@ -57,8 +58,7 @@ function lobbyHandlers(io, socket) {
     }
 
     //* Verificare se impostazioni inviate sono valide
-    if (
-      !settings ||
+    if (!settings ||
       (!settings.public && !settings.rounds && !settings.answerTimeMs)
     ) {
       return callback({
@@ -68,13 +68,14 @@ function lobbyHandlers(io, socket) {
     }
 
     // TempoGame = Nround * (2 * answerTimeSingle + nGiocatori * votingTime)
-    if (settings.rounds < 1 || settings.rounds > 9) {
-      return callback({
-        error: "Numero di rounds non valido (min 1, max 9)",
-      });
-    } else {
-      lobby.config.rounds = settings.rounds;
+    if(settings.rounds !== undefined){
+      if (settings.rounds < 1 || settings.rounds > 9) {
+        return callback({ error: "Numero di rounds non valido (min 1, max 9)"});
+      } else {
+        lobby.config.rounds = settings.rounds;
+      }
     }
+
 
     if (settings.answerTimeMs < 10000 || settings.answerTimeMs > 60000) {
       return callback({
@@ -87,9 +88,7 @@ function lobbyHandlers(io, socket) {
     if (settings.public === true || settings.public === false) {
       lobby.config.public = settings.public;
     } else {
-      return callback({
-        error: "Impostazione visibilità lobby non valida",
-      });
+      return callback({error: "Impostazione visibilità lobby non valida" });
     }
 
     callback({
@@ -103,6 +102,7 @@ function lobbyHandlers(io, socket) {
       config: lobby.config,
     });
   });
+
 
   //* ESCI DA LOBBY
   // Parametri: callback
@@ -152,7 +152,7 @@ function lobbyHandlers(io, socket) {
     try{
       prepareStart(lobby, socket);
     }catch(err){
-      return callback({error: err});
+      return callback({error: err.message});
     }
     
     //* Chiama startRound da game.service 
