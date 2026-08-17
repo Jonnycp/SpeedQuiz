@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const http = require("http");
+const questionCache = require("./store/questionStore.js")
 
 const indexRouter = require("./routes/index.js");
 const initSocket = require("./socket/index.js");
@@ -35,6 +36,9 @@ app.use((req, res) => {
 if (mongoUri && mongoUri.length > 0) {
   mongoose.connect(mongoUri).then(() => {
       console.log("Connessione a MongoDB riuscita!");
+
+      //Load domande in cache
+      questionCache.load().then(() => console.log("[cache] Domande aggiornate!"))
 
       server.listen(PORT, () => {
         console.log(`Backend server e Socket server partito su: http://localhost:${PORT}`); // un unico server in ascolto sulla porta 3000 che inoltra le richieste HTTP gestite da express ad app, dalle richieste di handshake Websocket
