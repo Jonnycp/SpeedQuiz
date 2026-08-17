@@ -36,7 +36,7 @@ const SettingsInput = ({
       <label className="whitespace-nowrap text-center select-none" htmlFor={name}>
         {label}
         {type === "range" && (
-          <span className="font-normal text-sm"> ({instantRangeValue} SEC)</span>
+          <span className="font-normal text-sm inline-block w-14 pl-2"> ({instantRangeValue} SEC)</span>
         )}
       </label>
       
