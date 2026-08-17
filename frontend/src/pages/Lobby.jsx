@@ -108,11 +108,11 @@ const Lobby = () => {
           <span className="block text-6xl tracking-wider "> {code} </span>
           <div className="flex gap-3 mt-5 mb-8 mx-auto select-none w-[80%]">
             
-            <ConfirmButton color="primary" customClasses="!text-neroNonNero" onClick={handleCopy}>
+            <ConfirmButton color="primary" customClasses="!text-neroNonNero" onClick={handleShare}>
               Invita amici
             </ConfirmButton>
             
-            <ConfirmButton customClasses="!bg-white !text-neroNonNero" onClick={handleShare}>
+            <ConfirmButton customClasses="!bg-white !text-neroNonNero" onClick={handleCopy}>
               <Icon icon="tabler:copy" className="text-neroNonNero" />
             </ConfirmButton>
 
