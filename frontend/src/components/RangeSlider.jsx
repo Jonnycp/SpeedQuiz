@@ -15,13 +15,13 @@ const RangeSlider = ({ min, max, value, onChange, name, disabled }) => {
         />
         {/* tondino custom */}
         <div
-          className="bg-primary w-8 h-5 absolute -top-1.25 border-3 border-neroNonNero rounded-md -translate-x-1/2 z-10 transition-all duration-300 ease-in-out"
+          className={`bg-primary w-8 h-5 absolute -top-1.25 border-3 border-neroNonNero rounded-md -translate-x-1/2 z-10 ${disabled ? "transition-all duration-300 ease-in-out" : ""}`}
           style={{ left: `${((value - min) / (max - min)) * 100}%` }}
         ></div>
 
         {/* track custom */}
         <div
-          className="bg-primary h-full absolute top-0 left-0 z-0 transition-all duration-300 ease-in-out"
+          className={`bg-primary h-full absolute top-0 left-0 z-0 ${disabled ? "transition-all duration-300 ease-in-out" : ""}`}
           style={{ width: `${((value - min) / (max - min)) * 100}%` }}
         ></div>
       </div>
