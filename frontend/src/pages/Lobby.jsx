@@ -79,8 +79,8 @@ const Lobby = () => {
       await leaveLobby();
       navigate("/");
     } catch (err) {
-      console.log(err);
-      toast.error(err);
+      console.log(err.message)
+      toast.error(err.message);
     }
   }
 
@@ -90,8 +90,7 @@ const Lobby = () => {
       await startLobby();
       navigate("/question");
     } catch (err) {
-      toast.error(err);
-      console.log(err);
+      console.log(err.message);
     }
   }
 
@@ -102,7 +101,6 @@ const Lobby = () => {
       toast.success("Codice copiato con successo!");
     } catch (err) {
       toast.error("Errore nella copia del codice. Riprova più tardi.");
-      console.error("Impossibile copiare il codice ora.", err);
     }
   }
 
