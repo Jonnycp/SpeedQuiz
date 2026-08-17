@@ -114,20 +114,24 @@ const Home = () => {
         <SectionTitle title="Esplora le stanze" />
 
         <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 hide-scrollbar md:flex-wrap md:justify-center md:gap-10 md:mt-10 md:pb-10">
-          {publicLobbies.map((lobby) => (
-            <div
-              key={lobby.code}
-              className="w-[80vw] shrink-0 snap-center md:w-auto h-full"
-            >
-              <LobbyCard
-                title={`Stanza di ${lobby.hostUsername}`}
-                players={lobby.players.length}
-                players_max={lobby.config.maxPlayers}
-                rotation="-rotate-1"
-                content={"Unisciti"}
-              />
-            </div>
-          ))}
+          {publicLobbies.length > 0 ? (
+            publicLobbies.map((lobby) => (
+              <div
+                key={lobby.code}
+                className="w-[80vw] shrink-0 snap-center md:w-auto h-full"
+              >
+                <LobbyCard
+                  title={`Stanza di ${lobby.hostUsername}`}
+                  players={lobby.players.length}
+                  players_max={lobby.config.maxPlayers}
+                  rotation="-rotate-1"
+                  content={"Unisciti"}
+                />
+              </div>
+            ))
+          ) : (
+                <EmptyState message="Nessuna stanza disponibile" />
+          )}
         </div>
       </section>
     </>
