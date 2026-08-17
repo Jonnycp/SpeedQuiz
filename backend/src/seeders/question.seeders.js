@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const questions = require('./domande_.json')
-require('dotenv').config();
+const questions = require('./domande.json')
+const Question = require('../models/Question');
 
-const Question = require('./src/models/Question');
+require('dotenv').config();
 const mongoUri = process.env.MONGODB_URI;
 
 async function seed(){
@@ -17,8 +17,6 @@ async function seed(){
         console.log(`Inserite ${insertedQuestions.length} domande`);
 
         await mongoose.connection.close();
-
-
     }catch(err){
         console.error("Seed fallito", err.message);
         process.exit(1);
