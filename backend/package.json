@@ -17,6 +17,8 @@
   "main": "./src/server.js",
   "scripts": {
     "start": "node ./src/server.js",
+    "secret": "node ./src/utils/generateSecret.js",
+    "seed": "node ./src/seeders/question.seeders.js",
     "dev": "nodemon --watch src --ext js,json --exec \"node src/server.js\""
   },
   "dependencies": {
