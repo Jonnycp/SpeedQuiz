@@ -35,6 +35,66 @@ function lobbyHandlers(io, socket) {
       lobby: serializeLobby(lobby),
     });
   });
-}
 
+  socket.on("lobby:modify_settings", (settings, callback) => {
+    //* Verifica se sei in una lobby
+    if(!socket.data.lobbyCode){
+      return callback({
+        error: "Non sei in una stanza."
+      })
+    }
+
+    //* Verifica se è l'host
+    const lobby = getLobby(socket.data.lobbyCode);
+    if(socket.user.id !== lobby.hostId){
+      return callback({
+        error: "Non sei l'host della stanza"
+      })
+    }
+    
+    //* Verificare se impostazioni inviate sono valide
+    if(!settings || (!settings.public && !settings.rounds && !settings.answerTimeMs)){
+      return callback({
+        error: "Inserisci almeno un parametro da modificare tra (public, rounds o answerTime)"
+      })
+    }
+
+    // TempoGame = Nround * (2 * answerTimeSingle + nGiocatori * votingTime)
+    if(settings.rounds < 1 || settings.rounds > 9){
+       return callback({
+        error: "Numero di rounds non valido (min 1, max 9)"
+      })
+    }else{
+      lobby.config.rounds = settings.rounds
+    }
+      
+    if(settings.answerTimeMs < 10000 || settings.answerTimeMs > 60000){
+      return callback({
+        error: "Tempo per rispondere non valido (min 10sec, max 60sec)"
+      })
+    }else{
+      lobby.config.answerTimeMs = settings.answerTimeMs
+    }
+
+    if(settings.public === true || settings.public === false){
+      lobby.config.public = settings.public
+    }else{
+      return callback({
+        error: "Impostazione visibilità lobby non valida"
+      })
+    }
+    
+    callback({
+      lobby: serializeLobby(lobby),
+      config: lobby.config
+    })
+
+    //* Notifica gli altri giocatori della modifica (tranne se stesso)
+    socket.to(lobby.code).emit("lobby:modified_settings", {
+      lobby: serializeLobby(lobby),
+      config: lobby.config
+    })  
+  })
+
+}
 module.exports = lobbyHandlers
