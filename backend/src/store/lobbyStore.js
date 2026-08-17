@@ -3,48 +3,68 @@
 
 const lobbies = new Map();
 
-function getLobby(code){
-    return lobbies.get(code);
+function getLobby(code) {
+  return lobbies.get(code);
 }
 
-function setLobby(code, lobby){
-    return lobbies.set(code, lobby);
+function setLobby(code, lobby) {
+  return lobbies.set(code, lobby);
 }
 
-function hasLobby(code){
-    return lobbies.has(code);
+function hasLobby(code) {
+  return lobbies.has(code);
 }
 
-function lobbyOwned(userId){
-    const lobby = [...lobbies.values()].filter(l => l.hostId === userId && l.status === "LOBBY");
-    return lobby;
+function lobbyOwned(userId) {
+  const lobby = [...lobbies.values()].filter(
+    (l) => l.hostId === userId && l.status === "LOBBY",
+  );
+  return lobby;
 }
 
-function getPublicLobbies(){
-    return [...lobbies.values()].filter(l => l.config.public && l.players.size < l.config.maxPlayers && l.status === "LOBBY");
+function getPublicLobbies() {
+  return [...lobbies.values()].filter(
+    (l) =>
+      l.config.public &&
+      l.players.size < l.config.maxPlayers &&
+      l.status === "LOBBY",
+  );
 }
 
-function deleteLobby(code){
-    return lobbies.delete(code);
-
+function deleteLobby(code) {
+  return lobbies.delete(code);
 }
 
-// ritorna un nuovo oggetto lobby in cui le Map (players e rounds) sono trasformate in array grazie a .values(), 
+// ritorna un nuovo oggetto lobby in cui le Map (players e rounds) sono trasformate in array grazie a .values(),
 // che restituisce un iteratore, e allo spread operator, che consuma quell'iteratore prendendo ogni valore e salvandolo in un nuovo array -> necessario perché JSON.strinfigy() non sa serializzare le Map
-function serializeLobby(lobby){
-    return {
-        ...lobby,
-        players: [...lobby.players.values()],
-        rounds: [...lobby.rounds.values()]
-    } 
+function serializeLobby(lobby) {
+  return {
+    code: lobby.code,
+    hostId: lobby.hostId,
+    hostUsername: lobby.hostUsername,
+    status: lobby.status,
+    config: {
+      public: lobby.public,
+      rounds: lobby.rounds,
+      minPlayers: lobby.minPlayers,
+      maxPlayers: lobby.maxPlayers,
+      answerTimeMs: lobby.answerTimeMs,
+      votingTimeMs: lobby.votingTimeMs,
+      revealTimems: lobby.revealTimems,
+    },
+    currentRound: lobby.currentRound,
+    phaseEndAt: lobby.phaseEndAt,
+    players: [...lobby.players.values()],
+    rounds: [...lobby.rounds.values()],
+  };
 }
 
 module.exports = {
-    getLobby,
-    setLobby,
-    hasLobby,
-    deleteLobby,
-    lobbyOwned,
-    getPublicLobbies,
-    serializeLobby
-}
+  getLobby,
+  setLobby,
+  hasLobby,
+  deleteLobby,
+  lobbyOwned,
+  getPublicLobbies,
+  serializeLobby,
+};
