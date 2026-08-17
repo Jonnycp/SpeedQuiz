@@ -23,12 +23,18 @@ export function useLobbySocket(socket, setLobby) {
       console.log("lobby:modified_settings", data);
       setLobby(data.lobby);
     });
+    
+    socket.on("lobby:player_left", (data) => {
+      console.log("lobby:player_left", data);
+      setLobby(data.lobby);
+    } )
 
     return () => {
       socket.off("lobby:player_joined");
       socket.off("lobby:player_offline");
       socket.off("lobby:player_disconnected");
       socket.off("lobby:modified_settings");
+      socket.off("lobby:player_left");
     };
   }, [socket, setLobby]);
 }

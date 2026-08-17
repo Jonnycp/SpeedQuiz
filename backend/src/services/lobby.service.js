@@ -75,6 +75,7 @@ function addPlayer(lobby, socket){
 }
 
 function removePlayer(lobby, socket, callback){
+
     //* Controllo se è lo stesso giocatore connesso dallo stesso dispositivo
     const player = lobby.players.get(socket.user.id);
     if(!player || player.socketId !== socket.id) return false;

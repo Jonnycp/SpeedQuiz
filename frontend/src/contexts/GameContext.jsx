@@ -74,8 +74,16 @@ export function GameProvider({ children }) {
     return response;
   }
 
+  async function leaveLobby(code){
+    if(!socket) throw new Error("Socket non connesso");
+    const response = await socket.emitWithAck("lobby:leave");
+    if(response.error) throw new Error(response.error);
+    setLobby(null);
+    return response;
+  }
+
   return (
-    <GameContext.Provider value={{ socket, lobby, joinLobby, editSettings }}>
+    <GameContext.Provider value={{ socket, lobby, joinLobby, editSettings, leaveLobby }}>
       {children}
     </GameContext.Provider>
   );

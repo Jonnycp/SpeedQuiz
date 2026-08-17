@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { useGame } from "../contexts/GameContext";
 import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router";
+import { ToastContainer, toast } from 'react-toastify';
 
 import GamePhase from "../components/GamePhase";
 import Gamer from "../components/Gamer";
@@ -14,7 +14,7 @@ const Lobby = () => {
   const { code } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { socket, lobby, joinLobby, editSettings } = useGame();
+  const { socket, lobby, joinLobby, editSettings, leaveLobby } = useGame();
   const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState({
     rounds: lobby?.config.rounds || 3,
@@ -31,9 +31,9 @@ const Lobby = () => {
   //* Gestione join lobby (o join da link)
   useEffect(() => {
     if (lobby && lobby.code === code) return; // se sei già joinato non ha senso fare un joinlobby
-    joinLobby(code)
-      .then((data) => navigate("/lobby/" + data.lobby.code))
-      .catch((err) => navigate("/"));
+     joinLobby(code)
+    .then((data) => navigate("/lobby/" + data.lobby.code, { replace: true }))
+    .catch((err) => navigate("/", { replace: true }));
   }, [code, socket]);
 
   //* Visualizza impostazioni lobby da socket
@@ -56,9 +56,34 @@ const Lobby = () => {
         .catch((err) => console.error("Errore nella modifica delle impostazioni", err));
     }
   }
+
+  //* Gestione uscita dalla lobby
+  async function handleLeave(){
+    try{
+      await leaveLobby();
+      navigate("/");
+    }catch(err){
+      console.log(err);
+    }
+  }
+
+  //* Gestione copia codice lobby
+  async function handleClick(){
+    try{
+      await navigator.clipboard.writeText(code);
+      toast("Codice copiato con successo!");
+    }catch(err){
+      console.error("Impossibile copiare il codice ora.", err);
+    }
+  }
+  
   return (
     <>
-      <GamePhase phase="Sala d'attesa" underPhase="In attesa di giocatori..." />
+    <ToastContainer hideProgressBar={true} position="top-center"/>
+      <GamePhase 
+      phase="Sala d'attesa" 
+      underPhase="In attesa di giocatori..." 
+      onLeave={handleLeave}/>
 
       <div className="flex-1 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 px-4 md:px-8 max-w-7xl mx-auto w-full">
         <aside className="bg-secondary flex flex-col items-center py-5 px-4 shadow-buttons flex-1 uppercase font-extrabold border-3 z-10 rounded-xl h-fit">
@@ -76,6 +101,7 @@ const Lobby = () => {
               content={<Icon icon="tabler:copy" className="text-neroNonNero" />}
               bgColor="white"
               textColor="neroNonNero"
+              onClick={handleClick}
             />
           </div>
 
@@ -126,11 +152,11 @@ const Lobby = () => {
         <section className="md:rotate-1 bg-transparent md:bg-white md:border-4 md:border-neroNonNero md:shadow-buttons md:p-10 flex-col gap-6 w-full flex-3 relative">
           <div className="hidden md:flex flex-col items-center gap-3">
             <h1 className="text-4xl font-black uppercase tracking-wide text-black text-center">
-              {isLoading ? "..." : "Stanza di " + lobby.hostUsername}
+              {!lobby ? "..." : "Stanza di " + lobby.hostUsername}
             </h1>
             <h3 className="bg-primary text-white border-3 border-neroNonNero rounded-full px-6 py-1.5 font-extrabold text-sm uppercase shadow-buttons -rotate-1">
               In attesa...
-              {isLoading
+              {!lobby
                 ? ""
                 : `(${lobby.players.length}/${lobby.config.maxPlayers})`}
             </h3>
@@ -138,7 +164,7 @@ const Lobby = () => {
           <div className="flex md:hidden justify-between items-end text-white font-medium text-sm mb-2 px-1">
             <span className="uppercase font-bold tracking-wide">
               GIOCATORI (
-              {isLoading
+              {!lobby
                 ? ""
                 : `${lobby.players.length}/${lobby.config.maxPlayers}`}
               )
@@ -146,7 +172,7 @@ const Lobby = () => {
             <span className="text-white/80">In attesa...</span>
           </div>
           <div className="flex md:flex-col gap-5 md:gap-3 my-8 flex-wrap">
-            {isLoading ? (
+            {!lobby ? (
               <p>Caricamento giocatori...</p>
             ) : (
               lobby.players.map((player, index) => (

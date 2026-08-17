@@ -12,12 +12,12 @@ import { useGame } from "../contexts/GameContext";
 
 const Home = () => {
   const { user } = useAuth();
-  const { socket } = useGame();
+  const { socket, joinLobby } = useGame();
+
   const [publicLobbies, setPublicLobbies] = useState([]);
   const [lobbycode, setLobbyCode] = useState("");
   const [joinError, setJoinError] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
-  const { joinLobby } = useGame();
 
   const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ const Home = () => {
   async function handleCreateLobby(){
     try{
       const data = await createLobbyAPI();
-      navigate(`/lobby/${data.code}`)
+      navigate(`/lobby/${data.code}`);
     }catch(err){
       console.log(err.message)
     }
