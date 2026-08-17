@@ -65,8 +65,17 @@ export function GameProvider({ children }) {
     return response;
   }
 
+  async function editSettings(newSettings) {
+    if (!socket) throw new Error("Socket non connesso");
+    const response = await socket.emitWithAck("lobby:modify_settings", newSettings);
+    if(response.error) throw new Error(response.error)
+    setLobby({...lobby, config: response.config})
+
+    return response;
+  }
+
   return (
-    <GameContext.Provider value={{ socket, lobby, joinLobby }}>
+    <GameContext.Provider value={{ socket, lobby, joinLobby, editSettings }}>
       {children}
     </GameContext.Provider>
   );

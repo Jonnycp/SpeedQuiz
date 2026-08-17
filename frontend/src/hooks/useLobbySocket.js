@@ -19,10 +19,16 @@ export function useLobbySocket(socket, setLobby) {
       setLobby(data.lobby);
     });
 
+    socket.on("lobby:modified_settings", (data) => {
+      console.log("lobby:modified_settings", data);
+      setLobby(data.lobby);
+    });
+
     return () => {
       socket.off("lobby:player_joined");
       socket.off("lobby:player_offline");
       socket.off("lobby:player_disconnected");
+      socket.off("lobby:modified_settings");
     };
   }, [socket, setLobby]);
 }
