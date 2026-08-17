@@ -1,9 +1,6 @@
-const {
-  getLobby,
-  serializeLobby,
-  deleteLobby,
-} = require("../../store/lobbyStore");
-const { addPlayer, removePlayer } = require("../../services/lobby.service");
+const { getLobby, serializeLobby, deleteLobby } = require("../../store/lobbyStore");
+const { addPlayer, removePlayer, prepareStart } = require("../../services/lobby.service");
+const { startRound } = require("../../services/game.service");
 
 function lobbyHandlers(io, socket) {
   //* JOIN LOBBY
@@ -139,6 +136,32 @@ function lobbyHandlers(io, socket) {
     socket.leave(lobbyCode);
 
     callback && callback({ success: true });
+  });
+
+  //* AVVIA PARTITA
+  socket.on("lobby:start", (callback) => {
+    if(!socket.data.lobbyCode){
+      return callback({ error: "Non sei in nessuna stanza" });
+    }
+
+    const lobby = getLobby(socket.data.lobbyCode);
+    if(!lobby){
+      return callback({error: "Stanza non trovata"});
+    }
+
+    try{
+      prepareStart(lobby, socket);
+    }catch(err){
+      return callback({error: err});
+    }
+    
+    //TODO chiama startRound da game.service 
+    startRound(lobby)
+    callback({lobby: serializeLobby(lobby)});
+
+    socket.to(lobby.code).emit("lobby:started", {
+      lobby: serializeLobby(lobby)
+    })
   });
 }
 module.exports = lobbyHandlers;
