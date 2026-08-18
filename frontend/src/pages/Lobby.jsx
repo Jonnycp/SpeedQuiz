@@ -17,7 +17,6 @@ const Lobby = () => {
   const { socket, lobby, joinLobby, editSettings, leaveLobby, startLobby } =
     useGame();
 
-  const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState({
     rounds: lobby?.config.rounds || 3,
     public: lobby?.config.public || false,
@@ -25,11 +24,6 @@ const Lobby = () => {
   });
   const [isDisabled, setIsDisabled] = useState(true);
 
-  //* Gestione loading lobby
-  useEffect(() => {
-    if (!lobby) setIsLoading(true);
-    else setIsLoading(false);
-  }, [lobby]);
 
   useEffect(() => {
     if (!lobby) return;
@@ -107,12 +101,12 @@ const Lobby = () => {
   //* Gestione condividi link lobby
   async function handleShare() {
     try {
-      await navigator.share({
+        await navigator.share({
         title: "Unisciti alla mia partita di SpeedQuiz!",
         text: `Unisciti alla mia partita di SpeedQuiz! Usa il codice: ${code}`,
         url: window.location.href,
       });
-    } catch (err) {
+    } catch(err) {
       toast.error("Errore nella condivisione del codice. Riprova più tardi.");
       console.error("Impossibile condividere il codice ora.", err);
     }
@@ -235,7 +229,7 @@ const Lobby = () => {
             </div>
           </div>
 
-          {!isLoading && (
+          {lobby && (
             <ConfirmButton
               color="verdinoCarino"
               customClasses="w-full -rotate-1 py-4 md:py-5 text-xl md:text-4xl"

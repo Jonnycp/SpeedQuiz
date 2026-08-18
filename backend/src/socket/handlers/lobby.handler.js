@@ -3,9 +3,8 @@ const { addPlayer, removePlayer, prepareStart } = require("../../services/lobby.
 const { startRound } = require("../../services/game.service");
 
 function lobbyHandlers(io, socket) {
+
   //* JOIN LOBBY
-  
-  // Parameters: lobbyCode, callback
   socket.on("lobby:join", (lobbyCode, callback) => {
     if (!lobbyCode.trim()) {
       return callback({ error: "Il codice della stanza è obbligatorio" });
@@ -76,7 +75,6 @@ function lobbyHandlers(io, socket) {
       }
     }
 
-
     if (settings.answerTimeMs < 10000 || settings.answerTimeMs > 60000) {
       return callback({
         error: "Tempo per rispondere non valido (min 10sec, max 60sec)",
@@ -105,7 +103,6 @@ function lobbyHandlers(io, socket) {
 
 
   //* ESCI DA LOBBY
-  // Parametri: callback
   socket.on("lobby:leave", (callback) => {
     // Socket.IO fornisce come parametro della CB, un'altra CB per inviare la risposta al client quando è "pronta" e risolvere così la promise restituita da emitwithack
     const lobbyCode = socket.data.lobbyCode;
@@ -126,7 +123,6 @@ function lobbyHandlers(io, socket) {
     });
 
     if (lobby.players.size === 0) {
-      // sposta questo controllo
       deleteLobby(lobbyCode);
     }
 
