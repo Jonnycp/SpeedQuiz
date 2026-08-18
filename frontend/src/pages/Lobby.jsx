@@ -53,7 +53,7 @@ const Lobby = () => {
 
     // Gestione spostamento in altre fasi
     if(lobby.status === "ANSWERING" || lobby.status === "VOTING" || lobby.status === "REVEAL"){
-      navigate("/game");
+      navigate("/game/"+lobby.code);
     }else if(lobby.status === "ENDEND"){
       navigate("/leaderboard");
     }
@@ -79,7 +79,7 @@ const Lobby = () => {
   async function handleStart() {
     try {
       await startLobby();
-      navigate("/game");
+      navigate("/game/"+lobby.code);
     } catch (err) {
       toast.error(err.message);
       console.log(err.message);
