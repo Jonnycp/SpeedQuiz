@@ -1,18 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useGame } from "../contexts/GameContext";
+import { useCountdown } from "../hooks/useCountdown";
 
-const TimeSlider = ({ tempoIniziale = 45 }) => {
-  const [tempoRimanente, setTempoRimanente] = useState(tempoIniziale);
+const TimeSlider = ({ totalTime, endsAt}) => {
+  const { offset } = useGame()
+  const { sec } = useCountdown(endsAt, offset)
 
-
-  useEffect(() => {
-    if (tempoRimanente <= 0) return;
-    const timerId = setInterval(() => {
-      setTempoRimanente((tempoRimasto) => tempoRimasto - 1);
-    }, 1000);
-    return () => clearInterval(timerId);
-  }, [tempoRimanente]);
-
-  const percentualeBarra = (tempoRimanente / tempoIniziale) * 100;
+  const percentualeBarra = (sec / totalTime) * 100;
 
   return (
     <div className="flex flex-col items-center gap-3 w-[92%] md:w-full max-w-3xl mx-auto my-6 font-primary relative z-10">
@@ -24,7 +18,7 @@ const TimeSlider = ({ tempoIniziale = 45 }) => {
       </div>
 
       <div className="bg-neroNonNero text-white font-black text-sm md:text-base uppercase px-6 py-1.5 rounded-full min-w-35 text-center">
-        {tempoRimanente} secondi RIMASTI
+        {Math.ceil(sec)} secondi RIMASTI
       </div>
       
     </div>
