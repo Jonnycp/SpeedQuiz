@@ -1,13 +1,12 @@
 import { useState } from "react";
 import ConfirmButton from "./ConfirmButton";
 
-const QuestionCard = ({ question, onSubmit }) => {
+const QuestionCard = ({ question, onSubmit, isFinal }) => {
   const [answers, setAnswers] = useState(["", "", ""]);
 
   function handleChange(index, value) {
     setAnswers(answers.map((answer, i) => (i === index ? value : answer)));
   }
-
   
   return (
     <div className="flex flex-col items-center mt-5 px-4 gap-3 w-full mx-auto md:max-w-3xl">
@@ -28,6 +27,7 @@ const QuestionCard = ({ question, onSubmit }) => {
         onSubmit={(e) => {
           e.preventDefault();
           onSubmit(answers);
+          setAnswers(["", "", ""]);
         }}
       >
         <div className="flex flex-col gap-5 *:w-full *:px-4 md:*:px-6 *:py-4 *:text-sm md:*:text-lg *:border-3 *:border-neroNonNero *:shadow-buttons mt-7 *:placeholder:text-gray-400">
@@ -45,13 +45,15 @@ const QuestionCard = ({ question, onSubmit }) => {
           })}
         </div>
 
-        <div className="w-1/2 mx-auto mt-10 mb-5">
+        <div className="w-2/3 mx-auto mt-10 mb-5">
           <ConfirmButton
             color="primary"
             type="submit"
-            customClasses="w-full -rotate-1 py-4 md:py-3 text-3xl md:text-4xl"
+            disabled={answers.some((a) => a.trim() === "")}
+            customClasses="w-full -rotate-1 py-4 md:py-3 text-2xl md:text-4xl"
+
           >
-            Invia
+            {isFinal ? "INVIA" : "PROSSIMA"}
           </ConfirmButton>
         </div>
       </form>
