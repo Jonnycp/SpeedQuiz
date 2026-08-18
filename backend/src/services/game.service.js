@@ -46,11 +46,32 @@ function startRound(lobby){
         //TODO: CHIUDI FASE answering
         console.log("chiudi fase answering, inizio voting")
     })
+
+    return lobby;
 }
 
+function saveAnswers(lobby, socket, matchIndex, answers){
+    if(!answers || (matchIndex != 0 && matchIndex != 1) || answers.length > 3){
+        throw new Error("Parametri di risposta non validi")
+    }
 
+    if(lobby.status !== "ANSWERING") return callback({ error: "Fase di gioco non abilitata a ricevere risposte" });
 
+    //TODO: tempo scaduto?
+    //TODO: pulizia input
+    const matches = lobby.rounds.get(lobby.currentRound)
+    const myMatches = matches.filter(m => m.p1.id == socket.user.id || m.p2.id == socket.user.id)
+
+    myMatches[matchIndex].answers = answers;
+
+    const match = myMatches[matchIndex];
+    const me = match.p1.id == socket.user.id ? match.p1 : match.p2;
+    me.answers = answers;
+
+    return myMatches
+}
 
 module.exports = {
-    startRound
+    startRound,
+    saveAnswers
 }
