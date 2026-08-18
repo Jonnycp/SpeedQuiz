@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { toast } from "react-toastify"
 
 export function useLobbySocket(socket, setLobby) {
   useEffect(() => {
@@ -15,6 +16,7 @@ export function useLobbySocket(socket, setLobby) {
     });
 
     socket.on("lobby:player_offline", (data) => {
+      toast.warn("Un player è offline...")
       console.log("lobby:player_offline", data);
       setLobby(data.lobby);
     });
@@ -32,7 +34,7 @@ export function useLobbySocket(socket, setLobby) {
      socket.on("lobby:started", (data) => {
       console.log("lobby:started", data);
       setLobby(data.lobby);
-    } )
+    })
 
     return () => {
       socket.off("lobby:player_joined");
