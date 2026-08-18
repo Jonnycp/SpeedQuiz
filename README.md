@@ -1,18 +1,22 @@
-# React + Vite
+<p align="center">
+  <img src="frontend/public/favicon.svg" width="200" alt="SpeedQuiz Logo">
+</p>
+<p align="center">
+    <img src="https://img.shields.io/badge/FrontEnd-React-61DAFB?style=for-the-badge&logo=react" alt="FrontEnd">
+    <img src="https://img.shields.io/badge/BackEnd-Express.js-06C167?style=for-the-badge&logo=express" alt="BackEnd">
+    <img src="https://img.shields.io/badge/Realtime-SocketIO-C93CD7?style=for-the-badge&logo=socketdotio" alt="SocketIo">
+</p>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# SpeedQuiz
+Una domanda, 3 risposte, la più divertente vince!
 
-Currently, two official plugins are available:
+## Indice
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+* [Cos'è SpeedQuiz](#cosè-chain4good)
+* [Chi siamo](#chi-siamo)
+* [Obiettivi e Funzionalità](#obiettivi-e-funzionalità)
+* [Architettura del Sistema](#architettura-del-sistema)
+* [Installazione](#installazione)
+* [Comandi Utili](#comandi-utili)
+* [Licenza](#licenza)
+  
