@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 
 const lobbyHandlers = require("./handlers/lobby.handler")
 const connectionHandlers = require("./handlers/connection.handler")
+const gameHandlers = require("./handlers/game.handler")
 
 module.exports = function initSocket(server) {
   const io = new Server(server, {
@@ -40,5 +41,6 @@ module.exports = function initSocket(server) {
 
     lobbyHandlers(io, socket);
     connectionHandlers(io, socket);
+    gameHandlers(io, socket)
   });
 };
