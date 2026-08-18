@@ -5,14 +5,14 @@ function createMatch(player1, player2, question){
     return {
         question: question, //id, text
         p1: {
-            id: player1._id,
+            id: player1.id,
             username: player1.username,
             answers: [],
             votedBy: [],
             score: 0
         },
         p2: {
-            id: player2._id,
+            id: player2.id,
             username: player2.username,
             answers: [],
             votedBy: [],
@@ -42,7 +42,7 @@ function startRound(lobby){
     lobby.rounds.set(lobby.currentRound, matches)
     lobby.phaseEndAt = Date.now() + lobby.config.answerTimeMs*2 //ognuno risponde a 2 domande
 
-    startTimer(lobby, "answering", lobby.config.answerTimeMs, () => {
+    startTimer(lobby, "answering", lobby.config.answerTimeMs*2, () => {
         //TODO: CHIUDI FASE answering
         console.log("chiudi fase answering, inizio voting")
     })
