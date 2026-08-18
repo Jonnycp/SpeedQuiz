@@ -9,6 +9,7 @@ export function GameProvider({ children }) {
   const { user } = useAuth();
   const [socket, setSocket] = useState(null);
   const [lobby, setLobby] = useState(null);
+  const [offset, setOffset] = useState(0)
 
   useEffect(() => {
     if (!user) return;
@@ -93,13 +94,14 @@ export function GameProvider({ children }) {
     const response = await socket.emitWithAck("lobby:start");
     if (response.error) throw new Error(response.error);
     setLobby(response.lobby);
-    
+    setOffset(response.serverNow - Date.now())
+    console.log(response.lobby)
     return response;
   }
 
   return (
     <GameContext.Provider
-      value={{ socket, lobby, joinLobby, editSettings, leaveLobby, startLobby }}
+      value={{ socket, lobby, joinLobby, editSettings, leaveLobby, startLobby, offset }}
     >
       {children}
     </GameContext.Provider>

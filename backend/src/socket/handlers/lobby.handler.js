@@ -153,10 +153,11 @@ function lobbyHandlers(io, socket) {
     
     //* Chiama startRound da game.service 
     startRound(lobby)
-    callback({lobby: serializeLobby(lobby)});
+    callback({lobby: serializeLobby(lobby), serverNow: Date.now()});
 
     socket.to(lobby.code).emit("lobby:started", {
-      lobby: serializeLobby(lobby)
+      lobby: serializeLobby(lobby),
+      serverNow: Date.now()
     })
   });
 }
