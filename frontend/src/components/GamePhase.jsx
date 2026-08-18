@@ -1,6 +1,22 @@
 import ConfirmButton from "./ConfirmButton";
+import { useNavigate } from "react-router";
+import { useGame } from "../contexts/GameContext";
+import { toast } from "react-toastify";
 
-const GamePhase = ({ phase, underPhase, onLeave }) => {
+const GamePhase = ({ phase, underPhase }) => {
+  const { leaveLobby } = useGame();
+  const navigate = useNavigate();
+
+  async function handleLeave() {
+    try {
+      await leaveLobby();
+      navigate("/");
+    } catch (err) {
+      toast.error(err.message);
+      console.log(err.message);
+    }
+  }
+  
   return (
     <header className="font-primary px-4 md:px-10 py-3 md:py-5 flex flex-wrap items-center justify-between gap-4 select-none z-10 w-full">
       <div className="flex flex-col items-start">
@@ -16,8 +32,8 @@ const GamePhase = ({ phase, underPhase, onLeave }) => {
       <div className="flex items-center gap-2 md:gap-4 ml-auto">
         <ConfirmButton
           color="red"
-          onClick={onLeave}
-          customClasses="hover:bg-red-700" 
+          onClick={handleLeave}
+          customClasses="hover:bg-red-700"
         >
           ESCI
         </ConfirmButton>

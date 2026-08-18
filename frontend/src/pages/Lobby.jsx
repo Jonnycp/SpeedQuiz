@@ -25,15 +25,6 @@ const Lobby = () => {
   const [isDisabled, setIsDisabled] = useState(true);
 
 
-  useEffect(() => {
-    if (!lobby) return;
-    if (lobby.players.filter(p => p.connected).length >= lobby.config.minPlayers) {
-      setIsDisabled(false);
-    }else{
-      setIsDisabled(true)
-    }
-  }, [lobby]);
-
   //* Gestione join lobby (o join da link)
   useEffect(() => {
     if (lobby && lobby.code === code) return; // se sei già joinato non ha senso fare un joinlobby
@@ -42,15 +33,32 @@ const Lobby = () => {
       .catch((err) => navigate("/", { replace: true }));
   }, [code, socket]);
 
-  //* Visualizza impostazioni lobby da socket
+  //* All'aggiornamento della lobby
   useEffect(() => {
     if (!lobby) return;
+
+    // Aggiorna le impostazioni locali
     setSettings({
       rounds: lobby.config.rounds,
       public: lobby.config.public,
       answerTimeMs: lobby.config.answerTimeMs,
     });
+
+    //Gestione disabilita pulsante avvia
+    if (lobby.players.filter(p => p.connected).length >= lobby.config.minPlayers) {
+      setIsDisabled(false);
+    }else{
+      setIsDisabled(true)
+    }
+
+    // Gestione spostamento in altre fasi
+    if(lobby.status === "ANSWERING" || lobby.status === "VOTING" || lobby.status === "REVEAL"){
+      navigate("/game");
+    }else if(lobby.status === "ENDEND"){
+      navigate("/leaderboard");
+    }
   }, [lobby]);
+
 
   //* Gestione chiamata a modifica impostazioni lobby (solo host)
   const handleSettingChange = (newSettings) => {
@@ -62,28 +70,18 @@ const Lobby = () => {
           console.log("Impostazioni modificate con successo", data),
         )
         .catch((err) =>
-          console.error("Errore nella modifica delle impostazioni", err),
+          toast.error("Errore nella modifica delle impostazioni")
         );
     }
   };
 
-  //* Gestione uscita dalla lobby
-  async function handleLeave() {
-    try {
-      await leaveLobby();
-      navigate("/");
-    } catch (err) {
-      console.log(err.message)
-      toast.error(err.message);
-    }
-  }
-
-  //* Gestione uscita dalla lobby
+  //* Gestione avvia lobby
   async function handleStart() {
     try {
       await startLobby();
-      navigate("/question");
+      navigate("/game");
     } catch (err) {
+      toast.error(err.message);
       console.log(err.message);
     }
   }
@@ -114,11 +112,9 @@ const Lobby = () => {
 
   return (
     <>
-      <ToastContainer hideProgressBar={true} position="top-center" colored />
       <GamePhase
-        phase="Sala d'attesa"
-        underPhase="In attesa di giocatori..."
-        onLeave={handleLeave}
+        phase={"Sala di attesa..."}
+        underPhase={isDisabled ? "In attesa di giocatori..." : "Pronto per iniziare!"}
       />
 
       <div className="flex-1 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 px-4 md:px-8 max-w-7xl mx-auto w-full">
