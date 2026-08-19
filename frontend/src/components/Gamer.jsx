@@ -1,10 +1,10 @@
-const Gamer = ({username, isHost = false, rotation, offline}) => {
+const Gamer = ({username, id, isHost = false, rotation, offline}) => {
   return (
 <div className={`flex flex-col md:flex-row items-center md:justify-between md:w-full md:max-w-2xl md:bg-white md:border-3 md:border-neroNonNero md:shadow-buttons md:py-3 md:px-5 font-primary md:mx-auto ${rotation || ""} ${offline ? "animate-pulse" : ""}`}>
         <div className="relative flex flex-col items-center md:flex-row md:gap-4 w-18 md:w-full">
             <img
                 className="w-16 md:w-8 md:h-8 rounded-full border-3 border-neroNonNero shadow-buttons md:shadow-none"
-                src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${username}`}
+                src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${id}`}
                 alt={`Avatar di ${username}`}
             />
             <span className="font-bold text-xs md:text-xl mt-3 md:mt-0 uppercase tracking-wide truncate max-w-full text-white md:text-black">
