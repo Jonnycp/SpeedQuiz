@@ -155,7 +155,7 @@ function lobbyHandlers(io, socket) {
     }
     
     //* Chiama startRound da game.service 
-    startRound(lobby)
+    startRound(lobby, io)
     callback({lobby: serializeLobby(lobby), serverNow: Date.now()});
 
     socket.to(lobby.code).emit("lobby:started", {
