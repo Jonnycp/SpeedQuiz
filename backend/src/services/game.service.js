@@ -1,6 +1,7 @@
 const { getLobby } = require('../store/lobbyStore');
-const { startTimer } = require("../store/timerManager")
+const { startTimer, clearTimer } = require("../store/timerManager")
 
+//* Genera l'oggetto match 
 function createMatch(player1, player2, question){
     return {
         question: question, //id, text
@@ -21,6 +22,7 @@ function createMatch(player1, player2, question){
     }
 }
 
+//* Avvia round, generando i match, imposta timer, e chiudi in automatico allo scadere
 function startRound(lobby){
     if(lobby.currentRound >= lobby.config.rounds){
         //TODO: endGame
@@ -50,28 +52,68 @@ function startRound(lobby){
     return lobby;
 }
 
+//* Salva le risposte di un giocatore per un match specifico
 function saveAnswers(lobby, socket, matchIndex, answers){
-    if(!answers || (matchIndex != 0 && matchIndex != 1) || answers.length > 3){
+    answers = answers ? answers.map(a => a.trim()).filter(a => a !== "") : []
+
+    if(!answers || (matchIndex != 0 && matchIndex != 1) || answers.length < 1 || answers.length > 3){
         throw new Error("Parametri di risposta non validi")
     }
 
     if(lobby.status !== "ANSWERING") return callback({ error: "Fase di gioco non abilitata a ricevere risposte" });
 
-    //TODO: tempo scaduto?
-    //TODO: pulizia input
-    const matches = lobby.rounds.get(lobby.currentRound)
-    const myMatches = matches.filter(m => m.p1.id == socket.user.id || m.p2.id == socket.user.id)
+    if(lobby.phaseEndAt < Date.now()){
+        throw new Error("Tempo scaduto per rispondere");
+    }
 
-    myMatches[matchIndex].answers = answers;
+    const matches = lobby.rounds.get(lobby.currentRound);
+    const myMatches = matches.filter(m => m.p1.id == socket.user.id || m.p2.id == socket.user.id)
 
     const match = myMatches[matchIndex];
     const me = match.p1.id == socket.user.id ? match.p1 : match.p2;
     me.answers = answers;
 
-    return myMatches
+    return myMatches;
 }
+
+//* Conta quanti giocatori hanno ancora risposte da inviare
+//Per ogni giocatore, filtra i suoi match, e capisci se ha risposte vuote
+function calculateMatchLefts(lobby){
+    const players = [...lobby.players.values()];
+    const currentRound = lobby.rounds.get(lobby.currentRound) || [];
+    const matchLefts = players.filter(p => {
+        const myMatches = currentRound.filter(m => m.p1.id === p.id || m.p2.id === p.id);
+        return myMatches.some(m => {
+          const me = m.p1.id === p.id ? m.p1 : m.p2;
+          return me.answers.length === 0;
+        });
+    });
+
+    return matchLefts.length;
+}
+
+//* Avvia fase di voting, chiudendo answering
+function closeAnsweringPhase(lobby){
+    if(!lobby) throw new Error("Lobby non trovata")
+    if(lobby.status !== "ANSWERING") throw new Error("Stanza non in fase di answering...")
+
+    lobby.status = "VOTING";
+    lobby.phaseEndAt = Date.now() + lobby.config.votingTimeMs;
+
+    clearTimer(lobby, "answering")
+
+    startTimer(lobby, "voting", lobby.config.votingTimeMs, () => {
+        //TODO: chiudi voting
+        console.log("chiudi fase voting, inizio reveal")
+    })
+
+    io.to(lobby.code).emit("")
+    
+}
+
 
 module.exports = {
     startRound,
-    saveAnswers
+    saveAnswers,
+    calculateMatchLefts
 }
