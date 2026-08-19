@@ -1,6 +1,8 @@
-const generateRoomCode = require("../utils/generateRoomCode")
-const { pickRandom } = require("../store/questionStore")
-const { setLobby } = require("../store/lobbyStore")
+const generateRoomCode = require("../utils/generateRoomCode");
+const { pickRandom } = require("../store/questionStore");
+const { setLobby } = require("../store/lobbyStore");
+
+
 
 function createLobby(ownerId, owenerUsername) {
     const code = generateRoomCode()
@@ -12,16 +14,17 @@ function createLobby(ownerId, owenerUsername) {
         createdAt: Date.now(),
         config: {
             public: false,
-            rounds: 3,
+            rounds: process.env.MAX_PLAYERS,
             minPlayers: 3,
-            maxPlayers: 8,
-            answerTimeMs: 30000, //30sec default
-            votingTimeMs: 30000, //30sec default
-            revealTimems: 15000, //15sec default
+            maxPlayers: process.env.MAX_PLAYERS,
+            answerTimeMs: process.env.ANSWER_TIME, //30sec default
+            votingTimeMs: process.env.VOTING_TIME , //30sec default
+            revealTimems: process.env.REVEAL_TIME, //15sec default
         },
         players: new Map(), //idPlayer => {}
         questions: [],
         currentRound: -1,
+        currentVoting: -1,
         disconnectedTimers: new Map(),
         timers: {
             answering: null,
