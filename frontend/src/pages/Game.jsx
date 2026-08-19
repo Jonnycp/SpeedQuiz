@@ -79,7 +79,7 @@ const Game = () => {
   }
 
   const votingMatch = currentRound[lobby.currentVoting];
-  const canVote = votingMatch && (votingMatch.p1.id === user.id || votingMatch.p2.id === user.id);
+  const canVote = votingMatch && !(votingMatch.p1.id === user.id || votingMatch.p2.id === user.id);
 
   return (
     <>
