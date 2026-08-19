@@ -32,7 +32,7 @@ async function getProfileStats(req, res) {
         id: game._id,
         title: `STANZA DI ${game.hostUsername}`,
         players: game.players.length,
-        maxPlayers: game.maxPlayers,
+        date: game.createdAt,
         isWinner: me ? me.isWinner : false,
       };
     });
