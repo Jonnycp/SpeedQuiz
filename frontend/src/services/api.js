@@ -94,8 +94,9 @@ export async function getPublicLobbiesAPI(){
   })
 }
 
-export async function getProfileStatsAPI(){
-  return fetchCustom("/auth/profile/stats", {
+
+export async function getProfileStatsAPI() {
+  return fetchCustom("/games/profile-stats", {
     method: "GET"
   });
 }
