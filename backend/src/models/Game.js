@@ -2,15 +2,29 @@ const mongoose = require('mongoose');
 
 const GameSchema = new mongoose.Schema({
 
+    hostId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+
     hostUsername: { 
         type: String,
         required: true
     },
 
-    maxPlayers: { 
-            type: Number, 
+    config: {
+        nRounds: {
+            type: Number,
             required: true,
+            default: 3 
         },
+        answerTime: {
+            type: Number,
+            required: true,
+            default: 10
+        }
+    },
 
     players: [
         {
@@ -29,10 +43,8 @@ const GameSchema = new mongoose.Schema({
             }
         }
     ],
-    createdAt: { 
-        type: Date, 
-        default: Date.now 
-        }
-});
+},
+    {timestamps:true}
+);
 
 module.exports = mongoose.model("Game", GameSchema);
