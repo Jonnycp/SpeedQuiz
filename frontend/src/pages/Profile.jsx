@@ -129,7 +129,7 @@ const Profile = () => {
                     <LobbyCard
                       title={partita.title}
                       players={partita.players}
-                      players_max={partita.maxPlayers}
+                      date={partita.date}
                       rotation="-rotate-1"
                       content={"RIVEDI"}
                       isWinner={partita.isWinner}
