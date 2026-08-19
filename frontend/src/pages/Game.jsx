@@ -116,7 +116,7 @@ const Game = () => {
           question={question}
           hints={
             lobby.status === "VOTING"
-              ? ["che vinca il migliore!", "sii sincero"]
+              ? ["che vinca il migliore!", (lobby?.players.length - gameState.votesLeft -2)+ " voti"]
               : null
           }
         />
