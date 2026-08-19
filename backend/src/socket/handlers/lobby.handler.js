@@ -1,5 +1,6 @@
 const { getLobby, serializeLobby, deleteLobby } = require("../../store/lobbyStore");
 const { addPlayer, removePlayer, prepareStart } = require("../../services/lobby.service");
+const { calculateMatchLefts } = require("../../services/game.service");
 const { startRound } = require("../../services/game.service");
 
 function lobbyHandlers(io, socket) {
@@ -26,16 +27,18 @@ function lobbyHandlers(io, socket) {
     socket.data.lobbyCode = lobby.code;
     socket.join(lobby.code);
 
-    callback({
-      lobby: serializeLobby(lobby),
-      amIhost: lobby.hostId === socket.user.id,
-    });
-
     //* Notifichiamo altri giocatori (tranne se stesso)
     socket.to(lobby.code).emit("lobby:player_joined", {
       player: newPlayer,
       lobby: serializeLobby(lobby),
     });
+
+    callback({
+      lobby: serializeLobby(lobby),
+      amIhost: lobby.hostId === socket.user.id,
+      matchLefts: calculateMatchLefts(lobby),
+    });
+
   });
 
   //* MODIFICA IMPOSTAZIONI
@@ -157,7 +160,7 @@ function lobbyHandlers(io, socket) {
 
     socket.to(lobby.code).emit("lobby:started", {
       lobby: serializeLobby(lobby),
-      serverNow: Date.now()
+      serverNow: Date.now(),
     })
   });
 }
