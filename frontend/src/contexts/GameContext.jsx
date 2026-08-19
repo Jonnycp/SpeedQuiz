@@ -11,6 +11,9 @@ export function GameProvider({ children }) {
   const [socket, setSocket] = useState(null);
   const [lobby, setLobby] = useState(null);
   const [offset, setOffset] = useState(0);
+  const [gameState, setGameState] = useState({
+    matchLefts: 0,
+  });
 
   useEffect(() => {
     if (!user) return;
@@ -57,7 +60,7 @@ export function GameProvider({ children }) {
   }, [user]);
 
   useLobbySocket(socket, setLobby);
-  useGameSocket(socket, setLobby);
+  useGameSocket(socket, setLobby, gameState, setGameState);
 
   async function joinLobby(code) {
     if (!socket) throw new Error("Socket non connesso");
@@ -68,6 +71,7 @@ export function GameProvider({ children }) {
     );
     if (response.error) throw new Error(response.error);
     setLobby(response.lobby);
+    setGameState({ ...gameState, matchLefts: response.matchLefts });
     return response;
   }
 
@@ -97,7 +101,6 @@ export function GameProvider({ children }) {
     if (response.error) throw new Error(response.error);
     setLobby(response.lobby);
     setOffset(response.serverNow - Date.now());
-    console.log(response.lobby);
     return response;
   }
 
@@ -106,6 +109,8 @@ export function GameProvider({ children }) {
     const response = await socket.emitWithAck("game:answer", {matchIndex, answers});
     if (response.error) throw new Error(response.error);
     setLobby(response.lobby);
+    setGameState({ ...gameState, matchLefts: response.matchLefts });
+    console.log("submitAnswer response", response)
     return response;
   }
 
@@ -115,6 +120,7 @@ export function GameProvider({ children }) {
         socket,
         lobby,
         offset,
+        gameState,
         joinLobby,
         editSettings,
         leaveLobby,
