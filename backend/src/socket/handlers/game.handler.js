@@ -1,4 +1,4 @@
-const { saveAnswers, calculateMatchLefts } = require("../../services/game.service");
+const { saveAnswers, calculateMatchLefts, startVotingPhase } = require("../../services/game.service");
 const { getLobby } = require("../../store/lobbyStore")
 const { serializeLobby } = require("../../store/lobbyStore");
 
@@ -21,17 +21,21 @@ function gameHandlers(io, socket) {
         return callback({ error: err.message });
     }
 
+    const matchLefts = calculateMatchLefts(lobby);
+
      socket.to(lobby.code).emit("game:player_answered", {
       lobby: serializeLobby(lobby),
-      matchLefts: calculateMatchLefts(lobby),
+      matchLefts,
     })
+    
+    if(matchLefts == 0){
+      return startVotingPhase(lobby, io);
+    }
 
     return callback({
         lobby: serializeLobby(lobby),
-        matchLefts: calculateMatchLefts(lobby),
+        matchLefts,
     })
-
-    //TODO: se matchLeft = 0... chiudi prima
   });
 }
 
