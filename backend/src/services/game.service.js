@@ -31,6 +31,7 @@ function startRound(lobby, io){
 
     lobby.status = "ANSWERING";
     lobby.currentRound++;
+    lobby.currentVoting = -1;
 
     //* Genera match del round
     const players = [...lobby.players.values()]
