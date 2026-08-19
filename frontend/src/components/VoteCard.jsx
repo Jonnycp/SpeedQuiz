@@ -72,7 +72,7 @@ const VoteCard = ({
             <Icon icon="glyphs-poly:sad-cry" width="64"/>
           </span>}
       </div>
-      {canVote || answers.length != 0 &&  (
+      {canVote && answers.length != 0 &&  (
         <div className="w-[92%] mx-auto md:w-full mt-5">
           <ConfirmButton
             color="secondary"

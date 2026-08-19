@@ -3,7 +3,6 @@ const { pickRandom } = require("../store/questionStore");
 const { setLobby } = require("../store/lobbyStore");
 
 
-
 function createLobby(ownerId, owenerUsername) {
     const code = generateRoomCode()
     const newLobby = {
@@ -34,7 +33,6 @@ function createLobby(ownerId, owenerUsername) {
         rounds: new Map(), //indexRound => {}
         phaseEndAt: null
     }
-    
     
     setLobby(code, newLobby) // modifica la Map lobbies aggiungendo una nuova lobby con chiave code e valore new lobby 
     return newLobby

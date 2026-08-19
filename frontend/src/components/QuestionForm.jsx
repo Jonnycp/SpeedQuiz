@@ -10,7 +10,7 @@ const QuestionForm = ({ onSubmit, isFinal }) => {
   
   return (
       <form
-        className="w-[80%] md:w-[70%] mx-auto"
+        className="w-[80%] md:w-[70%] md:max-w-2xl mx-auto"
         onSubmit={(e) => {
           e.preventDefault();
           onSubmit(answers);
