@@ -62,7 +62,7 @@ function saveAnswers(lobby, socket, matchIndex, answers){
         throw new Error("Parametri di risposta non validi")
     }
 
-    if(lobby.status !== "ANSWERING") return callback({ error: "Fase di gioco non abilitata a ricevere risposte" });
+    if(lobby.status !== "ANSWERING") throw new Error("Fase di gioco non abilitata a ricevere risposte" );
 
     if(lobby.phaseEndAt < Date.now()){
         throw new Error("Tempo scaduto per rispondere");
@@ -129,10 +129,64 @@ function startVotingPhase(lobby, io){
     })
 }
 
+//* Salva voto di un giocatore per il match corrente
+function saveVote(lobby, socket, voteFor){
+    if(!voteFor.trim()) throw new Error("Inserisci l'id del player da votare");
+        
+    if(lobby.status !== "VOTING") {
+        throw new Error("Fase di gioco non abilitata a ricevere risposte");
+    }
+    
+    if(lobby.phaseEndAt < Date.now()){
+        throw new Error("Tempo scaduto per rispondere");
+    }
+    
+    const currentRound = lobby.rounds.get(lobby.currentRound);
+    if(lobby.currentVoting < 0 || lobby.currentVoting > currentRound.length){
+        throw new Error("Match votabile non valido");
+    }
+
+    const currentMatch = currentRound[lobby.currentVoting]
+
+    const hasVoted = [...currentMatch.p1.votedBy, ...currentMatch.p2.votedBy].find(v => v === socket.user.id)
+    if(hasVoted) throw new Error("Hai già votato in questo match.");
+
+    let votedFor;
+    if(currentMatch.p1.id === voteFor.trim()){
+        votedFor = currentMatch.p1;
+    }else if(currentMatch.p2.id === voteFor.trim()){
+        votedFor = currentMatch.p2;
+    }else{
+        throw new Error(`Il player con id ${voteFor.trim()} non ha partecipato in questo match`)
+    }
+    
+    currentMatch.isVoted = true;
+    votedFor.votedBy.push(socket.user.id)
+
+    return currentMatch
+}
+
+//* Calcola voti mancanti al match corrente
+function calculateVotesLeft(lobby){
+    const currentRound = lobby.rounds.get(lobby.currentRound) || [];
+    if(lobby.currentVoting < 0) return 0;
+
+    const currentMatch = currentRound[lobby.currentVoting]
+    const players = [...lobby.players.keys()].filter(p => currentMatch.p1.id || currentMatch.p2.id)
+
+    const votesLeft = players.filter(p => {
+        !currentMatch.p1.votedBy.includes(p) || !currentMatch.p2.votedBy.includes(p)
+    });
+
+    return votesLeft.length;
+}
+
 
 module.exports = {
     startRound,
     saveAnswers,
+    startVotingPhase,
+    saveVote,
     calculateMatchLefts,
-    startVotingPhase
+    calculateVotesLeft
 }
