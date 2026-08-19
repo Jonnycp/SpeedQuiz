@@ -11,24 +11,34 @@ import MainTitle from "../components/MainTitle.jsx";
 import TimeSlider from "../components/TimeSlider.jsx";
 import QuestionCard from "../components/QuestionCard";
 import VoteCard from "../components/VoteCard";
+import EmptyState from "../components/EmptyState";
 
 const Game = () => {
   const { user } = useAuth();
   const { code } = useParams();
-  const { socket, lobby, joinLobby, submitAnswer } = useGame();
+  const { socket, lobby, joinLobby, submitAnswer, gameState } = useGame();
   const [currentMatch, setCurrentMatch] = useState(0);
   const navigate = useNavigate();
 
+  console.log("Game render", { lobby, currentMatch, gameState });
   const myMatch = lobby
     ? lobby.rounds[lobby.currentRound].filter(
         (m) => m.p1.id === user.id || m.p2.id === user.id,
       )
     : [];
-  const matchCompleted = lobby
-    ? lobby.rounds[lobby.currentRound].filter(
-        (m) => m.p1.answers.length == 3 && m.p2.answers.length == 3,
-      )
-    : [];
+  
+  //* Imposta currentMatch da visualizzare
+  useEffect(() => {
+    if(!lobby) return;
+    if(myMatch.length === 0) return;
+
+    const myMatchIndex = myMatch.findIndex(m => {
+      const me = m.p1.id === user.id ? m.p1 : m.p2;
+      return me.answers.length === 0;
+     })
+
+    setCurrentMatch(myMatchIndex);
+  }, [lobby?.currentRound, user]);
 
   //* Redirect se non hai lobby
   useEffect(() => {
@@ -42,18 +52,12 @@ const Game = () => {
     });
   }, [lobby, socket]);
 
-  //* Ripristino a 0 di currentMatch
-  useEffect(() => {
-    setCurrentMatch(0);
-  }, [lobby?.currentRound]);
-
+  //* Invio risposte
   function handleSubmit(answers) {
-    console.log(currentMatch, answers)
     submitAnswer(currentMatch, answers)
       .then(() => setCurrentMatch(currentMatch + 1))
-      .catch((e) => {
-        console.log(e);
-        toast.error(e.message || "Impossibile salvare le risposte");
+      .catch((err) => {
+        toast.error(err.message || "Impossibile salvare le risposte");
       });
   }
 
@@ -61,7 +65,9 @@ const Game = () => {
     <>
       <GamePhase underPhase={`Round ${lobby?.currentRound + 1}`} />
       <section className="flex flex-col items-center justify-center relative z-10 md:mt-10 mt-5">
-        <MainTitle title={`Domanda ${currentMatch + 1} di ${myMatch.length}`} />
+      {currentMatch >= 0 && currentMatch < myMatch.length && (
+         <MainTitle title={`Domanda ${currentMatch + 1} di ${myMatch.length}`} />
+      )}
         <TimeSlider
           totalTime={(lobby?.config.answerTimeMs / 1000) * 2}
           endsAt={lobby?.phaseEndAt}
@@ -69,21 +75,20 @@ const Game = () => {
       </section>
 
       {lobby && lobby.status === "ANSWERING" ? (
-        currentMatch < myMatch.length ? (
+        currentMatch >= 0 && currentMatch < myMatch.length ? (
           <QuestionCard
             question={myMatch[currentMatch].question}
             isFinal={currentMatch === myMatch.length - 1}
             onSubmit={handleSubmit}
           />
         ) : (
-          <p className="m-14 text-2xl md:text-3xl font-extrabold text-center bg-white shadow-buttons border-3 border-neroNonNero px-6 py-7 md:px-20 md:py-10 rounded-2xl select-none">
+          <EmptyState message={<div className="md:p-10 text-2xl">
             Attendi gli altri giocatori
             <br />
             <span className="font-normal text-xl">
-              {lobby.players.length - matchCompleted.length} di{" "}
-              {lobby.players.length}
+              {gameState.matchLefts} di {lobby.players.length}
             </span>
-          </p>
+          </div>}></EmptyState>
         )
       ) : lobby && lobby.status === "VOTING" ? (
         <section className="grid grid-cols-1 md:grid-cols-2 gap-x-8 mt-6 flex-1 md:px-30">
