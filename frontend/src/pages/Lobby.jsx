@@ -213,6 +213,7 @@ const Lobby = () => {
               lobby.players.map((player, index) => (
                 <Gamer
                   key={player.id}
+                  id={player.id}
                   username={player.username}
                   offline={!player.connected}
                   isHost={player.id === lobby.hostId}
