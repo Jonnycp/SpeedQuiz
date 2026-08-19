@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 export function useCountdown(endsAt, offset = 0) {
   const serverTime = () => Date.now() + offset;
   const [timeMs, setTimeMs] = useState(endsAt - serverTime());
-  const [intervalState, setIntervalState] = useState(null);
+  // const [intervalState, setIntervalState] = useState(null);
   
   //* Aggiorna il countdown ogni secondo
   useEffect(() => {
@@ -11,19 +11,17 @@ export function useCountdown(endsAt, offset = 0) {
       setTimeMs(0);
       return;
     }
-    setIntervalState(setInterval(() => {
-      const remaining = Math.max(0, endsAt - serverTime());
+  
+  const tick = () => {
+    const remaining = Math.max(0, endsAt - serverTime());
       setTimeMs(remaining);
-    }, 1000));
+  }
+  tick(); //Aggiorna subito il contdown senza aspettare il primo tick
+  
+  const timer = setInterval(tick, 1000);
+  
+  return () => clearInterval(timer); 
   }, [endsAt, offset]);
-
-  //* Pulisce l'intervallo quando il countdown finisce
-  useEffect(() => {
-    if (timeMs <= 0 && intervalState) {
-      clearInterval(intervalState);
-      setIntervalState(null);
-    }
-  }, [timeMs, intervalState]);
 
   return { ms: timeMs, sec: timeMs / 1000 };
 }
