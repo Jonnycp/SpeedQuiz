@@ -9,6 +9,5 @@ router.post("/register", AuthController.register);
 router.post("/logout", AuthController.logout)
 router.post("/refresh", AuthController.refresh)
 router.put("/profile", isAuth, AuthController.updateUser)
-router.get("/profile/stats", isAuth, AuthController.getProfileStats);
 
 module.exports = router;
