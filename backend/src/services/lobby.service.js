@@ -16,10 +16,10 @@ function createLobby(ownerId, owenerUsername) {
             public: false,
             rounds: process.env.MAX_PLAYERS,
             minPlayers: 3,
-            maxPlayers: process.env.MAX_PLAYERS,
-            answerTimeMs: process.env.ANSWER_TIME, //30sec default
-            votingTimeMs: process.env.VOTING_TIME , //30sec default
-            revealTimems: process.env.REVEAL_TIME, //15sec default
+            maxPlayers: Number(process.env.MAX_PLAYERS),
+            answerTimeMs: Number(process.env.ANSWER_TIME), //30sec default
+            votingTimeMs: Number(process.env.VOTING_TIME) , //30sec default
+            revealTimems: Number(process.env.REVEAL_TIME), //15sec default
         },
         players: new Map(), //idPlayer => {}
         questions: [],
