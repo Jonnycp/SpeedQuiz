@@ -1,10 +1,11 @@
-const { getLobby } = require('../store/lobbyStore');
+const { getLobby, serializeLobby } = require('../store/lobbyStore');
 const { startTimer, clearTimer } = require("../store/timerManager")
 
 //* Genera l'oggetto match 
 function createMatch(player1, player2, question){
     return {
         question: question, //id, text
+        isVoted: false,
         p1: {
             id: player1.id,
             username: player1.username,
@@ -23,7 +24,7 @@ function createMatch(player1, player2, question){
 }
 
 //* Avvia round, generando i match, imposta timer, e chiudi in automatico allo scadere
-function startRound(lobby){
+function startRound(lobby, io){
     if(lobby.currentRound >= lobby.config.rounds){
         //TODO: endGame
     }
@@ -45,8 +46,8 @@ function startRound(lobby){
     lobby.phaseEndAt = Date.now() + lobby.config.answerTimeMs*2 //ognuno risponde a 2 domande
 
     startTimer(lobby, "answering", lobby.config.answerTimeMs*2, () => {
-        //TODO: CHIUDI FASE answering
         console.log("chiudi fase answering, inizio voting")
+        startVotingPhase(lobby, io)
     })
 
     return lobby;
@@ -92,28 +93,45 @@ function calculateMatchLefts(lobby){
     return matchLefts.length;
 }
 
+//* Verifica se ci sono risposte nel match da votare
+function hasMatchAnswersNotVoted(match){
+    const hasAnwers = match.p1.answers.length > 0 || match.p2.answers.length > 0;
+    return hasAnwers && !match.isVoted;
+}
+
 //* Avvia fase di voting, chiudendo answering
-function closeAnsweringPhase(lobby){
+function startVotingPhase(lobby, io){
     if(!lobby) throw new Error("Lobby non trovata")
     if(lobby.status !== "ANSWERING") throw new Error("Stanza non in fase di answering...")
+    
+    clearTimer(lobby, "answering");
+
+    const currentRound = lobby.rounds.get(lobby.currentRound);
+    lobby.currentVoting = currentRound.findIndex(m => hasMatchAnswersNotVoted(m));
+
+    if(lobby.currentVoting === -1){
+        //TODO: next Rounds... niente più match da votare
+        console.log("Nessun match da votare, nuovo match")
+    }
 
     lobby.status = "VOTING";
     lobby.phaseEndAt = Date.now() + lobby.config.votingTimeMs;
-
-    clearTimer(lobby, "answering")
 
     startTimer(lobby, "voting", lobby.config.votingTimeMs, () => {
         //TODO: chiudi voting
         console.log("chiudi fase voting, inizio reveal")
     })
 
-    io.to(lobby.code).emit("")
-    
+    io.to(lobby.code).emit("game:voting_started", {
+        lobby: serializeLobby(lobby),
+        serverNow: Date.now()
+    })
 }
 
 
 module.exports = {
     startRound,
     saveAnswers,
-    calculateMatchLefts
+    calculateMatchLefts,
+    startVotingPhase
 }
