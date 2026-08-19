@@ -1,6 +1,6 @@
 const { getLobby, serializeLobby, deleteLobby } = require("../../store/lobbyStore");
 const { addPlayer, removePlayer, prepareStart } = require("../../services/lobby.service");
-const { calculateMatchLefts } = require("../../services/game.service");
+const { calculateMatchLefts, calculateVotesLeft } = require("../../services/game.service");
 const { startRound } = require("../../services/game.service");
 
 function lobbyHandlers(io, socket) {
@@ -37,6 +37,7 @@ function lobbyHandlers(io, socket) {
       lobby: serializeLobby(lobby),
       amIhost: lobby.hostId === socket.user.id,
       matchLefts: calculateMatchLefts(lobby),
+      votesLeft: calculateVotesLeft(lobby)
     });
 
   });
