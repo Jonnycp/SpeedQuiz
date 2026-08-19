@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { toast } from "react-toastify"
 
-export function useGameSocket(socket, setLobby, gameState, setGameState) {
+export function useGameSocket(socket, setLobby, gameState, setGameState, setOffset) {
   useEffect(() => {
     if (!socket) return;
 
@@ -11,9 +11,15 @@ export function useGameSocket(socket, setLobby, gameState, setGameState) {
       setGameState({ ...gameState, matchLefts: data.matchLefts });
     });
 
+    socket.on("game:voting_started", (data) => {
+      console.log("game:voting_started", data);
+      setLobby(data.lobby);
+      setOffset(data.serverNow - Date.now());
+    })
 
     return () => {
       socket.off("game:player_answered");
+      socket.off("game:voting_started");
     };
   }, [socket, setLobby, setGameState]);
 }

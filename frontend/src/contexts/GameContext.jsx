@@ -60,7 +60,7 @@ export function GameProvider({ children }) {
   }, [user]);
 
   useLobbySocket(socket, setLobby);
-  useGameSocket(socket, setLobby, gameState, setGameState);
+  useGameSocket(socket, setLobby, gameState, setGameState, setOffset);
 
   async function joinLobby(code) {
     if (!socket) throw new Error("Socket non connesso");
