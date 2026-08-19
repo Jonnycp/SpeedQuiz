@@ -49,9 +49,8 @@ const QuestionCard = ({ question, onSubmit, isFinal }) => {
           <ConfirmButton
             color="primary"
             type="submit"
-            disabled={answers.some((a) => a.trim() === "")}
+            disabled={answers.every((a) => a.trim() === "")}
             customClasses="w-full -rotate-1 py-4 md:py-3 text-2xl md:text-4xl"
-
           >
             {isFinal ? "INVIA" : "PROSSIMA"}
           </ConfirmButton>
