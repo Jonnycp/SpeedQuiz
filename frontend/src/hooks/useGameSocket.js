@@ -17,9 +17,16 @@ export function useGameSocket(socket, setLobby, gameState, setGameState, setOffs
       setOffset(data.serverNow - Date.now());
     })
 
+    socket.on("game:player_voted", (data) => {
+      console.log("game:player_voted", data);
+      setLobby(data.lobby);
+      setGameState({ ...gameState, votesLeft: data.votesLeft });
+    })
+    
     return () => {
       socket.off("game:player_answered");
       socket.off("game:voting_started");
+      socket.off("game:player_voted")
     };
   }, [socket, setLobby, setGameState]);
 }

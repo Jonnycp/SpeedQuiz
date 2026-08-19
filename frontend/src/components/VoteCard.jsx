@@ -1,5 +1,9 @@
+import { useState } from "react"
+import { useGame } from "../contexts/GameContext";
+
 import ConfirmButton from "./ConfirmButton";
 import { Icon } from "@iconify/react";
+import { toast } from "react-toastify"
 
 const MiniPlayer = ({ username, id, hostId }) => {
   return (
@@ -33,7 +37,20 @@ const VoteCard = ({
   votedBy,
   score,
 }) => {
+  //Pulizia answers vuote
   answers = answers.filter((answer) => answer.trim() !== "");
+
+  const { submitVote } = useGame()
+  const [isVoted, setIsVoted] = useState(false)
+
+  function handleVote(){
+    if(canVote && !isVoted)
+    submitVote(id)
+        .then(() => setIsVoted(true))
+        .catch((err) => {
+            toast.error(err.message || "Impossibile votare ora");
+          });
+  }
 
   return (
     <div className="flex-1 relative bg-white font-primary font-extrabold flex flex-col justify-between min-h-40 pt-12 pb-6 px-4 md:py-10 md:px-8 border-3 border-neroNonNero shadow-buttons hover:-translate-y-1 transition-transform">
@@ -60,8 +77,10 @@ const VoteCard = ({
           <ConfirmButton
             color="secondary"
             customClasses="w-full py-4 md:py-5 text-xl md:text-2xl"
+            onClick={handleVote}
+            isDisabled={isVoted}
           >
-            VOTA
+            {isVoted ? "Votato" : "Vota"}
           </ConfirmButton>
           <div className="flex gap-2 mt-3 md:mt-5 flex-wrap">
           <MiniPlayer username={"dsds"} id={id} hostId={hostId} />

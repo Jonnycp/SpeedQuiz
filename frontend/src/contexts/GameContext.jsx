@@ -13,6 +13,7 @@ export function GameProvider({ children }) {
   const [offset, setOffset] = useState(0);
   const [gameState, setGameState] = useState({
     matchLefts: 0,
+    votesLeft: 0
   });
 
   useEffect(() => {
@@ -72,6 +73,7 @@ export function GameProvider({ children }) {
     if (response.error) throw new Error(response.error);
     setLobby(response.lobby);
     setGameState({ ...gameState, matchLefts: response.matchLefts });
+    setGameState({ ...gameState, votesLeft: response.votesLeft });
     return response;
   }
 
@@ -110,7 +112,15 @@ export function GameProvider({ children }) {
     if (response.error) throw new Error(response.error);
     setLobby(response.lobby);
     setGameState({ ...gameState, matchLefts: response.matchLefts });
-    console.log("submitAnswer response", response)
+    return response;
+  }
+
+  async function submitVote(voteFor) {
+    if (!socket) throw new Error("Socket non connesso");
+    const response = await socket.emitWithAck("game:vote", voteFor);
+    if (response.error) throw new Error(response.error);
+    setLobby(response.lobby);
+    setGameState({ ...gameState, votesLeft: response.votesLeft });
     return response;
   }
 
@@ -126,6 +136,7 @@ export function GameProvider({ children }) {
         leaveLobby,
         startLobby,
         submitAnswer,
+        submitVote
       }}
     >
       {children}
