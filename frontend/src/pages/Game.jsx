@@ -51,6 +51,7 @@ const Game = () => {
     joinLobby(code)
     .then((response) => {
       if (response.lobby.status === "LOBBY") navigate("/lobby/" + code);
+      if(response.lobby.status === "ENDED") navigate("/leaderboard/" + response.lobby.gameId);
     })
     .catch((err) => {
       toast.error(
