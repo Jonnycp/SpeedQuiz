@@ -22,7 +22,22 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         minLength: 8,
-    }
+    },
+
+    stats: {
+            points: {
+                type: Number,
+                default: 0
+            },
+            gamesWon: {
+                type: Number,
+                default: 0
+            },
+            gamesPlayed: {
+                type: Number,
+                default: 0
+            }
+        }
 }, {timestamps: true});
 
 

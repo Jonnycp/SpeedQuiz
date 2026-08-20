@@ -1,5 +1,6 @@
 const User = require("../models/User.js");
 const RefreshToken = require("../models/RefreshToken.js")
+const Game = require("../models/Game.js");
 const generateJWT = require("../utils/generateJWT.js")
 const jwt = require("jsonwebtoken");
 
@@ -262,6 +263,7 @@ async function updateUser(req, res){
     return res.status(500).json({ message: "Impossibile aggiornare i dati ora." });
   }
 }
+
 
 module.exports = {
   login,

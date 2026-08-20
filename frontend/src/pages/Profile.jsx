@@ -12,17 +12,28 @@ import SingleInput from "../components/SingleInput";
 import EmptyState from "../components/EmptyState";
 
 const Profile = () => {
-
-  const tuePartite = [];
-
-  const { user, updateProfile } = useAuth();
-
+  //* Gestione utente e statistiche
+  const { user, updateProfile, fetchUserStats } = useAuth();
+  
+  //* Gestione modifica profilo
   const [username, setUsername] = useState(user.username);
   const [email, setEmail] = useState(user.email);
   const [password, setPassword] = useState("");
+  //* Gesitone errori modifica profilo
   const [error, setError] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
+  
+  //* Memoruzzazione dati dal backend
+  const [stats, setStats] = useState({
+    points: 0,
+    gamesWon: 0,
+    gamesPlayed: 0,
+    winRate: "0.00",
+  });
+  //* storico partite
+  const [tuePartite, setTuePartite] = useState([]);
 
+  //* salvataggio modifiche profilo
   async function handleSubmit(e){
     e.preventDefault();
     setError("");
@@ -35,7 +46,7 @@ const Profile = () => {
         setIsDisabled(false);
     }
   }
-
+  //* Gestione abilitazione/disabilitazione bottone salva modifiche in base a modifiche effettuate
   useEffect(() => {
     if(username !== user.username || email !== user.email || password.length > 8){
         setIsDisabled(false);
@@ -44,12 +55,28 @@ const Profile = () => {
     }
   }, [username, email, password]);
 
+  //* Recupero statistiche utente e partite giocate
+  useEffect(() => {
+      async function loadStats() {
+        try {
+          const data = await fetchUserStats(); //* Recupero statistiche utente e partite giocate
+          setStats(data.stats); //* Setto le statistiche dell'utente
+          setTuePartite(data.games); //* Setto le ultime 10 partite giocate dall'utente
+        } catch (err) {
+          console.error("Errore nel caricamento delle statistiche:", err);
+        }
+      }
+
+      loadStats();
+    }, []); //* Eseguito una volta al render del componente
+
+
   return (
     <div className="font-primary">
       <Header />
 
-      <main className="max-w-5xl mx-auto px-4 mt-8 flex flex-col items-center">
-        <section className="bg-white border-4 border-neroNonNero shadow-buttons w-full p-6 md:p-10 mb-12 flex flex-col md:flex-row items-center gap-8 rotate-[-0.5deg]">
+      <main className="md:max-w-7xl max-w-5xl mx-auto px-4 mt-8 flex flex-col items-center">
+        <section className="bg-white border-4 border-neroNonNero shadow-buttons w-full p-6 md:p-10 mb-12 flex flex-col md:flex-row items-center gap-8 -rotate-[0.5deg]">
           <div className="w-32 h-32 md:w-40 md:h-40 shrink-0 rounded-full border-4 border-neroNonNero shadow-buttons overflow-hidden flex items-center justify-center">
             <img
               src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${user.id}`}
@@ -65,25 +92,25 @@ const Profile = () => {
 
             <div className="grid grid-cols-2 md:flex md:flex-row gap-4 md:gap-8 mt-4 md:mt-10 mx-auto md:mx-0 w-full">
               <StatCardProfile
-                value={420}
+                value={stats.points}
                 label="Punti"
                 bgColor="bg-primary"
                 rotation="-rotate-1"
               />
               <StatCardProfile
-                value={420}
+                value={stats.gamesWon}
                 label="Partite vinte"
                 bgColor="bg-secondary"
                 rotation="-rotate-1"
               />
               <StatCardProfile
-                value={420}
+                value={stats.gamesPlayed}
                 label="Partite giocate"
                 bgColor="bg-[#cac0ff]"
                 rotation="-rotate-1"
               />
               <StatCardProfile
-                value={`${(99.42).toFixed(2)}%`}
+                value={`${stats.winRate}%`}
                 label="Win Rate"
                 bgColor="bg-verdinoCarino"
                 rotation="-rotate-1"
@@ -92,22 +119,22 @@ const Profile = () => {
           </div>
         </section>
 
-        <section className="w-full grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
+      <section className="w-full grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 items-start">
           {/* sx*/}
           <div className="w-full">
             <SectionTitle title="Le tue partite" />
 
-            <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 hide-scrollbar">
-              {tuePartite.length > 0 ? (
+            <div className="flex overflow-x-auto gap-5 pb-6 -mx-4 px-4 md:mx-0 md:px-0 min-[1265px]:grid md:grid-cols-2 md:max-h-[480px] md:overflow-y-auto hide-scrollbar pr-2">             
+                {tuePartite.length > 0 ? (
                 tuePartite.map((partita) => (
                   <div
                     key={partita.id}
-                    className="w-[85vw] max-w-75 shrink-0 snap-center h-auto"
-                  >
+                    className="w-[85vw] max-w-[300px] md:w-full shrink-0 snap-center h-auto"                  
+                    >
                     <LobbyCard
                       title={partita.title}
                       players={partita.players}
-                      players_max={partita.maxPlayers}
+                      date={partita.date}
                       rotation="-rotate-1"
                       content={"RIVEDI"}
                       isWinner={partita.isWinner}

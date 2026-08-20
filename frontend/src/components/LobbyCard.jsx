@@ -1,5 +1,5 @@
 import ConfirmButton from "./ConfirmButton";
-const LobbyCard = ({ title, players, players_max, rotation, content,
+const LobbyCard = ({ title, players, players_max, date, rotation, content,
   avatars = ["jonny", "genbi", "angelica", "marco", "andrea"] 
 }) => {
   
@@ -11,7 +11,15 @@ const LobbyCard = ({ title, players, players_max, rotation, content,
     <div className={`bg-white border-3 border-neroNonNero shadow-buttons p-4 md:p-6 py-6 md:py-8 ${rotation} flex flex-col justify-between font-primary hover:-translate-y-2 transition-transform cursor-pointer h-full`}>
       <div>
         <h4 className="font-extrabold text-lg md:text-xl uppercase mb-2 text-black leading-tight">{title}</h4>
-        <p className="font-extrabold text-xs md:text-sm mb-4 md:mb-6 text-gray-700 uppercase">Players: {players}/{players_max}</p>
+        {date ? (
+          <p className="font-extrabold text-xs md:text-sm mb-4 md:mb-6 text-gray-700 uppercase">
+            DATA: {new Date(date).toLocaleDateString("it-IT", { day: "2-digit", month: "2-digit", year: "numeric" })}
+          </p>
+        ) : (
+          <p className="font-extrabold text-xs md:text-sm mb-4 md:mb-6 text-gray-700 uppercase">
+            PLAYERS: {players}/{players_max || "?"}
+          </p>
+        )}
       </div>
       
       <div className="flex flex-wrap items-center justify-between gap-3 md:gap-5 mt-auto">
