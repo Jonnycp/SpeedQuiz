@@ -95,14 +95,14 @@ export async function getPublicLobbiesAPI(){
 }
 
 
-export async function getProfileStatsAPI() {
-  return fetchCustom("/games/profile-stats", {
+export async function getGamesAPI() {
+  return fetchCustom("/games", {
     method: "GET"
   });
 }
 
 export async function getGameLeaderboardAPI(gameId) {
-  return fetchCustom(`/games/leaderboard/${gameId}`, {
+  return fetchCustom(`/games/${gameId}`, {
     method: "GET"
   });
 }

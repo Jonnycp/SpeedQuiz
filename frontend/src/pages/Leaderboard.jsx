@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router";
 import Confetti from "react-confetti";
 import { useAuth } from "../contexts/AuthContext";
 
-import GamePhase from "../components/GamePhase";
 import Header from "../components/Header";
 import ResultPlayer from "../components/ResultPlayer";
 import PodiumPlayer from "../components/PodiumPlayer";
@@ -12,10 +11,9 @@ import MainTitle from "../components/MainTitle";
 import { MessagePage } from "../components/ProtectedRoute";
 
 const Leaderboard = () => {
-
   const { id } = useParams(); // Prende l'ID dalla rotta /leaderboard/:id
   const navigate = useNavigate();
-  const { fetchLeaderboard } = useAuth();
+  const { getLeaderboard } = useAuth();
 
   const [players, setPlayers] = useState([]);
   const [error, setError] = useState(null);
@@ -24,7 +22,7 @@ const Leaderboard = () => {
   useEffect(() => {
     async function getLeaderboardData() {
       try {
-        const data = await fetchLeaderboard(id);
+        const data = await getLeaderboard(id);
         setPlayers(data.players);
       } catch (err) {
         setError(err.message || "Impossibile caricare la classifica");

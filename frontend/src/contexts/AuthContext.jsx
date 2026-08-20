@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { loginAPI, registerAPI, logoutAPI, updateProfileAPI, getProfileStatsAPI, getGameLeaderboardAPI} from "../services/api";
+import { loginAPI, registerAPI, logoutAPI, updateProfileAPI, getGamesAPI, getGameLeaderboardAPI} from "../services/api";
 
 const AuthContext = createContext();
 
@@ -50,18 +50,19 @@ export function AuthProvider({ children }) {
   }
 
 //* STATISTICHE UTENTE
-  async function fetchUserStats() {
-    const data = await getProfileStatsAPI();
+  async function getUserGames() {
+    const data = await getGamesAPI();
     return data;
   }
+
 //* LEADERBOARD PARTITA
-  async function fetchLeaderboard(gameId) {
+  async function getLeaderboard(gameId) {
     const data = await getGameLeaderboardAPI(gameId);
     return data;
   }
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout, updateProfile, fetchUserStats, fetchLeaderboard }}>
+    <AuthContext.Provider value={{ user, isLoading, login, register, logout, updateProfile, getUserGames, getLeaderboard }}>
       {children}
     </AuthContext.Provider>
   );

@@ -15,7 +15,7 @@ import { Link } from "react-router";
 
 const Profile = () => {
   //* Gestione utente e statistiche
-  const { user, updateProfile, fetchUserStats } = useAuth();
+  const { user, updateProfile, getUserGames } = useAuth();
   
   //* Gestione modifica profilo
   const [username, setUsername] = useState(user.username);
@@ -61,7 +61,7 @@ const Profile = () => {
   useEffect(() => {
       async function loadStats() {
         try {
-          const data = await fetchUserStats(); //* Recupero statistiche utente e partite giocate
+          const data = await getUserGames(); //* Recupero statistiche utente e partite giocate
           setStats(data.stats); //* Setto le statistiche dell'utente
           setTuePartite(data.games); //* Setto le ultime 10 partite giocate dall'utente
         } catch (err) {
@@ -78,7 +78,7 @@ const Profile = () => {
       <Header />
 
       <main className="md:max-w-7xl max-w-5xl mx-auto px-4 mt-8 flex flex-col items-center">
-        <section className="bg-white border-4 border-neroNonNero shadow-buttons w-full p-6 md:p-10 mb-12 flex flex-col md:flex-row items-center gap-8 -rotate-[0.5deg]">
+        <section className="bg-white border-4 border-neroNonNero shadow-buttons w-full p-6 md:p-10 mb-12 flex flex-col md:flex-row items-center gap-8 rotate-[-0.5deg]">
           <div className="w-32 h-32 md:w-40 md:h-40 shrink-0 rounded-full border-4 border-neroNonNero shadow-buttons overflow-hidden flex items-center justify-center">
             <img
               src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${user.id}`}
