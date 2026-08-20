@@ -20,7 +20,7 @@ const Lobby = () => {
   const [settings, setSettings] = useState({
     rounds: lobby?.config.rounds || 3,
     public: lobby?.config.public || false,
-    answerTimeMs: lobby?.config.answerTimeMs || 30 * 1000,
+    answerTimeMs: lobby?.config.answerTimeMs || 15 * 1000,
   });
   const [isDisabled, setIsDisabled] = useState(true);
 
