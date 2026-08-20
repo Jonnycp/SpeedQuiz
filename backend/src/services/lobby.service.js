@@ -9,7 +9,7 @@ function createLobby(ownerId, owenerUsername) {
         code: code,
         hostId: ownerId,
         hostUsername: owenerUsername,
-        status: "LOBBY", //LOBBY, ANSWERING, VOTING, REVEAL, ENDED
+        status: "LOBBY", //LOBBY, ANSWERING, VOTING, REVEAL, PAUSED, ENDED
         createdAt: Date.now(),
         config: {
             public: false,
@@ -131,7 +131,7 @@ function markPlayerAsDisconnected(socket, lobby, callback){
 }
 
 function prepareStart(lobby, socket){
-    if(lobby.status !== "LOBBY"){
+    if(lobby.status !== "LOBBY" && lobby.status !== "PAUSED"){
       throw new Error("La partita è già stata avviata");
     }
     
@@ -146,7 +146,7 @@ function prepareStart(lobby, socket){
     }
 
     //*Pesca domande per tutti i rounds
-    lobby.questions = pickRandom(lobby.config.rounds * players.length, "text");
+    lobby.questions = pickRandom(players.length, "text");
 
     return lobby;
 }
