@@ -126,13 +126,13 @@ const Profile = () => {
           <div className="w-full">
             <SectionTitle title="Le tue partite" />
 
-            <div className="flex overflow-x-auto gap-5 pb-6 -mx-4 px-4 md:mx-0 md:px-0 min-[1265px]:grid md:grid-cols-2 md:max-h-[480px] md:overflow-y-auto hide-scrollbar pr-2">             
+            <div className="flex overflow-x-auto gap-5 pb-6 -mx-4 px-4 md:mx-0 md:px-0 min-[1265px]:grid md:grid-cols-2 md:max-h-120 md:overflow-y-auto hide-scrollbar pr-2">             
                 {tuePartite.length > 0 ? (
                 tuePartite.map((partita) => (
                   <Link
                     to={`/leaderboard/${partita.id}`}
                     key={partita.id}
-                    className="w-[85vw] max-w-[300px] md:w-full shrink-0 snap-center h-auto"                  
+                    className="w-[85vw] max-w-75 md:w-full shrink-0 snap-center h-auto"                  
                     >
                     <LobbyCard
                       title={partita.title}
