@@ -24,11 +24,17 @@ export function useGameSocket(socket, setLobby, gameState, setGameState, setOffs
     })
 
     
+    socket.on("game:reveal_started", (data) => {
+      console.log("game:reveal_started", data);
+      setLobby(data.lobby);
+    })
+
     
     return () => {
       socket.off("game:player_answered");
       socket.off("game:voting_started");
-      socket.off("game:player_voted")
+      socket.off("game:player_voted");
+      socket.off("game:reveal_started")
     };
   }, [socket, setLobby, setGameState]);
 }
