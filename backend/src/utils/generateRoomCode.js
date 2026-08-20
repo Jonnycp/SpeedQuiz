@@ -1,6 +1,6 @@
 const { hasLobby } = require("../store/lobbyStore");
 
-const LENGTH_CODICE = 5;
+const LENGTH_CODICE = process.env.CODE_LENGTH || 5;
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; //senza O e 0, senza I e 1
 
 function generateRoomCode() {

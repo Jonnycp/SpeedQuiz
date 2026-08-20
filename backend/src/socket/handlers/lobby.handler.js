@@ -1,6 +1,6 @@
 const { getLobby, serializeLobby, deleteLobby } = require("../../store/lobbyStore");
 const { addPlayer, removePlayer, prepareStart } = require("../../services/lobby.service");
-const { calculateMatchLefts } = require("../../services/game.service");
+const { calculateMatchLefts, calculateVotesLeft } = require("../../services/game.service");
 const { startRound } = require("../../services/game.service");
 
 function lobbyHandlers(io, socket) {
@@ -37,6 +37,7 @@ function lobbyHandlers(io, socket) {
       lobby: serializeLobby(lobby),
       amIhost: lobby.hostId === socket.user.id,
       matchLefts: calculateMatchLefts(lobby),
+      votes: lobby.players.size - 2 - calculateVotesLeft(lobby)
     });
 
   });
@@ -78,9 +79,9 @@ function lobbyHandlers(io, socket) {
       }
     }
 
-    if (settings.answerTimeMs < 10000 || settings.answerTimeMs > 60000) {
+    if (settings.answerTimeMs < Number(process.env.MIN_ANSWER_TIME) || settings.answerTimeMs > Number(process.env.MAX_ANSWER_TIME)) {
       return callback({
-        error: "Tempo per rispondere non valido (min 10sec, max 60sec)",
+        error: `Tempo per rispondere non valido (min ${Number(process.env.MIN_ANSWER_TIME) / 1000}sec, max ${Number(process.env.MAX_ANSWER_TIME) / 1000}sec)`,
       });
     } else {
       lobby.config.answerTimeMs = settings.answerTimeMs;
@@ -155,7 +156,7 @@ function lobbyHandlers(io, socket) {
     }
     
     //* Chiama startRound da game.service 
-    startRound(lobby)
+    startRound(lobby, io)
     callback({lobby: serializeLobby(lobby), serverNow: Date.now()});
 
     socket.to(lobby.code).emit("lobby:started", {

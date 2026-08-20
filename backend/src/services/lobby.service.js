@@ -1,6 +1,7 @@
-const generateRoomCode = require("../utils/generateRoomCode")
-const { pickRandom } = require("../store/questionStore")
-const { setLobby } = require("../store/lobbyStore")
+const generateRoomCode = require("../utils/generateRoomCode");
+const { pickRandom } = require("../store/questionStore");
+const { setLobby } = require("../store/lobbyStore");
+
 
 function createLobby(ownerId, owenerUsername) {
     const code = generateRoomCode()
@@ -8,20 +9,21 @@ function createLobby(ownerId, owenerUsername) {
         code: code,
         hostId: ownerId,
         hostUsername: owenerUsername,
-        status: "LOBBY", //LOBBY, ANSWERING, VOTING, REVEAL, ENDED
+        status: "LOBBY", //LOBBY, ANSWERING, VOTING, REVEAL, PAUSED, ENDED
         createdAt: Date.now(),
         config: {
             public: false,
-            rounds: 3,
+            rounds: Number(process.env.ROUNDS_DEFAULT),
             minPlayers: 3,
-            maxPlayers: 8,
-            answerTimeMs: 30000, //30sec default
-            votingTimeMs: 30000, //30sec default
-            revealTimems: 15000, //15sec default
+            maxPlayers: Number(process.env.MAX_PLAYERS),
+            answerTimeMs: Number(process.env.DEFAULT_ANSWER_TIME), //30sec default
+            votingTimeMs: Number(process.env.VOTING_TIME) , //30sec default
+            revealTimeMs: Number(process.env.REVEAL_TIME), //15sec default
         },
         players: new Map(), //idPlayer => {}
         questions: [],
         currentRound: -1,
+        currentVoting: -1,
         disconnectedTimers: new Map(),
         timers: {
             answering: null,
@@ -31,7 +33,6 @@ function createLobby(ownerId, owenerUsername) {
         rounds: new Map(), //indexRound => {}
         phaseEndAt: null
     }
-    
     
     setLobby(code, newLobby) // modifica la Map lobbies aggiungendo una nuova lobby con chiave code e valore new lobby 
     return newLobby
@@ -130,7 +131,7 @@ function markPlayerAsDisconnected(socket, lobby, callback){
 }
 
 function prepareStart(lobby, socket){
-    if(lobby.status !== "LOBBY"){
+    if(lobby.status !== "LOBBY" && lobby.status !== "PAUSED"){
       throw new Error("La partita è già stata avviata");
     }
     
@@ -145,7 +146,7 @@ function prepareStart(lobby, socket){
     }
 
     //*Pesca domande per tutti i rounds
-    lobby.questions = pickRandom(lobby.config.rounds * players.length, "text");
+    lobby.questions = pickRandom(players.length, "text");
 
     return lobby;
 }

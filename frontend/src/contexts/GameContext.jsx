@@ -13,6 +13,7 @@ export function GameProvider({ children }) {
   const [offset, setOffset] = useState(0);
   const [gameState, setGameState] = useState({
     matchLefts: 0,
+    votes: 0
   });
 
   useEffect(() => {
@@ -60,7 +61,7 @@ export function GameProvider({ children }) {
   }, [user]);
 
   useLobbySocket(socket, setLobby);
-  useGameSocket(socket, setLobby, gameState, setGameState);
+  useGameSocket(socket, setLobby, gameState, setGameState, setOffset);
 
   async function joinLobby(code) {
     if (!socket) throw new Error("Socket non connesso");
@@ -71,7 +72,7 @@ export function GameProvider({ children }) {
     );
     if (response.error) throw new Error(response.error);
     setLobby(response.lobby);
-    setGameState({ ...gameState, matchLefts: response.matchLefts });
+    setGameState({ ...gameState, matchLefts: response.matchLefts, votes: response.votes });
     return response;
   }
 
@@ -101,6 +102,7 @@ export function GameProvider({ children }) {
     if (response.error) throw new Error(response.error);
     setLobby(response.lobby);
     setOffset(response.serverNow - Date.now());
+    setGameState({ ...gameState, matchLefts: 0, votes: 0 });
     return response;
   }
 
@@ -110,7 +112,15 @@ export function GameProvider({ children }) {
     if (response.error) throw new Error(response.error);
     setLobby(response.lobby);
     setGameState({ ...gameState, matchLefts: response.matchLefts });
-    console.log("submitAnswer response", response)
+    return response;
+  }
+
+  async function submitVote(voteFor) {
+    if (!socket) throw new Error("Socket non connesso");
+    const response = await socket.emitWithAck("game:vote", voteFor);
+    if (response.error) throw new Error(response.error);
+    setLobby(response.lobby);
+    setGameState({ ...gameState, votes: response.votes });
     return response;
   }
 
@@ -126,6 +136,7 @@ export function GameProvider({ children }) {
         leaveLobby,
         startLobby,
         submitAnswer,
+        submitVote
       }}
     >
       {children}

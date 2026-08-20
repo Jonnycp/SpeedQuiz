@@ -11,9 +11,11 @@ import { createLobbyAPI, getPublicLobbiesAPI } from "../services/api";
 import { useState, useEffect } from "react";
 import { useGame } from "../contexts/GameContext";
 
+const CODE_LENGTH = Number(import.meta.env.VITE_CODE_LENGTH) || 5;
+  
 const Home = () => {
   const { user } = useAuth();
-  const { socket, joinLobby } = useGame();
+  const { joinLobby } = useGame();
 
   const [publicLobbies, setPublicLobbies] = useState([]);
   const [lobbycode, setLobbyCode] = useState("");
@@ -51,7 +53,7 @@ const Home = () => {
 
   //* Gestisci accensione pulsante ENTRA
   useEffect(() => {
-    if (lobbycode.trim().length === 5) setIsDisabled(false);
+    if (lobbycode.trim().length === CODE_LENGTH) setIsDisabled(false);
     else setIsDisabled(true);
   }, [lobbycode]);
 
@@ -87,7 +89,7 @@ const Home = () => {
             <input
               type="text"
               placeholder="Codice stanza"
-              maxLength={5}
+              maxLength={CODE_LENGTH}
               value={lobbycode}
               onChange={(e) => {
                 const sanitizedValue = e.target.value.replace(

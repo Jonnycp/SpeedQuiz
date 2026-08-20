@@ -53,6 +53,7 @@ function serializeLobby(lobby) {
       revealTimems: lobby.config.revealTimems,
     },
     currentRound: lobby.currentRound,
+    currentVoting: lobby.currentVoting,
     phaseEndAt: lobby.phaseEndAt,
     players: [...lobby.players.values()],
     rounds: [...lobby.rounds.values()],

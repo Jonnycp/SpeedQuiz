@@ -60,6 +60,7 @@ function pickRandom(N, category) {
       (q) => q._id.toString() == extracted._id.toString(),
     );
     if (exist.length == 0) {
+      extracted.timesUsed++;
       picked.push({ _id: extracted._id, text: extracted.text });
     }
   }
