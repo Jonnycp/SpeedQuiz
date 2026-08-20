@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { loginAPI, registerAPI, logoutAPI, updateProfileAPI} from "../services/api";
+import { loginAPI, registerAPI, logoutAPI, updateProfileAPI, getProfileStatsAPI} from "../services/api";
 
 const AuthContext = createContext();
 
@@ -49,8 +49,14 @@ export function AuthProvider({ children }) {
     setUser(data.user);
   }
 
+//* STATISTICHE UTENTE
+  async function fetchUserStats() {
+    const data = await getProfileStatsAPI();
+    return data;
+  }
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout, updateProfile }}>
+    <AuthContext.Provider value={{ user, isLoading, login, register, logout, updateProfile, fetchUserStats }}>
       {children}
     </AuthContext.Provider>
   );
