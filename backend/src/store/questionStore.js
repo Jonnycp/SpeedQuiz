@@ -61,7 +61,6 @@ function pickRandom(N, category) {
     );
     if (exist.length == 0) {
       extracted.timesUsed++;
-      console.log(`${extracted.text}" -> ${extracted.timesUsed}`);
       picked.push({ _id: extracted._id, text: extracted.text });
     }
   }
