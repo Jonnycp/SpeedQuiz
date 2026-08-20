@@ -72,8 +72,7 @@ export function GameProvider({ children }) {
     );
     if (response.error) throw new Error(response.error);
     setLobby(response.lobby);
-    setGameState({ ...gameState, matchLefts: response.matchLefts });
-    setGameState({ ...gameState, votes: response.votes });
+    setGameState({ ...gameState, matchLefts: response.matchLefts, votes: response.votes });
     return response;
   }
 
@@ -103,6 +102,7 @@ export function GameProvider({ children }) {
     if (response.error) throw new Error(response.error);
     setLobby(response.lobby);
     setOffset(response.serverNow - Date.now());
+    setGameState({ ...gameState, matchLefts: 0, votes: 0 });
     return response;
   }
 
