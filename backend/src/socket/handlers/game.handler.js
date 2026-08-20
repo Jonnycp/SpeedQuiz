@@ -1,4 +1,4 @@
-const { saveAnswers, calculateMatchLefts, calculateVotesLeft, startVotingPhase, saveVote } = require("../../services/game.service");
+const { saveAnswers, calculateMatchLefts, calculateVotesLeft, startVotingPhase, saveVote, startRevealPhase } = require("../../services/game.service");
 const { getLobby } = require("../../store/lobbyStore")
 const { serializeLobby } = require("../../store/lobbyStore");
 
@@ -29,7 +29,11 @@ function gameHandlers(io, socket) {
     })
     
     if(matchLefts == 0){
-      return startVotingPhase(lobby, io);
+      try{
+        startVotingPhase(lobby, io);
+      }catch(err){
+        callback({ error: err.message });
+      }
     }
 
     return callback({
@@ -58,17 +62,19 @@ function gameHandlers(io, socket) {
 
     const votesLeft = calculateVotesLeft(lobby);
     if(votesLeft == 0){
-      //TODO Se tutti votano, passa a reveal
+      startRevealPhase(lobby, io);
     }
 
     socket.to(lobby.code).emit("game:player_voted", {
       lobby: serializeLobby(lobby),
       votesLeft,
+      votes: lobby.players.size - 2 - votesLeft
     })
 
     return callback({
         lobby: serializeLobby(lobby),
         votesLeft,
+        votes: lobby.players.size - 2 - votesLeft
     })
     
   })
