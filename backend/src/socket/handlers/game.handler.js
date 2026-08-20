@@ -44,6 +44,7 @@ function gameHandlers(io, socket) {
 
   //* GAME SAVE VOTEFOR
   // Parametri: voteFor (id del giocatore da votare)
+  
   socket.on("game:vote", (voteFor , callback) => {
     if (!socket.data.lobbyCode) {
       return callback({ error: "Non sei in nessuna stanza" });
@@ -61,9 +62,6 @@ function gameHandlers(io, socket) {
     }
 
     const votesLeft = calculateVotesLeft(lobby);
-    if(votesLeft == 0){
-      startRevealPhase(lobby, io);
-    }
 
     socket.to(lobby.code).emit("game:player_voted", {
       lobby: serializeLobby(lobby),
@@ -71,13 +69,21 @@ function gameHandlers(io, socket) {
       votes: lobby.players.size - 2 - votesLeft
     })
 
+    if(votesLeft == 0){
+      try{
+        startRevealPhase(lobby, io);
+      }catch(err){
+        return callback({ error: err.message });
+      }
+    }
+
     return callback({
         lobby: serializeLobby(lobby),
         votesLeft,
         votes: lobby.players.size - 2 - votesLeft
     })
-    
   })
+
 }
 
 module.exports = gameHandlers;

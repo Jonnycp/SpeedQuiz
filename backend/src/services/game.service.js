@@ -29,8 +29,10 @@ function createMatch(player1, player2, question){
 
 //* Avvia round, generando i match, imposta timer, e chiudi in automatico allo scadere
 function startRound(lobby, io){
-    if(lobby.currentRound >= lobby.config.rounds){
+    if(lobby.currentRound >= lobby.config.rounds-1){
+        console.log("END GAME");
         //TODO: endGame
+        return;
     }
 
     lobby.status = "ANSWERING";
@@ -44,7 +46,7 @@ function startRound(lobby, io){
         const p1 = players[i]
         const p2 = players[(i+1) % players.length] //Con % si torna indietro a ciclo
 
-        matches.push(createMatch(p1, p2, lobby.questions[i + lobby.currentRound*players.length]))        
+        matches.push(createMatch(p1, p2, lobby.questions[i]))        
     }
 
     lobby.rounds.set(lobby.currentRound, matches)
@@ -55,7 +57,7 @@ function startRound(lobby, io){
         try{
             startVotingPhase(lobby, io)
         }catch(err){
-            //TODO: non succede ma se succede
+            //? non succede ma se succede
             console.error("Errore durante la chiusura della fase answering:", err);
         }
     })
@@ -120,8 +122,13 @@ function startVotingPhase(lobby, io){
     lobby.currentVoting = currentRound.findIndex(m => hasMatchAnswersNotVoted(m));
 
     if(lobby.currentVoting === -1){
-        //TODO: next Rounds... niente più match da votare
-        console.log("Nessun match da votare, nuovo match")
+        console.log("Nessun match da votare, nuovo round")
+        lobby.status = "PAUSED"
+
+        return io.to(lobby.code).emit("game:round_ended", {
+            lobby: serializeLobby(lobby),
+            serverNow: Date.now()
+        });
     }
 
     lobby.status = "VOTING";
@@ -179,14 +186,17 @@ function calculateVotesLeft(lobby){
     if(lobby.currentVoting < 0) return 0;
 
     const currentMatch = currentRound[lobby.currentVoting]
-    const players = [...lobby.players.keys()].filter(p => currentMatch.p1.id || currentMatch.p2.id)
+    const players = [...lobby.players.keys()].filter(
+        p => p !== currentMatch.p1.id && p !== currentMatch.p2.id
+    )
 
-    const votesLeft = players.filter(p => {
-        !currentMatch.p1.votedBy.includes(p) || !currentMatch.p2.votedBy.includes(p)
-    });
+    const votesLeft = players.filter(p =>
+        !currentMatch.p1.votedBy.includes(p) && !currentMatch.p2.votedBy.includes(p)
+    );
 
     return votesLeft.length;
 }
+
 
 function startRevealPhase(lobby, io){
     if(!lobby) throw new Error("Lobby non trovata")
@@ -206,22 +216,24 @@ function startRevealPhase(lobby, io){
 
     const winner = calculateMatchWinner(lobby, currentMatch);
     
-    startTimer(lobby, "reveal", lobby.config.revealTimeMs, () => {
-        console.log("chiudi fase di reveal");
-        try{
-            startVotingPhase(lobby, io);
-        }catch(err){
-            //TODO: non succede... ma se succede
-            console.error("Errore durante la chiusura della fase reveal:", err);
-        }
-    })
-
     io.to(lobby.code).emit("game:reveal_started", {
         lobby: serializeLobby(lobby),
         winner: winner,
         serverNow: Date.now()
     })
+
+    startTimer(lobby, "reveal", lobby.config.revealTimeMs, () => {
+        console.log("chiudi fase di reveal");
+        try{
+            return startVotingPhase(lobby, io);
+        }catch(err){
+            //? non succede... ma se succede
+            console.error("Errore durante la chiusura della fase reveal:", err);
+        }
+    })
 }
+
+
 
 module.exports = {
     startRound,
