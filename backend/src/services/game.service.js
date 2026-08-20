@@ -112,7 +112,7 @@ function hasMatchAnswersNotVoted(match){
 //* Avvia fase di voting, chiudendo answering
 function startVotingPhase(lobby, io){
     if(!lobby) throw new Error("Lobby non trovata")
-    if(lobby.status !== "ANSWERING") throw new Error("Stanza non in fase di answering...")
+    if(lobby.status !== "ANSWERING" && lobby.status !== "REVEAL") throw new Error("Stanza non in fase di answering o reveal...")
     
     clearTimer(lobby, "answering");
 
