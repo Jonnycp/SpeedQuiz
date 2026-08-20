@@ -21,12 +21,12 @@ const Game = () => {
   const [currentQuestion, setcurrentQuestion] = useState(0);
   const navigate = useNavigate();
 
+  //* Costanti di utility per frontend
   const currentRound = lobby ? lobby.rounds[lobby.currentRound] : [];
-
-  //* Le mie domande da rispondere, per il round
-  const myMatch = currentRound.filter(
-    (m) => m.p1.id === user.id || m.p2.id === user.id,
-  );
+  const myMatch = currentRound.filter((m) => m.p1.id === user.id || m.p2.id === user.id,);
+  const hasNextQuestion = currentQuestion >= 0 && currentQuestion < myMatch.length;
+  const votingMatch = currentRound[lobby.currentVoting];
+  const canVote = votingMatch && !(votingMatch.p1.id === user.id || votingMatch.p2.id === user.id);
 
   //* Imposta currentQuestion da visualizzare
   useEffect(() => {
@@ -53,8 +53,6 @@ const Game = () => {
     });
   }, [lobby, socket]);
 
-  if (!lobby) return null;
-
   //* Invio risposte
   function handleSubmit(answers) {
     submitAnswer(currentQuestion, answers)
@@ -64,84 +62,83 @@ const Game = () => {
       });
   }
 
-  const hasNextQuestion =
-    currentQuestion >= 0 && currentQuestion < myMatch.length;
-
-  let question;
-  if (lobby && lobby.status === "ANSWERING") {
-    if (hasNextQuestion) {
-      question = myMatch[currentQuestion].question;
-    }
-  } else if (lobby && lobby.status === "VOTING") {
-    if (lobby.currentVoting >= 0) {
-      question = currentRound[lobby.currentVoting].question;
-    }
+  const TEXTS = {
+    ANSWERING: {
+      isTitle: hasNextQuestion,
+      title: hasNextQuestion ? `Domanda ${currentQuestion + 1} di ${myMatch.length}` : null,
+      totalTimeMs: lobby?.config.answerTimeMs * 2,
+      isBar: true,
+      isQuestion: hasNextQuestion,
+      question: hasNextQuestion ? myMatch[currentQuestion].question : null,
+      hints: null,
+    },
+    VOTING: {
+      isTitle: true,
+      title: "Vota la terna migliore!",
+      totalTimeMs: lobby?.config.votingTimeMs,
+      isBar: false,
+      isQuestion: votingMatch ? true : false,
+      question: votingMatch ? votingMatch.question : null, 
+      hints: ["che vinca il migliore!", gameState.votes + " voti"],
+    },
+    REVEAL: {
+      isTitle: true,
+      title: "Ecco il vincitore!",
+      totalTimeMs: lobby?.config.revealTimeMs,
+      isBar: false,
+      isQuestion: true,
+      question: votingMatch ? votingMatch.question : null, 
+      hints: ["che vinca il migliore!", gameState.votes + " voti"],
+    },
   }
-
-  const votingMatch = currentRound[lobby.currentVoting];
-  const canVote = votingMatch && !(votingMatch.p1.id === user.id || votingMatch.p2.id === user.id);
-
+  
   return (
     <>
       <GamePhase underPhase={`Round ${lobby?.currentRound + 1}`} />
 
       <section className="flex flex-col items-center justify-center relative z-10">
-        {hasNextQuestion ||
-          (lobby?.status === "VOTING" && (
+          {TEXTS[lobby?.status].isTitle && (
             <MainTitle
-              title={
-                hasNextQuestion
-                  ? `Domanda ${currentQuestion + 1} di ${myMatch.length}`
-                  : lobby?.status === "VOTING"
-                    ? "Vota la terna migliore!"
-                    : null
-              }
+              title={TEXTS[lobby?.status].title}
             />
-          ))}
+          )}
         <TimeSlider
-          totalTime={
-            ((lobby.status === "ANSWERING"
-              ? lobby?.config.answerTimeMs
-              : lobby?.config.votingTimeMs) /
-              1000) *
-            2
-          }
+          totalTime={TEXTS[lobby?.status].totalTimeMs / 1000}
           endsAt={lobby?.phaseEndAt}
-          isBar={lobby.status === "ANSWERING"}
+          isBar={TEXTS[lobby?.status].isBar}
         />
       </section>
 
-      {(hasNextQuestion || (lobby?.status === "VOTING" && votingMatch)) && (
+      {TEXTS[lobby?.status].isQuestion && (
         <Question
-          question={question}
-          hints={
-            lobby.status === "VOTING"
-              ? ["che vinca il migliore!", gameState.votes + " voti"]
-              : null
-          }
+          question={TEXTS[lobby?.status].question}
+          hints={TEXTS[lobby?.status].hints}
         />
       )}
 
-      {lobby && lobby.status === "ANSWERING" ? (
-        hasNextQuestion ? (
-          <QuestionForm
-            isFinal={currentQuestion === myMatch.length - 1}
-            onSubmit={handleSubmit}
-          />
-        ) : (
-          <EmptyState
-            message={
-              <div className="md:p-10 text-2xl">
-                Attendi gli altri giocatori
-                <br />
-                <span className="font-normal text-xl">
-                  {gameState.matchLefts} di {lobby.players.length}
-                </span>
-              </div>
-            }
-          ></EmptyState>
-        )
-      ) : lobby && lobby.status === "VOTING" ? (
+      {(lobby.status === "ANSWERING") ? 
+          hasNextQuestion ? (
+                <QuestionForm
+                  isFinal={currentQuestion === myMatch.length - 1}
+                  onSubmit={handleSubmit}
+                />
+              ) 
+          : (
+              <EmptyState
+                message={
+                  <div className="md:p-10 text-2xl">
+                    Attendi gli altri giocatori
+                    <br />
+                    <span className="font-normal text-xl">
+                      {gameState.matchLefts} di {lobby.players.length}
+                    </span>
+                  </div>
+                }
+              ></EmptyState>
+        ) 
+        : null}
+      
+      {lobby.status === "VOTING" || lobby.status === "REVEAL" ? (
         <section className="flex gap-4 m-6 my-16 md:gap-10 lg:mx-auto md:max-w-4xl">
           {votingMatch && [votingMatch.p1, votingMatch.p2].map((m) => (
             <VoteCard
@@ -153,6 +150,7 @@ const Game = () => {
               hostId={lobby.hostId}
               votedBy={votingMatch.votedBy}
               score={votingMatch.p1.score}
+              isWinner={votingMatch.isWinner}
             />
           ))}
         </section>
