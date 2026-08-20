@@ -10,17 +10,22 @@ import Gamer from "../components/Gamer";
 import ConfirmButton from "../components/ConfirmButton";
 import SettingsInput from "../components/SettingsInput";
 
+const ROUNDS_DEFAULT = Number(import.meta.env.VITE_ROUNDS_DEFAULT) || 3;
+const MIN_ANSWER_TIME = Number(import.meta.env.VITE_MIN_ANSWER_TIME) || 5000;
+const MAX_ANSWER_TIME = Number(import.meta.env.VITE_MAX_ANSWER_TIME) || 40000;
+const DEFAULT_ANSWER_TIME = Number(import.meta.env.VITE_DEFAULT_ANSWER_TIME) || 15000;
+
 const Lobby = () => {
   const navigate = useNavigate();
   const { code } = useParams();
   const { user } = useAuth();
-  const { socket, lobby, joinLobby, editSettings, leaveLobby, startLobby } =
+  const { socket, lobby, joinLobby, editSettings, startLobby } =
     useGame();
 
   const [settings, setSettings] = useState({
-    rounds: lobby?.config.rounds || 3,
+    rounds: lobby?.config.rounds || ROUNDS_DEFAULT,
     public: lobby?.config.public || false,
-    answerTimeMs: lobby?.config.answerTimeMs || 15 * 1000,
+    answerTimeMs: lobby?.config.answerTimeMs || (DEFAULT_ANSWER_TIME || 15000 / 1000),
   });
   const [isDisabled, setIsDisabled] = useState(true);
 
@@ -173,8 +178,8 @@ const Lobby = () => {
               label="Tempo per rispondere"
               name="answerTime"
               type="range"
-              minValue={5}
-              maxValue={40}
+              minValue={MIN_ANSWER_TIME / 1000}
+              maxValue={MAX_ANSWER_TIME / 1000}
               value={settings.answerTimeMs / 1000}
               disabled={lobby && lobby.hostId !== user.id}
               onChange={(value) =>

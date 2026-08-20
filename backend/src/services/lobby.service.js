@@ -13,7 +13,7 @@ function createLobby(ownerId, owenerUsername) {
         createdAt: Date.now(),
         config: {
             public: false,
-            rounds: process.env.MAX_PLAYERS,
+            rounds: Number(process.env.ROUNDS_DEFAULT),
             minPlayers: 3,
             maxPlayers: Number(process.env.MAX_PLAYERS),
             answerTimeMs: Number(process.env.DEFAULT_ANSWER_TIME), //30sec default
