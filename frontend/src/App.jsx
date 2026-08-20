@@ -39,6 +39,7 @@ const App = () => {
               <Route path="/lobby/:code" element={<ProtectedRoute> <Lobby /></ProtectedRoute>} />
               <Route path="/game/:code" element={<ProtectedRoute> <Game /> </ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute> <Profile /> </ProtectedRoute>} />
+              <Route path="/leaderboard/:id" element={<ProtectedRoute> <Leaderboard /> </ProtectedRoute>} />
               <Route path="*" element={<MessagePage/>}/>
             </Routes>
           </GameProvider>

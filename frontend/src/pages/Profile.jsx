@@ -11,6 +11,8 @@ import SingleInput from "../components/SingleInput";
 
 import EmptyState from "../components/EmptyState";
 
+import { Link } from "react-router";
+
 const Profile = () => {
   //* Gestione utente e statistiche
   const { user, updateProfile, fetchUserStats } = useAuth();
@@ -127,7 +129,8 @@ const Profile = () => {
             <div className="flex overflow-x-auto gap-5 pb-6 -mx-4 px-4 md:mx-0 md:px-0 min-[1265px]:grid md:grid-cols-2 md:max-h-[480px] md:overflow-y-auto hide-scrollbar pr-2">             
                 {tuePartite.length > 0 ? (
                 tuePartite.map((partita) => (
-                  <div
+                  <Link
+                    to={`/leaderboard/${partita.id}`}
                     key={partita.id}
                     className="w-[85vw] max-w-[300px] md:w-full shrink-0 snap-center h-auto"                  
                     >
@@ -139,7 +142,7 @@ const Profile = () => {
                       content={"RIVEDI"}
                       isWinner={partita.isWinner}
                     />
-                  </div>
+                  </Link>
                 ))
               ) : (
                 <div className="md:col-span-2 w-full mt-4">

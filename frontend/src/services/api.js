@@ -100,3 +100,9 @@ export async function getProfileStatsAPI() {
     method: "GET"
   });
 }
+
+export async function getGameLeaderboardAPI(gameId) {
+  return fetchCustom(`/games/leaderboard/${gameId}`, {
+    method: "GET"
+  });
+}
