@@ -78,7 +78,7 @@ const VoteCard = ({
             color="secondary"
             customClasses="w-full py-4 md:py-5 text-xl md:text-2xl"
             onClick={handleVote}
-            isDisabled={isVoted}
+            disabled={isVoted}
           >
             {isVoted ? "Votato" : "Vota"}
           </ConfirmButton>
