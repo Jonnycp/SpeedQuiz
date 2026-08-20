@@ -11,25 +11,29 @@ import SingleInput from "../components/SingleInput";
 
 import EmptyState from "../components/EmptyState";
 
-import { getProfileStatsAPI } from "../services/api";
-
 const Profile = () => {
-  const { user, updateProfile } = useAuth();
-
+  //* Gestione utente e statistiche
+  const { user, updateProfile, fetchUserStats } = useAuth();
+  
+  //* Gestione modifica profilo
   const [username, setUsername] = useState(user.username);
   const [email, setEmail] = useState(user.email);
   const [password, setPassword] = useState("");
+  //* Gesitone errori modifica profilo
   const [error, setError] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
   
+  //* Memoruzzazione dati dal backend
   const [stats, setStats] = useState({
     points: 0,
     gamesWon: 0,
     gamesPlayed: 0,
     winRate: "0.00",
   });
+  //* storico partite
   const [tuePartite, setTuePartite] = useState([]);
 
+  //* salvataggio modifiche profilo
   async function handleSubmit(e){
     e.preventDefault();
     setError("");
@@ -42,7 +46,7 @@ const Profile = () => {
         setIsDisabled(false);
     }
   }
-
+  //* Gestione abilitazione/disabilitazione bottone salva modifiche in base a modifiche effettuate
   useEffect(() => {
     if(username !== user.username || email !== user.email || password.length > 8){
         setIsDisabled(false);
@@ -51,19 +55,20 @@ const Profile = () => {
     }
   }, [username, email, password]);
 
+  //* Recupero statistiche utente e partite giocate
   useEffect(() => {
-    async function fetchStats() {
-      try {
-        const data = await getProfileStatsAPI();
-        setStats(data.stats);
-        setTuePartite(data.games);
-      } catch (err) {
-        console.error("Errore nel caricamento delle statistiche:", err);
+      async function loadStats() {
+        try {
+          const data = await fetchUserStats(); //* Recupero statistiche utente e partite giocate
+          setStats(data.stats); //* Setto le statistiche dell'utente
+          setTuePartite(data.games); //* Setto le ultime 10 partite giocate dall'utente
+        } catch (err) {
+          console.error("Errore nel caricamento delle statistiche:", err);
+        }
       }
-    }
 
-    fetchStats();
-  }, []);
+      loadStats();
+    }, []); //* Eseguito una volta al render del componente
 
 
   return (
