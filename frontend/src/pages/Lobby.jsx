@@ -173,8 +173,8 @@ const Lobby = () => {
               label="Tempo per rispondere"
               name="answerTime"
               type="range"
-              minValue={10}
-              maxValue={60}
+              minValue={5}
+              maxValue={40}
               value={settings.answerTimeMs / 1000}
               disabled={lobby && lobby.hostId !== user.id}
               onChange={(value) =>

@@ -16,7 +16,7 @@ function createLobby(ownerId, owenerUsername) {
             rounds: process.env.MAX_PLAYERS,
             minPlayers: 3,
             maxPlayers: Number(process.env.MAX_PLAYERS),
-            answerTimeMs: Number(process.env.ANSWER_TIME), //30sec default
+            answerTimeMs: Number(process.env.DEFAULT_ANSWER_TIME), //30sec default
             votingTimeMs: Number(process.env.VOTING_TIME) , //30sec default
             revealTimems: Number(process.env.REVEAL_TIME), //15sec default
         },

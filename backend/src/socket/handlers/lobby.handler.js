@@ -79,9 +79,9 @@ function lobbyHandlers(io, socket) {
       }
     }
 
-    if (settings.answerTimeMs < 10000 || settings.answerTimeMs > 60000) {
+    if (settings.answerTimeMs < Number(process.env.MIN_ANSWER_TIME) || settings.answerTimeMs > Number(process.env.MAX_ANSWER_TIME)) {
       return callback({
-        error: "Tempo per rispondere non valido (min 10sec, max 60sec)",
+        error: `Tempo per rispondere non valido (min ${Number(process.env.MIN_ANSWER_TIME) / 1000}sec, max ${Number(process.env.MAX_ANSWER_TIME) / 1000}sec)`,
       });
     } else {
       lobby.config.answerTimeMs = settings.answerTimeMs;
