@@ -54,6 +54,37 @@ async function getProfileStats(req, res) {
   }
 }
 
+async function getGameLeaderboard(req, res) {
+  try {
+    const { id } = req.params;
+
+    //* Cerco la partita nel database
+    const game = await Game.findById(id);
+
+    if (!game) {
+      return res.status(404).json({ message: "Partita non trovata o inesistente." });
+    }
+
+    //* Estraggo l'array dei giocatori e lo ordino per punteggio decrescente
+    //* non è gestito il caso in cui due giocatori abbiano lo stesso punteggio
+    const sortedPlayers = game.players.sort((a, b) => b.score - a.score);
+    //console.log("Giocatori ordinati per punteggio:", sortedPlayers);
+
+    res.status(200).json({
+      title: `Stanza di ${game.hostUsername}`,
+      players: sortedPlayers,
+    });
+  } catch (error) {
+    console.error("Errore recupero leaderboard:", error);
+    //* Gestisco se c'è un errore di cast 
+    if (error.name === "CastError") {
+      return res.status(404).json({ message: "Partita non trovata." });
+    }
+    return res.status(500).json({ message: "Errore interno del server." });
+  }
+}
+
 module.exports = {
   getProfileStats,
+  getGameLeaderboard
 };
