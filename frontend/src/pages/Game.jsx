@@ -111,12 +111,12 @@ const Game = () => {
         />
       </section>
 
-      {(hasNextQuestion || lobby?.status === "VOTING") && (
+      {(hasNextQuestion || (lobby?.status === "VOTING" && votingMatch)) && (
         <Question
           question={question}
           hints={
             lobby.status === "VOTING"
-              ? ["che vinca il migliore!", (lobby?.players.length - gameState.votesLeft -2)+ " voti"]
+              ? ["che vinca il migliore!", gameState.votes + " voti"]
               : null
           }
         />
@@ -143,7 +143,7 @@ const Game = () => {
         )
       ) : lobby && lobby.status === "VOTING" ? (
         <section className="flex gap-4 m-6 my-16 md:gap-10 lg:mx-auto md:max-w-4xl">
-          {[votingMatch.p1, votingMatch.p2].map((m) => (
+          {votingMatch && [votingMatch.p1, votingMatch.p2].map((m) => (
             <VoteCard
               id={m.id}
               key={"match-"+lobby.currentVoting+"-"+m.id}

@@ -37,7 +37,7 @@ function lobbyHandlers(io, socket) {
       lobby: serializeLobby(lobby),
       amIhost: lobby.hostId === socket.user.id,
       matchLefts: calculateMatchLefts(lobby),
-      votesLeft: calculateVotesLeft(lobby)
+      votes: lobby.players.size - 2 - calculateVotesLeft(lobby)
     });
 
   });
