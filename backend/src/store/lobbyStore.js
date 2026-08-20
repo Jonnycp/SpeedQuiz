@@ -57,6 +57,7 @@ function serializeLobby(lobby) {
     phaseEndAt: lobby.phaseEndAt,
     players: [...lobby.players.values()],
     rounds: [...lobby.rounds.values()],
+    gameId: lobby.gameId
   };
 }
 
