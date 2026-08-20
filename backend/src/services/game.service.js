@@ -1,6 +1,8 @@
 const { getLobby, serializeLobby } = require('../store/lobbyStore');
-const { startTimer, clearTimer } = require("../store/timerManager")
+const { startTimer, clearTimer } = require('../store/timerManager');
+const { calculateMatchWinner } = require("./score.service");
 
+ 
 //* Genera l'oggetto match 
 function createMatch(player1, player2, question){
     return {
@@ -11,14 +13,16 @@ function createMatch(player1, player2, question){
             username: player1.username,
             answers: [],
             votedBy: [],
-            score: 0
+            score: 0,
+            isWinner: false
         },
         p2: {
             id: player2.id,
             username: player2.username,
             answers: [],
             votedBy: [],
-            score: 0
+            score: 0,
+            isWinner: false
         },
     }
 }
@@ -48,7 +52,12 @@ function startRound(lobby, io){
 
     startTimer(lobby, "answering", lobby.config.answerTimeMs*2, () => {
         console.log("chiudi fase answering, inizio voting")
-        startVotingPhase(lobby, io)
+        try{
+            startVotingPhase(lobby, io)
+        }catch(err){
+            //TODO: non succede ma se succede
+            console.error("Errore durante la chiusura della fase answering:", err);
+        }
     })
 
     return lobby;
@@ -119,8 +128,7 @@ function startVotingPhase(lobby, io){
     lobby.phaseEndAt = Date.now() + lobby.config.votingTimeMs;
 
     startTimer(lobby, "voting", lobby.config.votingTimeMs, () => {
-        //TODO: chiudi voting
-        console.log("chiudi fase voting, inizio reveal")
+    startRevealPhase(lobby, io);
     })
 
     io.to(lobby.code).emit("game:voting_started", {
@@ -160,10 +168,9 @@ function saveVote(lobby, socket, voteFor){
         throw new Error(`Il player con id ${voteFor.trim()} non ha partecipato in questo match`)
     }
     
-    currentMatch.isVoted = true;
-    votedFor.votedBy.push(socket.user.id)
+    votedFor.votedBy.push(socket.user.id);
 
-    return currentMatch
+    return currentMatch;
 }
 
 //* Calcola voti mancanti al match corrente
@@ -181,11 +188,46 @@ function calculateVotesLeft(lobby){
     return votesLeft.length;
 }
 
+function startRevealPhase(lobby, io){
+    if(!lobby) throw new Error("Lobby non trovata")
+    if(lobby.status !== "VOTING") throw new Error("Stanza non in fase di voting...");
+
+    clearTimer(lobby, "voting");
+
+    const currentRound = lobby.rounds.get(lobby.currentRound);
+    if(lobby.currentVoting < 0 || lobby.currentVoting > currentRound.length){
+        throw new Error("Match votabile non valido");
+    }
+    const currentMatch = currentRound[lobby.currentVoting];
+    currentMatch.isVoted = true;
+
+    lobby.status = "REVEAL";
+    lobby.phaseEndAt = Date.now() + lobby.config.revealTimeMs;
+
+    const winner = calculateMatchWinner(lobby, currentMatch);
+    
+    startTimer(lobby, "reveal", lobby.config.revealTimeMs, () => {
+        console.log("chiudi fase di reveal");
+        try{
+            startVotingPhase(lobby, io);
+        }catch(err){
+            //TODO: non succede... ma se succede
+            console.error("Errore durante la chiusura della fase reveal:", err);
+        }
+    })
+
+    io.to(lobby.code).emit("game:reveal_started", {
+        lobby: serializeLobby(lobby),
+        winner: winner,
+        serverNow: Date.now()
+    })
+}
 
 module.exports = {
     startRound,
     saveAnswers,
     startVotingPhase,
+    startRevealPhase,
     saveVote,
     calculateMatchLefts,
     calculateVotesLeft
