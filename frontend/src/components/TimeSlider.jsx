@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useGame } from "../contexts/GameContext";
 import { useCountdown } from "../hooks/useCountdown";
 
-const TimeSlider = ({ totalTime, endsAt, isBar=true}) => {
+const TimeSlider = ({ totalTime, endsAt, isBar=true, isTime=true}) => {
   const { offset } = useGame()
   const { sec } = useCountdown(endsAt, offset)
 
@@ -18,11 +18,11 @@ const TimeSlider = ({ totalTime, endsAt, isBar=true}) => {
           ></div>}
         </div>
       )}
-
-      <div className="bg-neroNonNero text-white font-black text-sm md:text-base uppercase px-6 py-1.5 rounded-full min-w-35 text-center">
-        {Math.ceil(sec)} secondi RIMASTI
-      </div>
-      
+      {isTime &&
+        <div className="bg-neroNonNero text-white font-black text-sm md:text-base uppercase px-6 py-1.5 rounded-full min-w-35 text-center">
+          {Math.ceil(sec)} secondi RIMASTI
+        </div>
+      }
     </div>
   );
 };
