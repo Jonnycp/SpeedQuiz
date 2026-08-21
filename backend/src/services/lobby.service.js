@@ -1,6 +1,7 @@
 const generateRoomCode = require("../utils/generateRoomCode");
 const { pickRandom } = require("../store/questionStore");
 const { setLobby } = require("../store/lobbyStore");
+const { clearAllTimer } = require("../store/timerManager");
 
 
 function createLobby(ownerId, owenerUsername) {
@@ -92,16 +93,26 @@ function removePlayer(lobby, socket, callback){
     const player = lobby.players.get(socket.user.id);
     if(!player || player.socketId !== socket.id) return false;
 
-    lobby.players.delete(socket.user.id)
+    lobby.players.delete(socket.user.id);
 
     //* Uscita da stanza multicast
     socket.data.lobbyCode = null;
-    socket.leave(lobby.code)
+    socket.leave(lobby.code);
 
     //* Gestione se esce host
     if (lobby.hostId === socket.user.id && lobby.players.size > 0){
         lobby.hostId = [...lobby.players.keys()][0] 
         lobby.hostUsername = lobby.players.get(lobby.hostId).username
+    }
+    
+    //* caso in cui un utente esce e i players < 3
+    const isGameInProgress = lobby.status !== "LOBBY" && lobby.status !== "ENDED";
+    if(isGameInProgress && lobby.players.size < lobby.config.minPlayers){
+           lobby.status = "LOBBY";
+           lobby.phaseEndAt = null;
+           lobby.currentRound = -1;
+           lobby.currentVoting = -1;
+           clearAllTimer(lobby);
     }
 
     //* Chiamata callback (solitamente evento per notificare altri giocatori)
