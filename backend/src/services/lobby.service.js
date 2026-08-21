@@ -1,7 +1,7 @@
 const generateRoomCode = require("../utils/generateRoomCode");
 const { pickRandom } = require("../store/questionStore");
 const { setLobby } = require("../store/lobbyStore");
-
+const { clearAllTimer } = require("../store/timerManager");
 
 function createLobby(ownerId, owenerUsername) {
     const code = generateRoomCode()
@@ -11,6 +11,7 @@ function createLobby(ownerId, owenerUsername) {
         hostUsername: owenerUsername,
         status: "LOBBY", //LOBBY, ANSWERING, VOTING, REVEAL, PAUSED, ENDED
         createdAt: Date.now(),
+        lastActivityAt: Date.now(),
         config: {
             public: false,
             rounds: Number(process.env.ROUNDS_DEFAULT),
@@ -43,11 +44,10 @@ function addPlayer(lobby, socket){
     //* Gestione persone che erano entrate e si sono disconnesse per sbaglio
     const existingPlayer = lobby.players.get(socket.user.id)
     
-    // //* Attaccante che è connesso e chiama dinuovo la funzione
-    // Sembra baggato... rimosso
-    // if(existingPlayer && existingPlayer.connected){
-    //     throw new Error("Sei già in questa stanza!")
-    // }
+    //* Gestione multiaccesso dallo stesso dispositivo (stesso socketId)
+    if(existingPlayer && existingPlayer.connected && existingPlayer.socketId !== socket.id){
+        throw new Error("Sei già in questa stanza!")
+    }
 
     //* Fai rientrare utente disconnesso
     if(existingPlayer && !existingPlayer.connected){
@@ -102,6 +102,16 @@ function removePlayer(lobby, socket, callback){
     if (lobby.hostId === socket.user.id && lobby.players.size > 0){
         lobby.hostId = [...lobby.players.keys()][0] 
         lobby.hostUsername = lobby.players.get(lobby.hostId).username
+    }
+
+    if (lobby.players.size < lobby.config.minPlayers && lobby.status !== "LOBBY" && lobby.status !== "ENDED"){
+        lobby.status = "LOBBY"
+        lobby.phaseEndAt = null
+        lobby.currentRound = -1
+        lobby.currentVoting = -1
+        lobby.rounds.clear()
+        lobby.questions = []
+        clearAllTimer(lobby)
     }
 
     //* Chiamata callback (solitamente evento per notificare altri giocatori)
