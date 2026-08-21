@@ -71,7 +71,6 @@ const Game = () => {
     if(lobby?.status === 'ENDED' && lobby.gameId){
       navigate("/leaderboard/" + lobby.gameId)
     } else if(lobby?.status === 'LOBBY' && lobby.code === code){
-      toast.error(`Giocatori insufficienti (minimo 3): partita interrotta (minimo 3).`);
       navigate("/lobby/" + lobby.code)
     }
     if(lobby?.status === 'LOBBY' && lobby.code){
