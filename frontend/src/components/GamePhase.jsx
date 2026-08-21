@@ -9,8 +9,8 @@ const GamePhase = ({ phase, underPhase }) => {
 
   async function handleLeave() {
     try {
-      await leaveLobby();
       navigate("/");
+      await leaveLobby();
     } catch (err) {
       toast.error(err.message);
       console.log(err.message);

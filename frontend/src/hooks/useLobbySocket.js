@@ -11,14 +11,26 @@ export function useLobbySocket(socket, setLobby) {
     });
 
     socket.on("lobby:player_disconnected", (data) => {
-      console.log("lobby:player_disconnected", data);
-      setLobby(data.lobby);
+      if(data.lobby.status !== "ENDED") {
+        console.log("lobby:player_disconnected", data, data.lobby.players.length < data.lobby.config.minPlayers);
+        if(data.lobby.players.length < data.lobby.config.minPlayers) {
+          toast.error(`${data.playerDisconnected.username} si è disconnessə... Non ci sono abbastanza giocatori per continuare la partita.`)
+        } else {
+          toast.info(`${data.playerDisconnected.username} si è disconnessə...`)
+        }
+
+      }
+      if(data.lobby.status !== "ENDED") {
+        setLobby(data.lobby);
+      }
     });
 
     socket.on("lobby:player_offline", (data) => {
-      if(data.lobby.status !== "ENDED") {
-        toast.warn("Un player è offline...")
+      if(data.lobby.status !== "ENDED" && data.lobby.status !== "LOBBY") {
+        toast.warn(`${data.playerDisconnected.username} è offline...`)
         console.log("lobby:player_offline", data);
+      }
+      if(data.lobby.status !== "ENDED") {
         setLobby(data.lobby);
       }
     });
@@ -27,11 +39,6 @@ export function useLobbySocket(socket, setLobby) {
       console.log("lobby:modified_settings", data);
       setLobby(data.lobby);
     });
-    
-    socket.on("lobby:player_left", (data) => {
-      console.log("lobby:player_left", data);
-      setLobby(data.lobby);
-    })
 
      socket.on("lobby:started", (data) => {
       console.log("lobby:started", data);

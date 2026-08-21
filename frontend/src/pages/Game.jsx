@@ -74,6 +74,9 @@ const Game = () => {
       toast.error(`Giocatori insufficienti (minimo 3): partita interrotta (minimo 3).`);
       navigate("/lobby/" + lobby.code)
     }
+    if(lobby?.status === 'LOBBY' && lobby.code){
+      navigate("/lobby/" + lobby.code)
+    }
   }, [lobby?.status, lobby?.gameId])
   
   
