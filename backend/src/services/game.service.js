@@ -256,7 +256,6 @@ async function endGame(lobby, io){
         const game = await savingENDGame(lobby);
         gameId = game._id;
     }catch(err){
-        //TODO: non succede... ma se succede?
         console.error("Errore durante il salvataggio della partita:", err);
     }
 

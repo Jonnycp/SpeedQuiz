@@ -24,8 +24,8 @@ async function saveGameResult(lobby) {
   });
   await game.save();
 
-  //* UPDATE STATS UTENTE
 
+  //* aggiornamento statistiche utente
   async function updateUser(player, winnerPlayer) {
     await User.findByIdAndUpdate(player.id, {
       $inc: {
@@ -41,6 +41,7 @@ async function saveGameResult(lobby) {
   return game;
 }
 
+//* aggiornamento delle domande 
 async function updateUsedQuestions(lobby) {
     const rounds = [...lobby.rounds.values()]
     const questions = rounds.flat().map(m => m.question._id)

@@ -47,7 +47,7 @@ const Game = () => {
   //* Redirect se non hai lobby
   useEffect(() => {
     if (!socket) return;
-    if (lobby && lobby.code === code) return;
+    if (lobby && lobby.code === code) return; // abilita il join solo se l'utente non fa parte della lobby
     joinLobby(code)
     .then((response) => {
       if (response.lobby.status === "LOBBY") navigate("/lobby/" + code);
@@ -56,7 +56,7 @@ const Game = () => {
       toast.error(err.message || "Non sei in una lobby. Verrai reindirizzato alla home.");
       navigate("/");
     });
-  }, [lobby, socket]);
+  }, [code, socket]);
 
   //* Next round
   function handleNextRound() {
@@ -70,6 +70,9 @@ const Game = () => {
   useEffect(() => {
     if(lobby?.status === 'ENDED' && lobby.gameId){
       navigate("/leaderboard/" + lobby.gameId)
+    } else if(lobby?.status === 'LOBBY' && lobby.code === code){
+      toast.error(`La partita è stata interrotta perché il numero giocatori non è sufficiente (minimo 3).`);
+      navigate("/lobby/" + lobby.code)
     }
     if(lobby?.status === 'LOBBY' && lobby.code){
       navigate("/lobby/" + lobby.code)

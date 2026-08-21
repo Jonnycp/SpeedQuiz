@@ -3,6 +3,7 @@ const { pickRandom } = require("../store/questionStore");
 const { setLobby } = require("../store/lobbyStore");
 const { clearAllTimer } = require("../store/timerManager");
 
+
 function createLobby(ownerId, owenerUsername) {
     const code = generateRoomCode()
     const newLobby = {
@@ -92,11 +93,11 @@ function removePlayer(lobby, socket, callback){
     const player = lobby.players.get(socket.user.id);
     if(!player || player.socketId !== socket.id) return false;
 
-    lobby.players.delete(socket.user.id)
+    lobby.players.delete(socket.user.id);
 
     //* Uscita da stanza multicast
     socket.data.lobbyCode = null;
-    socket.leave(lobby.code)
+    socket.leave(lobby.code);
 
     //* Gestione se esce host
     if (lobby.hostId === socket.user.id && lobby.players.size > 0){
