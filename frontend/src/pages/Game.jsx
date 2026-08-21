@@ -19,13 +19,13 @@ import ResultPlayer from "../components/ResultPlayer.jsx";
 const Game = () => {
   const { user } = useAuth();
   const { code } = useParams();
-  const { socket, lobby, joinLobby, submitAnswer, gameState, startLobby } = useGame();
+  const { socket, lobby, joinLobby, gameState, startLobby } = useGame();
   const [currentQuestion, setcurrentQuestion] = useState(0);
   const navigate = useNavigate();
 
   //* Costanti di utility per frontend
-  const currentRound = lobby ? lobby.rounds[lobby.currentRound] : [];
-  const myMatch = currentRound.filter((m) => m.p1.id === user.id || m.p2.id === user.id,);
+  const currentRound = lobby?.rounds?.[lobby.currentRound] ?? [];
+  const myMatch = currentRound.filter((m) => m.p1.id === user.id || m.p2.id === user.id);
   const hasNextQuestion = currentQuestion >= 0 && currentQuestion < myMatch.length;
   const votingMatch = currentRound[lobby?.currentVoting];
   const canVote = votingMatch && !(votingMatch.p1.id === user.id || votingMatch.p2.id === user.id);
@@ -53,21 +53,10 @@ const Game = () => {
       if (response.lobby.status === "LOBBY") navigate("/lobby/" + code);
     })
     .catch((err) => {
-      toast.error(
-        err.message || "Non sei in una lobby. Verrai reindirizzato alla home.",
-      );
+      toast.error(err.message || "Non sei in una lobby. Verrai reindirizzato alla home.");
       navigate("/");
     });
   }, [lobby, socket]);
-
-  //* Invio risposte
-  function handleSubmit(answers) {
-    submitAnswer(currentQuestion, answers)
-      .then(() => setcurrentQuestion(currentQuestion + 1))
-      .catch((err) => {
-        toast.error(err.message || "Impossibile salvare le risposte");
-      });
-  }
 
   //* Next round
   function handleNextRound() {
@@ -77,6 +66,13 @@ const Game = () => {
       toast.error(err.message || "Impossibile avviare un nuovo round");
     })
   }
+
+  useEffect(() => {
+    if(lobby?.status === 'ENDED' && lobby.gameId){
+      navigate("/leaderboard/" + lobby.gameId)
+    }
+  }, [lobby?.status, lobby?.gameId])
+  
   
   const TEXTS = {
     ANSWERING: {
@@ -149,7 +145,8 @@ const Game = () => {
           hasNextQuestion ? (
                 <QuestionForm
                   isFinal={currentQuestion === myMatch.length - 1}
-                  onSubmit={handleSubmit}
+                  setcurrentQuestion={setcurrentQuestion}
+                  currentQuestion={currentQuestion}
                 />
               ) 
           : (
@@ -192,6 +189,7 @@ const Game = () => {
               <ResultPlayer
                 key={p.id}
                 username={p.username}
+                id={p.id}
                 points={p.score}
                 isWinner={p.isWinner}
                 className={"animate-slide-in-bottom"}

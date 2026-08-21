@@ -1,19 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ConfirmButton from "./ConfirmButton";
+import { useGame } from "../contexts/GameContext";
+import { toast } from "react-toastify";
 
-const QuestionForm = ({ onSubmit, isFinal }) => {
+const QuestionForm = ({ isFinal, currentQuestion, setcurrentQuestion }) => {
   const [answers, setAnswers] = useState(["", "", ""]);
+  const { submitAnswer } = useGame();
 
   function handleChange(index, value) {
     setAnswers(answers.map((answer, i) => (i === index ? value : answer)));
   }
-  
+
+  function handleSubmit(answers, currentQuestion, setcurrentQuestion, noNext=false) {
+    submitAnswer(currentQuestion, answers)
+      .then(() => {
+        if (!noNext) {
+          setcurrentQuestion(currentQuestion + 1);
+        }
+      })
+      .catch((err) => {
+        toast.error(err.message || "Impossibile salvare le risposte");
+      });
+    }
+
+useEffect(() => {
+    if (answers.every((a) => a.trim() === "")) return;
+
+    const timer = setTimeout(() => {
+      handleSubmit(answers, currentQuestion, setcurrentQuestion, true);
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [answers]);
+
   return (
       <form
         className="w-[80%] md:w-[70%] md:max-w-2xl mx-auto"
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit(answers);
+          handleSubmit(answers, currentQuestion, setcurrentQuestion);
           setAnswers(["", "", ""]);
         }}
       >

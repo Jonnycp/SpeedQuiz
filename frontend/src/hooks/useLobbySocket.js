@@ -16,9 +16,11 @@ export function useLobbySocket(socket, setLobby) {
     });
 
     socket.on("lobby:player_offline", (data) => {
-      toast.warn("Un player è offline...")
-      console.log("lobby:player_offline", data);
-      setLobby(data.lobby);
+      if(data.lobby.status !== "ENDED") {
+        toast.warn("Un player è offline...")
+        console.log("lobby:player_offline", data);
+        setLobby(data.lobby);
+      }
     });
 
     socket.on("lobby:modified_settings", (data) => {

@@ -31,7 +31,8 @@ function createLobby(ownerId, owenerUsername) {
             reveal: null
         },
         rounds: new Map(), //indexRound => {}
-        phaseEndAt: null
+        phaseEndAt: null,
+        gameId: null
     }
     
     setLobby(code, newLobby) // modifica la Map lobbies aggiungendo una nuova lobby con chiave code e valore new lobby 

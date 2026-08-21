@@ -1,6 +1,7 @@
 const { getLobby, serializeLobby } = require('../store/lobbyStore');
-const { startTimer, clearTimer } = require('../store/timerManager');
+const { startTimer, clearTimer, clearAllTimer } = require('../store/timerManager');
 const { calculateMatchWinner } = require("./score.service");
+const { savingENDGame } = require("./saving.service");
 
  
 //* Genera l'oggetto match 
@@ -30,9 +31,8 @@ function createMatch(player1, player2, question){
 //* Avvia round, generando i match, imposta timer, e chiudi in automatico allo scadere
 function startRound(lobby, io){
     if(lobby.currentRound >= lobby.config.rounds-1){
-        console.log("END GAME");
-        //TODO: endGame
-        return;
+        console.log("END GAME startRound");
+        return endGame(lobby, io)
     }
 
     lobby.status = "ANSWERING";
@@ -122,13 +122,20 @@ function startVotingPhase(lobby, io){
     lobby.currentVoting = currentRound.findIndex(m => hasMatchAnswersNotVoted(m));
 
     if(lobby.currentVoting === -1){
-        console.log("Nessun match da votare, nuovo round")
-        lobby.status = "PAUSED"
+        console.log("Nessun match da votare, nuovo round");
+        //* NUOVO ROUND O FINE PARTITA
+        if(lobby.currentRound >= lobby.config.rounds-1){
+            console.log("END GAME currentVoting -1");
+            return endGame(lobby, io)
+        }else{
+            lobby.status = "PAUSED"
 
-        return io.to(lobby.code).emit("game:round_ended", {
-            lobby: serializeLobby(lobby),
-            serverNow: Date.now()
-        });
+            return io.to(lobby.code).emit("game:round_ended", {
+                lobby: serializeLobby(lobby),
+                serverNow: Date.now()
+            });
+        }
+        
     }
 
     lobby.status = "VOTING";
@@ -197,7 +204,7 @@ function calculateVotesLeft(lobby){
     return votesLeft.length;
 }
 
-
+//* Avvia fase di reveal, chiudendo voting */
 function startRevealPhase(lobby, io){
     if(!lobby) throw new Error("Lobby non trovata")
     if(lobby.status !== "VOTING") throw new Error("Stanza non in fase di voting...");
@@ -231,9 +238,34 @@ function startRevealPhase(lobby, io){
             console.error("Errore durante la chiusura della fase reveal:", err);
         }
     })
+    
 }
 
+async function endGame(lobby, io){
+    if(!lobby) throw new Error("Lobby non trovata");
+    if(lobby.status === "ENDED") throw new Error("Partita già terminata");
 
+    clearAllTimer(lobby);
+    lobby.status = "ENDED";
+    lobby.phaseEndAt = null;
+    lobby.currentRound = -1;
+    lobby.currentVoting = -1;
+
+    let gameId = null;
+    try{
+        const game = await savingENDGame(lobby);
+        gameId = game._id;
+    }catch(err){
+        //TODO: non succede... ma se succede?
+        console.error("Errore durante il salvataggio della partita:", err);
+    }
+
+    lobby.gameId = gameId;
+    io.to(lobby.code).emit("game:ended", {
+        lobby: serializeLobby(lobby),
+        gameId: gameId,
+    })
+}
 
 module.exports = {
     startRound,
