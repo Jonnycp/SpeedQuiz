@@ -43,3 +43,15 @@ export const ProtectedRoute = ({ children }) => {
   );
 };
 
+export const NoReloginRoute = ({ children }) => {
+  const { user, isLoading } = useAuth();
+  
+  return isLoading ? (
+    <MessagePage loadingPage/>
+  ) : user ? (
+    <Navigate to="/" />
+  ) : (
+    children
+  );
+}
+

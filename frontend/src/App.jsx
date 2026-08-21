@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
 
 import background from "../assets/background.png";
-import { ProtectedRoute, MessagePage } from "./components/ProtectedRoute.jsx";
+import { ProtectedRoute, MessagePage, NoReloginRoute } from "./components/ProtectedRoute.jsx";
 
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
@@ -33,8 +33,8 @@ const App = () => {
         <AuthProvider>
           <GameProvider>
             <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<NoReloginRoute> <Login /> </NoReloginRoute>} />
+              <Route path="/register" element={<NoReloginRoute> <Register /> </NoReloginRoute>} />
               <Route path="/" element={<ProtectedRoute> <Home /> </ProtectedRoute>} />
               <Route path="/lobby/:code" element={<ProtectedRoute> <Lobby /></ProtectedRoute>} />
               <Route path="/game/:code" element={<ProtectedRoute> <Game /> </ProtectedRoute>} />
