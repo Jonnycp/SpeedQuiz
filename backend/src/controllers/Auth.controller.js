@@ -81,13 +81,13 @@ async function login(req, res) {
 async function register(req, res) {
   try {
     //* Verifica presenza parametri body
-    if (!req.body || !email || !password.trim() || !username.trim()) {
+    if (!req.body || !req.body.email.trim() || !req.body.password.trim() || !req.body.username.trim()) {
       return res.status(400).json({ message: "Email, password e username sono obbigatori." });
     }
 
-    const email = email.toLowerCase();
-    const password = password.trim();
-    const username = username.trim().toLowerCase();
+    const email = req.body.email.trim().toLowerCase();
+    const password = req.body.password.trim();
+    const username = req.body.username.trim().toLowerCase();
 
     //* Verifica correttezza parametri
     if(password.length < 8){
@@ -126,6 +126,7 @@ async function register(req, res) {
         email: newUser.email },
     });
   } catch (err){
+    console.log(err)
     return res.status(500).json({ message: "Impossibile effettuare la registrazione ora." });
   }
 }
