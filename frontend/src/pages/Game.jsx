@@ -71,7 +71,7 @@ const Game = () => {
     if(lobby?.status === 'ENDED' && lobby.gameId){
       navigate("/leaderboard/" + lobby.gameId)
     } else if(lobby?.status === 'LOBBY' && lobby.code === code){
-      toast.error(`La partita è stata interrotta perché il numero giocatori non è sufficiente (minimo 3).`);
+      toast.error(`Giocatori insufficienti (minimo 3): partita interrotta (minimo 3).`);
       navigate("/lobby/" + lobby.code)
     }
   }, [lobby?.status, lobby?.gameId])

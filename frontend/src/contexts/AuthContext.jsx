@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { loginAPI, registerAPI, logoutAPI, updateProfileAPI, getGamesAPI, getGameLeaderboardAPI} from "../services/api";
+import { loginAPI, registerAPI, logoutAPI, updateProfileAPI } from "../services/api";
 
 const AuthContext = createContext();
 
@@ -42,28 +42,16 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
-//* UPDATE PROFILE
-  async function updateProfile(username, email, password){
-    const data = await updateProfileAPI(username, email, password);
-    localStorage.setItem("loggedUser", JSON.stringify(data.user));
-    localStorage.setItem("accessToken", data.token);
-    setUser(data.user);
-  }
-
-//* STATISTICHE UTENTE
-  async function getUserGames() {
-    const data = await getGamesAPI();
-    return data;
-  }
-
-//* LEADERBOARD PARTITA
-  async function getLeaderboard(gameId) {
-    const data = await getGameLeaderboardAPI(gameId);
-    return data;
-  }
+  //* aggiornamento profilo
+    async function updateProfile(username, email, password){
+        const data = await updateProfileAPI(username, email, password);
+        localStorage.setItem("loggedUser", JSON.stringify(data.user));
+        localStorage.setItem("accessToken", data.token);
+        setUser(data.user);
+    }
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout, updateProfile, getUserGames, getLeaderboard }}>
+    <AuthContext.Provider value={{ user, isLoading, login, register, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );

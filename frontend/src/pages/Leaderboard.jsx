@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import Confetti from "react-confetti";
-import { useAuth } from "../contexts/AuthContext";
+import { useUser } from "../contexts/UserContext";
 
 import Header from "../components/Header";
 import ResultPlayer from "../components/ResultPlayer";
@@ -10,10 +10,11 @@ import ConfirmButton from "../components/ConfirmButton";
 import MainTitle from "../components/MainTitle";
 import { MessagePage } from "../components/ProtectedRoute";
 
+
 const Leaderboard = () => {
-  const { id } = useParams(); // Prende l'ID dalla rotta /leaderboard/:id
+  const { id } = useParams();
   const navigate = useNavigate();
-  const { getLeaderboard } = useAuth();
+  const { getLeaderboard } = useUser();
 
   const [players, setPlayers] = useState([]);
   const [error, setError] = useState(null);

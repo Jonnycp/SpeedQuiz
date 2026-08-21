@@ -15,6 +15,8 @@ import Profile from "./pages/Profile.jsx";
 
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { GameProvider } from "./contexts/GameContext.jsx";
+import { UserProvider } from "./contexts/UserContext.jsx";
+
 
 const App = () => {
   return (
@@ -31,6 +33,7 @@ const App = () => {
         </div>
         <ToastContainer hideProgressBar={true} position="top-center" theme="colored" />
         <AuthProvider>
+          <UserProvider>
           <GameProvider>
             <Routes>
               <Route path="/login" element={<NoReloginRoute> <Login /> </NoReloginRoute>} />
@@ -43,6 +46,7 @@ const App = () => {
               <Route path="*" element={<MessagePage/>}/>
             </Routes>
           </GameProvider>
+          </UserProvider>
         </AuthProvider>
         <footer className="text-white/50 font-primary text-sm text-center py-5 font-extrabold uppercase selection:bg-primary selection:text-black">
           ©{new Date().getFullYear()} - SpeedQuiz Team ❤️

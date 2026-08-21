@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
+import { useUser } from "../contexts/UserContext";
 import { useAuth } from "../contexts/AuthContext";
 
 import Header from "../components/Header";
@@ -15,7 +16,8 @@ import { Link } from "react-router";
 
 const Profile = () => {
   //* Gestione utente e statistiche
-  const { user, updateProfile, getUserGames } = useAuth();
+  const { user, updateProfile } = useAuth();
+  const { getUserGames } = useUser();
   
   //* Gestione modifica profilo
   const [username, setUsername] = useState(user.username);
@@ -48,6 +50,7 @@ const Profile = () => {
         setIsDisabled(false);
     }
   }
+
   //* Gestione abilitazione/disabilitazione bottone salva modifiche in base a modifiche effettuate
   useEffect(() => {
     if(username !== user.username || email !== user.email || password.length > 8){
@@ -61,16 +64,15 @@ const Profile = () => {
   useEffect(() => {
       async function loadStats() {
         try {
-          const data = await getUserGames(); //* Recupero statistiche utente e partite giocate
-          setStats(data.stats); //* Setto le statistiche dell'utente
-          setTuePartite(data.games); //* Setto le ultime 10 partite giocate dall'utente
+          const data = await getUserGames(); 
+          setStats(data.stats); 
+          setTuePartite(data.games);
         } catch (err) {
           console.error("Errore nel caricamento delle statistiche:", err);
         }
       }
-
       loadStats();
-    }, []); //* Eseguito una volta al render del componente
+    }, []);
 
 
   return (

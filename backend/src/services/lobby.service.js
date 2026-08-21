@@ -116,8 +116,8 @@ function removePlayer(lobby, socket, callback){
     }
 
     //* Chiamata callback (solitamente evento per notificare altri giocatori)
-    callback && callback()
-    return true
+    callback && callback();
+    return true;
 }
 
 function markPlayerAsDisconnected(socket, lobby, callback){
