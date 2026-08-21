@@ -71,6 +71,9 @@ const Game = () => {
     if(lobby?.status === 'ENDED' && lobby.gameId){
       navigate("/leaderboard/" + lobby.gameId)
     }
+    if(lobby?.status === 'LOBBY' && lobby.code){
+      navigate("/lobby/" + lobby.code)
+    }
   }, [lobby?.status, lobby?.gameId])
   
   
