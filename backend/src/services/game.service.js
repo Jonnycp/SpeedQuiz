@@ -31,7 +31,7 @@ function createMatch(player1, player2, question){
 //* Avvia round, generando i match, imposta timer, e chiudi in automatico allo scadere
 function startRound(lobby, io){
     if(lobby.currentRound >= lobby.config.rounds-1){
-        console.log("END GAME");
+        console.log("END GAME startRound");
         return endGame(lobby, io)
     }
 
@@ -125,7 +125,7 @@ function startVotingPhase(lobby, io){
         console.log("Nessun match da votare, nuovo round");
         //* NUOVO ROUND O FINE PARTITA
         if(lobby.currentRound >= lobby.config.rounds-1){
-            console.log("END GAME");
+            console.log("END GAME currentVoting -1");
             return endGame(lobby, io)
         }else{
             lobby.status = "PAUSED"

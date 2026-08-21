@@ -43,7 +43,7 @@ async function saveGameResult(lobby) {
 
 async function updateUsedQuestions(lobby) {
     const rounds = [...lobby.rounds.values()]
-    const questions = rounds.map(r => r.question._id)
+    const questions = rounds.flat().map(m => m.question._id)
 
     questions.forEach(async (questionId) => {
         await Question.findByIdAndUpdate(questionId, {
@@ -53,7 +53,7 @@ async function updateUsedQuestions(lobby) {
 }
 
 async function savingENDGame(lobby){
-    updateUsedQuestions(lobby)
+    await updateUsedQuestions(lobby)
     return saveGameResult(lobby)
 }
 
