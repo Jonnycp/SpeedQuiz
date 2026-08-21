@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 
 export const MessagePage = ({ loadingPage }) => {
   return (
-    <div className="flex flex-col h-screen items-center justify-center gap-10 text-3xl text-white text-center">
+    <div className="flex flex-col min-h-[80vh] items-center justify-center gap-10 text-3xl text-white text-center">
       {loadingPage ? (
         <>
           <p>

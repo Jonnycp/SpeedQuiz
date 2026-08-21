@@ -33,7 +33,14 @@ const Leaderboard = () => {
     getLeaderboardData();
   }, [id]);
 
-  if (loading) return <MessagePage loadingPage={true} />;
+if (loading) {
+    return (
+      <>
+        <Header />
+        <MessagePage loadingPage={true} />
+      </>
+    );
+  }
   if (error) return <MessagePage loadingPage={false} />;
 
   // Separiamo i primi 3 per il podio dagli altri giocatori
