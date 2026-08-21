@@ -16,7 +16,7 @@ function connectionHandlers(io, socket) {
     try {
       markPlayerAsDisconnected(socket, lobby, () => {
         socket.to(lobby.code).emit("lobby:player_disconnected", {
-          playerDisconnected: socket.user.id,
+          playerDisconnected: {id: socket.user.id, username: socket.user.username},
           lobby: serializeLobby(lobby),
         });
       });
@@ -26,7 +26,7 @@ function connectionHandlers(io, socket) {
 
     //* Evento per avvisare che player è andato offline
      socket.to(lobby.code).emit("lobby:player_offline", {
-        playerDisconnected: socket.user.id,
+        playerDisconnected: {id: socket.user.id, username: socket.user.username},
         lobby: serializeLobby(lobby),
       });
   });

@@ -119,9 +119,12 @@ function lobbyHandlers(io, socket) {
     }
 
     //* rimuovo il player e avviso tutti gli altri
-    removePlayer(lobby, socket, (callback) => {
-      socket.to(lobbyCode).emit("lobby:player_left", {
-        playerLeft: socket.user.id,
+    removePlayer(lobby, socket, () => {
+      socket.to(lobbyCode).emit("lobby:player_disconnected", {
+        playerDisconnected: {
+          id: socket.user.id,
+          username: socket.user.username
+        },
         lobby: serializeLobby(lobby),
       });
     });
