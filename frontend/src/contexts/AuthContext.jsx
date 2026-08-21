@@ -46,6 +46,7 @@ export function AuthProvider({ children }) {
   async function updateProfile(username, email, password){
     const data = await updateProfileAPI(username, email, password);
     localStorage.setItem("loggedUser", JSON.stringify(data.user));
+    localStorage.setItem("accessToken", data.token);
     setUser(data.user);
   }
 

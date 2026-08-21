@@ -1,0 +1,77 @@
+{
+  "name": "SpeedQuiz",
+  "description": "Sfida i tuoi amici in una partita di domande! Una domanda, 3 risposte. La più divertente vince! Ma ricorda di tenere d'occhio il tempo.",
+  "short_name": "speedquiz",
+  "display": "standalone",
+  "background_color": "#3111d2",
+  "theme_color": "#ff6b35",
+  "orientation": "portrait",
+  "dir": "ltr",
+  "lang": "it-IT",
+  "start_url": "/",
+  "categories": ["game", "quiz", "party"],
+  "id": "/",
+  "display_override": ["window-controls-overlay", "standalone", "fullscreen"],
+  "icons": [
+    {
+      "src": "logos/logo-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logos/logo-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/screen-desktop-home.png",
+      "sizes": "1924x1080",
+      "type": "image/png",
+      "label": "Home",
+      "platform": "desktop",
+      "form_factor": "wide"
+    },
+    {
+      "src": "screenshots/screen-desktop-lobby.png",
+      "sizes": "1924x1080",
+      "type": "image/png",
+      "label": "Lobby",
+      "platform": "desktop",
+      "form_factor": "wide"
+    },
+    {
+      "src": "screenshots/screen-desktop-home.png",
+      "sizes": "1924x1080",
+      "type": "image/png",
+      "label": "Home",
+      "platform": "desktop",
+      "form_factor": "wide"
+    },
+    {
+      "src": "screenshots/screen-mobile-home.png",
+      "sizes": "402x807",
+      "type": "image/png",
+      "label": "Home",
+      "platform": "mobile",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshots/screen-mobile-lobby.png",
+      "sizes": "402x807",
+      "type": "image/png",
+      "label": "Lobby",
+      "platform": "mobile",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshots/screen-mobile-question.png",
+      "sizes": "402x807",
+      "type": "image/png",
+      "label": "Question Page",
+      "platform": "mobile",
+      "form_factor": "narrow"
+    }
+  ]
+}
