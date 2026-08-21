@@ -56,15 +56,16 @@ const Leaderboard = () => {
         </h2>
       </section>
         <section className="flex gap-3 md:gap-8 mx-4 md:mx-32 py-24 relative z-10 select-none justify-center">
-          {second && <PodiumPlayer position={2} username={second.username} points={second.score} />}
-          {first && <PodiumPlayer position={1} username={first.username} points={first.score} />}
-          {third && <PodiumPlayer position={3} username={third.username} points={third.score} />}
+          {second && <PodiumPlayer position={2} username={second.username} points={second.score} id={second.user}/>}
+          {first && <PodiumPlayer position={1} username={first.username} points={first.score} id={first.user}/>}
+          {third && <PodiumPlayer position={3} username={third.username} points={third.score} id={third.user}/>}
       </section>
       {others.length > 0 && (
         <section className="flex flex-col gap-4 mx-10 md:mx-40 relative z-10">
           {others.map((player, index) => (
             <ResultPlayer 
-              key={player._id || index} 
+              key={player._id}
+              id={player.user} 
               username={player.username} 
               position={index + 4}
               points={player.score} 

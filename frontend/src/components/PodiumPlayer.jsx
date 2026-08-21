@@ -1,4 +1,4 @@
-const PodiumPlayer = ({ position, username, points }) => {
+const PodiumPlayer = ({ position, username, points, id }) => {
 
     const transformClasses = {
         1: "translate-y-[-60px] rotate-1",
@@ -23,7 +23,7 @@ const PodiumPlayer = ({ position, username, points }) => {
         </span>
       )}
       <img
-        src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${username}`}
+        src={`https://api.dicebear.com/10.x/critters/svg?tags=animation&seed=${id}`}
         alt={`Avatar di ${username}`}
         className="w-20 rounded-full border-3 border-neroNonNero mb-3 mt-6"
       />
