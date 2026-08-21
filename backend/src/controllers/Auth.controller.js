@@ -258,7 +258,8 @@ async function updateUser(req, res){
       id: user._id,
       username: user.username,
       email: user.email
-    }})
+    },
+    token: generateJWT.accessToken(req.userId, user.username)})
     
   }catch (err){
     return res.status(500).json({ message: "Impossibile aggiornare i dati ora." });
