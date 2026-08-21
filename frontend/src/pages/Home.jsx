@@ -5,20 +5,22 @@ import SectionTitle from "../components/SectionTitle";
 import { useAuth } from "../contexts/AuthContext";
 import ConfirmButton from "../components/ConfirmButton";
 import EmptyState from "../components/EmptyState";
+import { toast } from "react-toastify";
 
 import { useNavigate } from "react-router";
-import { createLobbyAPI, getPublicLobbiesAPI } from "../services/api";
 import { useState, useEffect } from "react";
 import { useGame } from "../contexts/GameContext";
+import { useUser } from "../contexts/UserContext";
 
 const CODE_LENGTH = Number(import.meta.env.VITE_CODE_LENGTH) || 5;
   
 const Home = () => {
   const { user } = useAuth();
   const { joinLobby } = useGame();
+  const { getPublicLobbies, createLobby } = useUser();
 
   const [publicLobbies, setPublicLobbies] = useState([]);
-  const [lobbycode, setLobbyCode] = useState("");
+  const [lobbyCode, setLobbyCode] = useState("");
   const [joinError, setJoinError] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
 
@@ -27,7 +29,7 @@ const Home = () => {
   //* Gestione crea lobby
   async function handleCreateLobby() {
     try {
-      const data = await createLobbyAPI();
+      const data = await createLobby();
       navigate(`/lobby/${data.code}`);
     } catch (err) {
       console.log(err.message);
@@ -38,11 +40,11 @@ const Home = () => {
   async function handleSubmit(e) {
     e.preventDefault();
     setIsDisabled(true);
-    if (!lobbycode) return;
+    if (!lobbyCode) return;
     setJoinError("");
     try {
-      await joinLobby(lobbycode);
-      navigate(`/lobby/${lobbycode.trim().toUpperCase()}`);
+      await joinLobby(lobbyCode);
+      navigate(`/lobby/${lobbyCode.trim().toUpperCase()}`);
     } catch (err) {
       setJoinError(err.message);
       setLobbyCode("");
@@ -53,14 +55,25 @@ const Home = () => {
 
   //* Gestisci accensione pulsante ENTRA
   useEffect(() => {
-    if (lobbycode.trim().length === CODE_LENGTH) setIsDisabled(false);
+    if (lobbyCode.trim().length === CODE_LENGTH) setIsDisabled(false);
     else setIsDisabled(true);
-  }, [lobbycode]);
+  }, [lobbyCode]);
 
   //* Ottieni lobby pubbliche
   useEffect(() => {
-    getPublicLobbiesAPI().then((data) => setPublicLobbies(data.lobbies));
+    getPublicLobbies()
+    .then((data) => setPublicLobbies(data.lobbies));
   }, []);
+
+  async function handleClick(code) {
+  try {
+    await joinLobby(code);
+    navigate(`/lobby/${code}`);
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
 
   return (
     <>
@@ -90,7 +103,7 @@ const Home = () => {
               type="text"
               placeholder="Codice stanza"
               maxLength={CODE_LENGTH}
-              value={lobbycode}
+              value={lobbyCode}
               onChange={(e) => {
                 const sanitizedValue = e.target.value.replace(
                   /[^a-zA-Z2-9]/,
@@ -128,6 +141,7 @@ const Home = () => {
                   players_max={lobby.config.maxPlayers}
                   rotation="-rotate-1"
                   content={"Unisciti"}
+                  onClick={() => handleClick(lobby.code)}
                 />
               </div>
             ))

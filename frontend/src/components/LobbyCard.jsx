@@ -1,5 +1,5 @@
 import ConfirmButton from "./ConfirmButton";
-const LobbyCard = ({ title, players, players_max, date, rotation, content,
+const LobbyCard = ({ title, players, players_max, date, rotation, content, onClick,
   avatars = ["jonny", "genbi", "angelica", "marco", "andrea"] 
 }) => {
   
@@ -42,7 +42,7 @@ const LobbyCard = ({ title, players, players_max, date, rotation, content,
           )}
         </div>
         
-        <ConfirmButton color="secondary" customClasses="w-full">
+        <ConfirmButton color="secondary" customClasses="w-full" onClick={onClick}>
           {content +  " →"}
         </ConfirmButton>
       </div>

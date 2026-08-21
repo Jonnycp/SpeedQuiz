@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { getGamesAPI, getGameLeaderboardAPI, getPublicLobbiesAPI } from "../services/api";
+import { createLobbyAPI, getGamesAPI, getGameLeaderboardAPI, getPublicLobbiesAPI } from "../services/api";
 
 const UserContext = createContext();
 
@@ -16,6 +16,11 @@ export function UserProvider({ children }) {
         return data;
     }
 
+    async function createLobby(){
+        const data = await createLobbyAPI();
+        return data;
+    }
+
     //* lobbies pubbliche
     async function getPublicLobbies(gameId){
         const data = await getPublicLobbiesAPI(gameId);
@@ -23,7 +28,7 @@ export function UserProvider({ children }) {
     }
 
     return (
-    <UserContext.Provider value={{ getUserGames, getLeaderboard, getPublicLobbies }}>
+    <UserContext.Provider value={{ createLobby, getUserGames, getLeaderboard, getPublicLobbies }}>
       {children}
     </UserContext.Provider>
   );
