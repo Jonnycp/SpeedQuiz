@@ -25,6 +25,13 @@ app.use(express.json());
 // Parsing dei cookie (per refresh token)
 app.use(cookieParser());
 
+// Swagger UI setup
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger.js");
+
+// Serve Swagger UI at /api-docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 //Router express
 app.use("/api/v1/", indexRouter);
 
