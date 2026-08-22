@@ -1,0 +1,38 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: speedquiz-db
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    image: speedquiz-backend:latest
+    container_name: speedquiz-backend
+    env_file:
+      - ./backend/.env
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/speedquiz
+      - FRONTEND_URL=http://localhost
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        - VITE_BACKEND_URL=http://localhost:3000
+    container_name: speedquiz-frontend
+    image: speedquiz-frontend:latest
+    env_file:
+      - ./frontend/.env
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
