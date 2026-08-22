@@ -18,6 +18,7 @@ const options = {
             { name: "AuthController", description: "Gestione autenticazione, registrazione e profilo utente" },
             { name: "GameController", description: "Gestione statistiche e classifiche delle partite" },
             { name: "LobbyController", description: "Creazione e ricerca delle stanze di gioco" },
+            { name: "HealthController", description: "Verifica lo stato del server" },
         ],
         components: {
             securitySchemes: {
@@ -131,6 +132,31 @@ const options = {
             },
         },
         paths: {
+            
+            //* HEALTH CONTROLLER
+            "/api/v1/health": {
+                get: {
+                    tags: ["HealthController"],
+                    summary: "Verifica lo stato del server",
+                    description: "Endpoint di health check, non richiede autenticazione.",
+                    responses: {
+                        200: {
+                            description: "Server attivo e funzionante",
+                            content: {
+                                "application/json": {
+                                    schema: {
+                                        type: "object",
+                                        properties: {
+                                            message: { type: "string", example: "Il server funziona" },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+
             //* AUTH CONTROLLER
             "/api/v1/auth/register": {
                 post: {
