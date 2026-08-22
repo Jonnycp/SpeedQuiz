@@ -23,8 +23,7 @@ function lobbyOwned(userId) {
 }
 
 function getPublicLobbies() {
-  return [...lobbies.values()].filter(
-    (l) =>
+  return [...lobbies.values()].filter((l) =>
       l.config.public &&
       l.players.size < l.config.maxPlayers &&
       l.status === "LOBBY",
@@ -33,6 +32,24 @@ function getPublicLobbies() {
 
 function deleteLobby(code) {
   return lobbies.delete(code);
+}
+
+//* elimina le lobby per evitare che la Map delle lobbies cresca indefinitamente 
+function reap(){
+  const now = Date.now();
+  [...lobbies.values()].forEach((lobby) => {
+    const isEmpty = lobby.players.size === 0;
+    const isOld = now - lobby.lastActivityAt > 10 * 60 * 1000;
+    
+    if (isEmpty && isOld) {
+      lobbies.delete(lobby.code);
+    }
+  })
+}
+
+function startReaper() {
+  console.log("[socket] Avvio reaper per eliminare le lobby inattive");
+  setInterval(reap, 5 * 60 * 1000);
 }
 
 // ritorna un nuovo oggetto lobby in cui le Map (players e rounds) sono trasformate in array grazie a .values(),
@@ -69,4 +86,5 @@ module.exports = {
   lobbyOwned,
   getPublicLobbies,
   serializeLobby,
+  startReaper
 };

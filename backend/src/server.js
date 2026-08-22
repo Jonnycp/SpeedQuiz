@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const http = require("http");
 const questionCache = require("./store/questionStore.js")
+const { startReaper } = require("./store/lobbyStore.js");
 
 const indexRouter = require("./routes/index.js");
 const initSocket = require("./socket/index.js");
@@ -40,6 +41,10 @@ if (mongoUri && mongoUri.length > 0) {
       //Load domande in cache
       questionCache.load().then(() => console.log("[cache] Domande aggiornate!"))
 
+      //Avvio reaper per eliminare le lobby inattive
+      startReaper();
+
+      //Avvio server
       server.listen(PORT, () => {
         console.log(`Backend server e Socket server partito su: http://localhost:${PORT}`); // un unico server in ascolto sulla porta 3000 che inoltra le richieste HTTP gestite da express ad app, dalle richieste di handshake Websocket
       });

@@ -38,6 +38,7 @@ function startRound(lobby, io){
     lobby.status = "ANSWERING";
     lobby.currentRound++;
     lobby.currentVoting = -1;
+    lobby.lastActivityAt = Date.now();
 
     //* Genera match del round
     const players = [...lobby.players.values()]
@@ -85,6 +86,7 @@ function saveAnswers(lobby, socket, matchIndex, answers){
     const match = myMatches[matchIndex];
     const me = match.p1.id == socket.user.id ? match.p1 : match.p2;
     me.answers = answers;
+    lobby.lastActivityAt = Date.now();
 
     return myMatches;
 }
@@ -129,6 +131,7 @@ function startVotingPhase(lobby, io){
             return endGame(lobby, io)
         }else{
             lobby.status = "PAUSED"
+            lobby.lastActivityAt = Date.now();
 
             return io.to(lobby.code).emit("game:round_ended", {
                 lobby: serializeLobby(lobby),
@@ -140,6 +143,7 @@ function startVotingPhase(lobby, io){
 
     lobby.status = "VOTING";
     lobby.phaseEndAt = Date.now() + lobby.config.votingTimeMs;
+    lobby.lastActivityAt = Date.now();
 
     startTimer(lobby, "voting", lobby.config.votingTimeMs, () => {
     startRevealPhase(lobby, io);
@@ -183,6 +187,7 @@ function saveVote(lobby, socket, voteFor){
     }
     
     votedFor.votedBy.push(socket.user.id);
+    lobby.lastActivityAt = Date.now();
 
     return currentMatch;
 }
@@ -220,6 +225,7 @@ function startRevealPhase(lobby, io){
 
     lobby.status = "REVEAL";
     lobby.phaseEndAt = Date.now() + lobby.config.revealTimeMs;
+    lobby.lastActivityAt = Date.now();
 
     const winner = calculateMatchWinner(lobby, currentMatch);
     
@@ -241,6 +247,7 @@ function startRevealPhase(lobby, io){
     
 }
 
+//* End game, chiude partita, salva su DB e invia evento a tutti i giocatori
 async function endGame(lobby, io){
     if(!lobby) throw new Error("Lobby non trovata");
     if(lobby.status === "ENDED") throw new Error("Partita già terminata");
@@ -250,6 +257,7 @@ async function endGame(lobby, io){
     lobby.phaseEndAt = null;
     lobby.currentRound = -1;
     lobby.currentVoting = -1;
+    lobby.lastActivityAt = Date.now();
 
     let gameId = null;
     try{

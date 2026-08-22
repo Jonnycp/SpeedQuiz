@@ -3,7 +3,7 @@ const { pickRandom } = require("../store/questionStore");
 const { setLobby } = require("../store/lobbyStore");
 const { clearAllTimer } = require("../store/timerManager");
 
-
+//* Crea una nuova lobby e la salva nella Map lobbies */
 function createLobby(ownerId, owenerUsername) {
     const code = generateRoomCode()
     const newLobby = {
@@ -41,6 +41,7 @@ function createLobby(ownerId, owenerUsername) {
     return newLobby
 }
 
+//* Aggiunge un giocatore alla lobby, gestendo il caso di riconnessione */
 function addPlayer(lobby, socket){
     //* Gestione persone che erano entrate e si sono disconnesse per sbaglio
     const existingPlayer = lobby.players.get(socket.user.id)
@@ -55,7 +56,8 @@ function addPlayer(lobby, socket){
         existingPlayer.socketId = socket.id;
         existingPlayer.connected = true;
         existingPlayer.disconnectedAt = null;
-        
+        lobby.lastActivityAt = Date.now();
+
         const timer = lobby.disconnectedTimers.get(socket.user.id)
         if(timer){
             clearTimeout(timer)
@@ -84,9 +86,11 @@ function addPlayer(lobby, socket){
     }
 
     lobby.players.set(newPlayer.id, newPlayer)
+    lobby.lastActivityAt = Date.now();
     return newPlayer
 }
 
+//* Rimuove un giocatore dalla lobby, gestendo il caso in cui sia l'host o se la partita è in corso */
 function removePlayer(lobby, socket, callback){
 
     //* Controllo se è lo stesso giocatore connesso dallo stesso dispositivo
@@ -94,6 +98,7 @@ function removePlayer(lobby, socket, callback){
     if(!player || player.socketId !== socket.id) return false;
 
     lobby.players.delete(socket.user.id);
+    lobby.lastActivityAt = Date.now();
 
     //* Uscita da stanza multicast
     socket.data.lobbyCode = null;
@@ -105,6 +110,7 @@ function removePlayer(lobby, socket, callback){
         lobby.hostUsername = lobby.players.get(lobby.hostId).username
     }
 
+    //* Gestione caso in cui un utente esce i players < 3
     if (lobby.players.size < lobby.config.minPlayers && lobby.status !== "LOBBY" && lobby.status !== "ENDED"){
         lobby.status = "LOBBY"
         lobby.phaseEndAt = null
@@ -120,6 +126,7 @@ function removePlayer(lobby, socket, callback){
     return true;
 }
 
+//* Marca un giocatore come disconnesso, avviando un timer per la riconnessione */
 function markPlayerAsDisconnected(socket, lobby, callback){
     //* CHECK SE GIOCATORE ESISTE
     if(!lobby) throw new Error("Partita non trovata");
@@ -129,6 +136,7 @@ function markPlayerAsDisconnected(socket, lobby, callback){
     //* AGGIORNA DATI GIOCATORE (offline, tempo di disconnessione)
     player.connected = false;
     player.disconnectedAt = Date.now();
+    lobby.lastActivityAt = Date.now();
 
     //* TIMER PER RICONESSIONE (se si riconnette entro X sec, altrimenti eliminalo)
     const timer = setTimeout(() => {
@@ -142,6 +150,7 @@ function markPlayerAsDisconnected(socket, lobby, callback){
     lobby.disconnectedTimers.set(socket.user.id, timer);
 }
 
+//* Prepara la lobby per l'avvio della partita, controllando che ci siano abbastanza giocatori e pescando le domande */
 function prepareStart(lobby, socket){
     if(lobby.status !== "LOBBY" && lobby.status !== "PAUSED"){
       throw new Error("La partita è già stata avviata");
