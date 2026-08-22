@@ -25,7 +25,7 @@ services:
     build:
       context: ./frontend
       args:
-        - VITE_BACKEND_URL=http://backend:3000
+        - VITE_BACKEND_URL=http://localhost:3000
     container_name: speedquiz-frontend
     image: speedquiz-frontend:latest
     env_file:
