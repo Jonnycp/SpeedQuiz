@@ -1,7 +1,7 @@
 {
   "name": "SpeedQuiz",
   "description": "Sfida i tuoi amici in una partita di domande! Una domanda, 3 risposte. La più divertente vince! Ma ricorda di tenere d'occhio il tempo.",
-  "short_name": "speedquiz",
+  "short_name": "Speed Quiz",
   "display": "standalone",
   "background_color": "#3111d2",
   "theme_color": "#ff6b35",
