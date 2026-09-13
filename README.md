@@ -183,7 +183,7 @@ SpeedQuiz/
             └── socket.js
 ```
 
-## API
+## API REST
 
 Con il backend avviato, la documentazione interattiva (OpenAPI 3.0) è disponibile su:
 
@@ -204,6 +204,7 @@ Tutte le rotte HTTP vivono sotto il prefisso **`/api/v1`**. 🔒 = richiede head
 | `POST` | `/api/v1/lobbies` | Crea una nuova lobby (o restituisce quella già attiva) | 🔒 |
 | `GET` | `/api/v1/lobbies/public` | Elenco delle lobby pubbliche attive | 🔒 |
 
+## Socket.IO
 La partita vera e propria (lobby, round, risposte, voti) è gestita via **Socket.IO** (handshake con `auth.token` = access token JWT), non tramite REST:
 
 | Evento (client → server) | Descrizione |
