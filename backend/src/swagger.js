@@ -121,6 +121,7 @@ const options = {
                         phaseEndAt: { type: "number", nullable: true, example: null },
                         players: { type: "array", items: { $ref: "#/components/schemas/LobbyPlayer" } },
                         rounds: { type: "array", items: { type: "object" } },
+                        gameId: { type: "string", nullable: true, example: "6a79a933ef286d120db6a52a" },
                     },
                 },
                 Error: {
@@ -218,8 +219,7 @@ const options = {
                 post: {
                     tags: ["AuthController"],
                     summary: "Logout utente",
-                    description: "Invalida il refresh token del dispositivo corrente e cancella il cookie. Lascia attive le sessioni su altri dispositivi.",
-                    security: [{ cookieAuth: [] }],
+                    description: "Invalida il refresh token del dispositivo corrente (se presente nel cookie) e cancella il cookie. Non richiede autenticazione: se il cookie è assente la richiesta ha comunque successo. Lascia attive le sessioni su altri dispositivi.",
                     responses: {
                         200: { description: "Logout effettuato con successo" },
                         500: { description: "Errore del server", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
