@@ -49,6 +49,13 @@ La relazione «extend» collega **Riconnessione a una partita in corso** a **Ing
 
 ## 4. Modello dei dati
 
+Le entità che devono sopravvivere al singolo processo server sono modellate come schemi Mongoose in `backend/src/models/`: `User`, `RefreshToken`, `Question` e `Game`. Lo stato di una partita in corso (lobby, round, risposte, voti) non è invece rappresentato da alcuno schema persistito: vive in memoria nel processo Node.js (`backend/src/store/lobbyStore.js`) e viene proiettato su un documento `Game` solo al termine della partita.
+
+- **`User`**: `username` ed `email` sono vincolati a unicità e normalizzati in minuscolo; `password` non è mai leggibile in chiaro, poiché un hook `pre("save")` la sostituisce con il proprio hash bcrypt prima del salvataggio (`User.js`, righe 44-47). Il sotto-oggetto `stats` accumula punteggio totale, partite vinte e partite giocate.
+- **`RefreshToken`**: collezione separata da `User` (e non annidata), perché un utente può possedere più refresh token contemporaneamente (un dispositivo per sessione) e perché il campo `expiresAt` porta un indice TTL (`expires: 0`) che richiede un documento di primo livello per eliminare automaticamente il token scaduto.
+- **`Question`**: `isActive` e `category` sono indicizzati per l'estrazione casuale a runtime, mentre `timesUsed` viene incrementato a ogni utilizzo per bilanciare l'estrazione verso le domande meno proposte. Non esiste alcun riferimento persistito tra una partita conclusa e le domande poste durante quella partita: viene aggiornato solo il contatore `timesUsed`.
+- **`Game`**: documento generato al termine di una partita. `hostId` referenzia l'utente che ha creato la lobby, mentre `hostUsername` ne denormalizza il nome al momento della partita. L'array `players` è un sotto-documento con `_id: false`, poiché i singoli elementi non necessitano di un identificativo proprio; ciascuno denormalizza anche lo `username` del partecipante, in modo che una successiva modifica del nome utente non alteri retroattivamente lo storico già consultato.
+
 ### 4.1 Diagramma delle classi
 
 ![Modello dei dati](diagrammi/modello-dati.svg)
@@ -56,7 +63,7 @@ La relazione «extend» collega **Riconnessione a una partita in corso** a **Ing
 ## 5. Documentazione delle API (backend)
 
 ### 5.1 API REST
-Tutte le rotte REST sono montate sotto il prefisso /api/v1 (backend/src/routes/index.js). La colonna “Autenticazione” indica se è richiesto un access token Bearer valido.
+Tutte le rotte REST sono montate sotto il prefisso /api/v1 (backend/src/routes/index.js). La colonna “Autenticazione” indica se è richiesto un access token Bearer valido. Oltre a questa tabella, l'intera API è documentata in formato OpenAPI tramite Swagger: a backend avviato, la documentazione interattiva è consultabile all'indirizzo `/api-docs` (`server.js`, righe 29-33), generata con `swagger-jsdoc` ed esposta con `swagger-ui-express`.
 
 | Metodo | Endpoint | Descrizione | Auth |
 |---|---|---|:---:|
