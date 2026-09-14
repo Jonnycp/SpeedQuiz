@@ -13,6 +13,10 @@ const options = {
                 url: "http://localhost:3000",
                 description: "Development server",
             },
+            {
+                url: "https://speedquiz-api.onrender.com/",
+                description: "Public server",
+            },
         ],
         tags: [
             { name: "AuthController", description: "Gestione autenticazione, registrazione e profilo utente" },
