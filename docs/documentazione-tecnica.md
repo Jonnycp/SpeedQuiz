@@ -82,7 +82,7 @@ Le entità che devono sopravvivere al singolo processo server sono modellate com
 - [`Question`](../backend/src/models/Question.js)
 - [`Game`](../backend/src/models/Game.js). 
 
-![Modello dei dati](diagrammi/modello-dati.svg)
+![Modello dei dati](diagrammi/modello-dati.drawio.svg)
 
 Lo stato di una partita in corso non è invece rappresentato da uno schema su db: vive in memoria e viene proiettato su un documento `Game` solo al termine della partita.
 
