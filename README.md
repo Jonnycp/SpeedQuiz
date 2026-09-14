@@ -13,7 +13,7 @@
 * [Chi siamo](#chi-siamo)
 * [Funzionalità principali](#funzionalità-principali)
 * [Architettura del Sistema](#architettura-del-sistema)
-* [API](#api)
+* [API REST](#API-REST)
 * [Variabili d'ambiente](#variabili-dambiente)
 * [Installazione](#installazione)
 * [Comandi Utili](#comandi-utili)
@@ -24,11 +24,11 @@
 > *Una domanda, 3 risposte, la più divertente vince!*
 
 ## Cos'è SpeedQuiz
-SpeedQuiz è un party game multiplayer in tempo reale: un host crea una stanza, pubblica o privata, e gli altri giocatori entrano con un codice.
+<b>SpeedQuiz</b> è un party game multiplayer in tempo reale: un host crea una stanza, pubblica o privata, e gli altri giocatori entrano per unirsi alla partita con un codice.
 
-A ogni round i giocatori vengono divisi in coppie a rotazione: ciascuno partecipa a due match contro due avversari diversi, e ogni coppia riceve una propria domanda a cui entrambi rispondono entro un tempo limite. Conclusa la fase di risposta, i giocatori non coinvolti nel match votano la risposta che ritengono più divertente tra le due. I voti ricevuti, insieme a un bonus legato alla velocità di risposta, determinano il punteggio. Al termine dei round configurati viene mostrata una classifica finale, salvata nello storico partite di ogni utente.
+A ogni round i giocatori vengono divisi in coppie a rotazione: ciascuno partecipa a due match contro due avversari diversi, e ogni coppia riceve una propria domanda a cui entrambi rispondono entro un tempo limite. Conclusa la fase di risposta, i giocatori non coinvolti nel match votano la risposta che ritengono più divertente tra le due. I voti ricevuti, insieme a un bonus legato all'unanimità dei voti, determinano il punteggio. Al termine dei round configurati viene mostrata una classifica finale, salvata nello storico partite di ogni utente.
 
-Il gioco richiede un account (registrazione/login) e gestisce la sessione con access token JWT e refresh token in cookie httpOnly. Le stanze e lo stato di gioco vivono in memoria sul server e vengono orchestrati via Socket.IO; solo utenti, domande e partite concluse sono persistiti su MongoDB.
+Il gioco richiede un account (registrazione/login) e gestisce la sessione con access token JWT e refresh token in cookie httpOnly. Le stanze e lo stato di gioco vivono in memoria sul server e vengono orchestrati via Socket.IO; solo utenti, domande e partite concluse sono persistenti su MongoDB.
 
 ## Chi siamo
 Progetto sviluppato da:
@@ -189,7 +189,8 @@ Con il backend avviato, la documentazione interattiva (OpenAPI 3.0) è disponibi
 
 👉 **http://localhost:3000/api-docs**
 
-Tutte le rotte HTTP vivono sotto il prefisso **`/api/v1`**. 🔒 = richiede header `Authorization: Bearer <token>`.
+Tutte le rotte HTTP vivono sotto il prefisso **`/api/v1`**. 
+🔒 = richiede header `Authorization: Bearer <token>`.
 
 | Metodo | Endpoint | Descrizione | Auth |
 |---|---|---|:---:|
@@ -205,7 +206,8 @@ Tutte le rotte HTTP vivono sotto il prefisso **`/api/v1`**. 🔒 = richiede head
 | `GET` | `/api/v1/lobbies/public` | Elenco delle lobby pubbliche attive | 🔒 |
 
 ## Socket.IO
-La partita vera e propria (lobby, round, risposte, voti) è gestita via **Socket.IO** (handshake con `auth.token` = access token JWT), non tramite REST:
+La partita vera e propria (lobby, round, risposte, voti) è gestita via **Socket.IO** 
+<i>(handshake con `auth.token` = access token JWT), non tramite REST:<//i>
 
 | Evento (client → server) | Descrizione |
 |---|---|
@@ -245,7 +247,7 @@ cp frontend/.env.example frontend/.env
 |---|---|---|
 | `PORT` | Porta di ascolto del backend | `3000` |
 | `MODE` | Ambiente di esecuzione | `local` |
-| `FRONTEND_URL` | Origine consentita per CORS/Socket.IO | `http://localhost` |
+| `FRONTEND_URL` | Origine consentita per CORS/Socket.IO | `http://localhost:5173` |
 | `MONGODB_URI` | Connection string di MongoDB | `mongodb://localhost:27017/speedquiz` |
 | `JWT_SECRET` | Chiave di firma dell'access token | *(generato con `npm run secret`)* |
 | `JWT_REFRESH_SECRET` | Chiave di firma del refresh token | *(generato con `npm run secret`)* |
@@ -271,11 +273,12 @@ Copia i valori generati in `backend/.env`.
 |---|---|---|
 | `VITE_BACKEND_URL` | URL del backend usato dal client (HTTP e Socket.IO) | `http://localhost:3000` |
 | `MODE` | Ambiente di esecuzione | `local` |
-| `VITE_MIN_ANSWER_TIME` / `VITE_MAX_ANSWER_TIME` / `VITE_DEFAULT_ANSWER_TIME` | Limiti tempo di risposta lato UI (ms) | `5000` / `40000` / `15000` |
+| `VITE_MIN_ANSWER_TIME` / `VITE_MAX_ANSWER_TIME` / `VITE_DEFAULT_ANSWER_TIME` | Limiti tempo di risposta lato UI. (ms) | `5000` / `40000` / `15000` |
 | `VITE_ROUNDS_DEFAULT` | Round di default mostrati in UI | `3` |
 | `VITE_CODE_LENGTH` | Lunghezza attesa del codice lobby | `5` |
 
-> ⚠️ **Con Docker Compose**, `VITE_BACKEND_URL` viene definito come build-arg in `docker-compose.yml` (servizio `frontend`, `build.args`) e viene "cotto" nella build statica: il valore in `frontend/.env` **non** ha effetto sull'immagine Docker, solo sull'esecuzione con `npm run dev`/`vite build` locale.
+> ⚠️ **Con Docker Compose**, `VITE_BACKEND_URL` viene definito come build-arg in `docker-compose.yml` (servizio `frontend`, `build.args`) e viene "inserito" nella build statica: il valore in `frontend/.env` **non** ha effetto sull'immagine Docker, solo sull'esecuzione con `npm run dev`/`vite build` locale.
+> ⚠️ I valori MIN_ANSWER_TIME, MAX_ANSWER_TIME, DEFAULT_ANSWER_TIME, ROUNDS_DEFAULT, CODE_LENGTH devono corrispondere con la configurazione backend.
 
 ## Installazione
 
