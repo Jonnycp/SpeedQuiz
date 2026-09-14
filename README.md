@@ -23,6 +23,12 @@
 # SpeedQuiz
 > *Una domanda, 3 risposte, la più divertente vince!*
 
+<p align="center">
+    <a href="https://speedquiz-508b.onrender.com/" target="_blank">
+      <img src="./frontend/public/og-image.png" width="600" alt="Screen Home desktop SpeedQuiz">
+    </a>
+</p>
+
 ## Cos'è SpeedQuiz
 <b>SpeedQuiz</b> è un party game multiplayer in tempo reale: un host crea una stanza, pubblica o privata, e gli altri giocatori entrano per unirsi alla partita con un codice.
 
@@ -40,7 +46,6 @@ Progetto sviluppato da:
 * **Angelica De Feudis**
 * **Jonathan Caputo**
 * **Luca Gentile**
-
 
 ## Funzionalità principali
 * **Lobby pubbliche o private**, configurabili nel numero di round, tempo di risposta e numero massimo di giocatori.
