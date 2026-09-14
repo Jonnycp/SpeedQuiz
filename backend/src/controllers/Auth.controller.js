@@ -32,7 +32,7 @@ async function gestioneRefresh(res, userId){
 async function login(req, res) {
   try {
     //* Verifica presenza parametri body
-    if (!req.body || !req.body.email.trim() || !req.body.password.trim()) {
+    if (!req.body || !req.body.email?.trim() || !req.body.password?.trim()) {
       return res.status(400).json({ message: "Email e password sono obbigatori." });
     }
     const email = req.body.email.trim().toLowerCase();

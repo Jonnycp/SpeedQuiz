@@ -110,8 +110,10 @@ const Lobby = () => {
         url: window.location.href,
       });
     } catch(err) {
-      toast.error("Errore nella condivisione del codice. Riprova più tardi.");
-      console.error("Impossibile condividere il codice ora.", err);
+      if(!err.name === "AbortError") {
+        toast.error("Errore nella condivisione del codice. Riprova più tardi.");
+        console.error("Impossibile condividere il codice ora.", err);
+      }
     }
   }
 
