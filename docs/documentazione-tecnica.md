@@ -147,17 +147,17 @@ Sono stati modellati i flussi più significativi tra quelli effettivamente imple
 - la creazione e l'ingresso in una lobby
 - l'avvio della partita da parte dell'host
 
-### 8.1 Registrazione di un nuovo utente
+### 8.1 Registrazione
 
 ![Diagramma di sequenza - Registrazione](diagrammi/sequenza-registrazione.drawio.svg)
 
-### 8.2 Login e gestione delle credenziali non valide
+### 8.2 Login
 
-![Diagramma di sequenza - Login](diagrammi/sequenza-login.drawio.svg)
+![Diagramma di sequenza - Login](diagrammi/login-sequenza.drawio.svg)
 
 ### 8.3 Creazione e ingresso in una lobby
 
-![Diagramma di sequenza - Creazione e ingresso in una lobby](diagrammi/sequenza-creazione-ingresso-lobby.drawio.svg)
+![Diagramma di sequenza - Creazione e ingresso in una lobby](diagrammi/creazione-ingresso-lobby.drawio.svg)
 
 ### 8.4 Avvio della partita
 
