@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="frontend/public/favicon.svg" width="200" alt="SpeedQuiz Logo">
+  <img src="frontend/public/favicon.svg" width="200" alt="SpeedQuiz Logo"/>
 </p>
 
 <p align="center">
@@ -30,6 +30,11 @@ A ogni round i giocatori vengono divisi in coppie a rotazione: ciascuno partecip
 
 Il gioco richiede un account (registrazione/login) e gestisce la sessione con access token JWT e refresh token in cookie httpOnly. Le stanze e lo stato di gioco vivono in memoria sul server e vengono orchestrati via Socket.IO; solo utenti, domande e partite concluse sono persistenti su MongoDB.
 
+<p align="center">
+  <img src="./frontend/public/screenshots/screen-desktop-lobby.png" width="600" alt="Screen Lobby desktop SpeedQuiz"/>
+   <img src="./frontend/public/screenshots/screen-mobile-lobby.png" width="168" alt="Screen Lobby mobile SpeedQuiz"/>
+</p>
+
 ## Chi siamo
 Progetto sviluppato da:
 * **Angelica De Feudis**
@@ -42,6 +47,12 @@ Progetto sviluppato da:
 * **Riconnessione automatica**: un giocatore disconnesso resta in partita per una finestra di tempo configurabile prima di essere rimosso.
 * **Statistiche di profilo e storico partite** (partite giocate, vittorie, win rate, partite recenti).
 * **Documentazione API interattiva** via Swagger UI.
+* **Installabilità** via Progressive Web App PWA
+
+<p align="center">
+   <img src="./frontend/public/screenshots/screen-mobile-question.png" width="168" alt="Screen Question mobile SpeedQuiz">
+    <img src="./frontend/public/screenshots/screen-desktop-home.png" width="600" alt="Screen Home desktop SpeedQuiz">
+</p>
 
 ## Architettura del Sistema
 
