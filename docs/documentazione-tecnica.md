@@ -82,9 +82,12 @@ Le entità che devono sopravvivere al singolo processo server sono modellate com
 - [`Question`](../backend/src/models/Question.js)
 - [`Game`](../backend/src/models/Game.js). 
 
-Lo stato di una partita in corso non è invece rappresentato da uno schema persistito: vive in memoria e viene proiettato su un documento `Game` solo al termine della partita.
-
 ![Modello dei dati](diagrammi/modello-dati.svg)
+
+Lo stato di una partita in corso non è invece rappresentato da uno schema su db: vive in memoria e viene proiettato su un documento `Game` solo al termine della partita.
+
+La map delle lobby è rappresentata in questo modo:
+![Modello dati socket](diagrammi/modello-dati-lobby.drawio.svg)
 
 ## 6. Documentazione delle API
 
