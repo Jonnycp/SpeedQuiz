@@ -149,19 +149,19 @@ Sono stati modellati i flussi più significativi tra quelli effettivamente imple
 
 ### 8.1 Registrazione di un nuovo utente
 
-![Diagramma di sequenza - Registrazione](diagrammi/sequenza-registrazione.svg)
+![Diagramma di sequenza - Registrazione](diagrammi/sequenza-registrazione.drawio.svg)
 
 ### 8.2 Login e gestione delle credenziali non valide
 
-![Diagramma di sequenza - Login](diagrammi/sequenza-login.svg)
+![Diagramma di sequenza - Login](diagrammi/sequenza-login.drawio.svg)
 
 ### 8.3 Creazione e ingresso in una lobby
 
-![Diagramma di sequenza - Creazione e ingresso in una lobby](diagrammi/sequenza-creazione-ingresso-lobby.svg)
+![Diagramma di sequenza - Creazione e ingresso in una lobby](diagrammi/sequenza-creazione-ingresso-lobby.drawio.svg)
 
 ### 8.4 Avvio della partita
 
-![Diagramma di sequenza - Avvio della partita](diagrammi/sequenza-avvio-partita.svg)
+![Diagramma di sequenza - Avvio della partita](diagrammi/sequenza-avvio-partita.drawio.svg)
 
 ## 9. Descrizione dei componenti React
 
