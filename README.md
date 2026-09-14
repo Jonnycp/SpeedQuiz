@@ -61,6 +61,8 @@ Progetto sviluppato da:
 ## Architettura del Sistema
 Più informazioni nel file [`documentazione-tecnica.md`](/docs/documentazione-tecnica.md)
 
+![Architettura](docs/diagrammi/architettura.png)
+
 ## Variabili d'ambiente
 
 I due servizi hanno ciascuno un proprio file, da creare a partire dal template:

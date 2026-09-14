@@ -27,6 +27,8 @@ L'accesso all'applicazione richiede necessariamente un account: la sessione è g
 
 L'applicazione si basa sullo stack MERN (MongoDB, Express, React, Node.js) ed è organizzata come una *Single-Page Application* (SPA) lato client che comunica con un backend esposto sia via API REST sia via un canale Socket.IO. 
 
+![Architettura](diagrammi/architettura.png)
+
 Il client è una SPA realizzata in React 19, responsabile del *rendering* dell'interfaccia, della gestione dello stato applicativo e dell'instaurazione delle comunicazioni verso il backend. 
 
 Il server è un processo Node.js basato su Express, che espone:
