@@ -27,6 +27,8 @@ L'accesso all'applicazione richiede necessariamente un account: la sessione è g
 
 L'applicazione si basa sullo stack MERN (MongoDB, Express, React, Node.js) ed è organizzata come una *Single-Page Application* (SPA) lato client che comunica con un backend esposto sia via API REST sia via un canale Socket.IO. 
 
+![Architettura](diagrammi/architettura.png)
+
 Il client è una SPA realizzata in React 19, responsabile del *rendering* dell'interfaccia, della gestione dello stato applicativo e dell'instaurazione delle comunicazioni verso il backend. 
 
 Il server è un processo Node.js basato su Express, che espone:
@@ -82,9 +84,12 @@ Le entità che devono sopravvivere al singolo processo server sono modellate com
 - [`Question`](../backend/src/models/Question.js)
 - [`Game`](../backend/src/models/Game.js). 
 
-Lo stato di una partita in corso non è invece rappresentato da uno schema persistito: vive in memoria e viene proiettato su un documento `Game` solo al termine della partita.
+![Modello dei dati](diagrammi/modello-dati.drawio.svg)
 
-![Modello dei dati](diagrammi/modello-dati.svg)
+Lo stato di una partita in corso non è invece rappresentato da uno schema su db: vive in memoria e viene proiettato su un documento `Game` solo al termine della partita.
+
+La map delle lobby è rappresentata in questo modo:
+![Modello dati socket](diagrammi/modello-dati-lobby.drawio.svg)
 
 ## 6. Documentazione delle API
 
