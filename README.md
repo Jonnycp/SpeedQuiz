@@ -184,6 +184,6 @@ docker compose down -v             # ... e rimuove anche il volume del database
  Nessuna domanda disponibile in partita | Il seeder non è stato eseguito: `docker compose exec backend npm run seed` (o `cd backend && npm run seed` in locale). |
 
 ## Licenza
-Il progetto è distribuito con una licenza proprietaria a uso accademico: nessuna parte del codice o della relazione può essere riprodotta, distribuita o riutilizzata senza il consenso scritto degli autori. Testo completo in [LICENSE.md](LICENSE.md).
+Il progetto è distribuito con una licenza proprietaria a uso accademico: nessuna parte del codice può essere riprodotta, distribuita o riutilizzata senza il consenso scritto degli autori. Testo completo in [LICENSE.md](LICENSE.md).
 
 © 2026 Angelica De Feudis, Jonathan Caputo, Luca Gentile. Tutti i diritti riservati.
