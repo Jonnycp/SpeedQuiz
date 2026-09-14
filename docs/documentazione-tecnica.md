@@ -157,11 +157,11 @@ Sono stati modellati i flussi più significativi tra quelli effettivamente imple
 
 ### 8.3 Creazione e ingresso in una lobby
 
-![Diagramma di sequenza - Creazione e ingresso in una lobby](diagrammi/creazione-ingresso-lobby.drawio.svg)
+![Diagramma di sequenza - Creazione e ingresso in una lobby](diagrammi/creazione-ingresso-lobby-sequenza.drawio.svg)
 
 ### 8.4 Avvio della partita
 
-![Diagramma di sequenza - Avvio della partita](diagrammi/sequenza-avvio-partita.drawio.svg)
+![Diagramma di sequenza - Avvio della partita](diagrammi/avvio-partita.drawio.svg)
 
 ## 9. Descrizione dei componenti React
 
